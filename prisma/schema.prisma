@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Fundraiser {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String
+  /** Supabase Auth user id — set when the first pot creates their login. */
+  authUserId      String?  @unique
+  /** Public profile path `/hosts/{profileSlug}` — null until chosen. */
+  profileSlug     String?  @unique
+  bio             String?
+  photoUrl        String?
+  profilePublic   Boolean  @default(false)
+  isAlumni        Boolean  @default(false)
+  alumniYearsFrom Int?
+  alumniYearsTo   Int?
+  alumniMinistry  String?
+  alumniCity      String?
+  alumniCountry   String?
+  createdAt       DateTime @default(now())
+  pots            Pot[]
+}
+
+model Pot {
+  id                  String              @id @default(cuid())
+  slug                String              @unique
+  type                PotType
+  status              PotStatus           @default(PENDING)
+  title               String
+  /** Public pitch on the pot details page — optional at create. */
+  story               String?
+  /** Optional personal why — only on the pot page, below the description. */
+  founderStory        String?
+  photoUrl            String?
+  targetAmount        Int
+  totalRaised         Int                 @default(0)
+  donorCount          Int                 @default(0)
+  restorationCategory RestorationCategory @default(GENERAL)
+  fundraiserId        String
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  donations           Donation[]
+  pageViews           PotPageView[]
+  slugRedirects       PotSlugRedirect[]
+  fundraiser          Fundraiser          @relation(fields: [fundraiserId], references: [id])
+
+  @@index([fundraiserId])
+}
+
+/** Old pot URLs keep working after a host changes the slug. */
+model PotSlugRedirect {
+  id        String   @id @default(cuid())
+  oldSlug   String   @unique
+  potId     String
+  createdAt DateTime @default(now())
+  pot       Pot      @relation(fields: [potId], references: [id], onDelete: Cascade)
+
+  @@index([potId])
+}
+
+/** First-party pot page view — aggregates only in creator UI (no PII). */
+model PotPageView {
+  id           String   @id @default(cuid())
+  potId        String
+  viewedAt     DateTime @default(now())
+  /** Calendar day (UTC) for daily series. */
+  day          DateTime @db.Date
+  /** SHA-256 of anon visitor id — used for unique counts only. */
+  visitorKey   String
+  country      String?
+  referrerHost String?
+  device       String   @default("other")
+  /** Share attribution from ?src= / utm_source. */
+  src          String?
+  pot          Pot      @relation(fields: [potId], references: [id], onDelete: Cascade)
+
+  @@index([potId, day])
+  @@index([potId, viewedAt])
+  @@index([potId, visitorKey])
+}
+
+model Donation {
+  id                      String              @id @default(cuid())
+  amount                  Int
+  status                  DonationStatus      @default(PENDING)
+  potId                   String?
+  restorationCategory     RestorationCategory @default(GENERAL)
+  donorName               String?
+  donorEmail              String?
+  isAnonymous             Boolean             @default(false)
+  message                 String?
+  /** Original giver text kept when a creator redacts/replaces the public message. */
+  messageOriginal         String?
+  /** Creator hid this gift message from the public pot page. */
+  commentHidden           Boolean             @default(false)
+  /** At most one public reply from the pot creator. */
+  creatorReply            String?
+  creatorReplyAt          DateTime?
+  isRecurring             Boolean             @default(false)
+  giftAid                 Boolean             @default(false)
+  donorAddressLine1       String?
+  donorCity               String?
+  donorPostcode           String?
+  stripePaymentIntentId   String?             @unique
+  stripeCheckoutSessionId String?             @unique
+  stripeSubscriptionId    String?
+  stripeInvoiceId         String?             @unique
+  /** True after wall / building-fund totals have been incremented for this gift. */
+  totalsApplied           Boolean             @default(false)
+  /** Set when Stripe reports the related subscription cancelled/deleted. */
+  subscriptionCancelledAt DateTime?
+  createdAt               DateTime            @default(now())
+  paymentMethod           PaymentMethod       @default(CARD)
+  pot                     Pot?                @relation(fields: [potId], references: [id])
+
+  @@index([potId])
+  @@index([status])
+  @@index([stripeSubscriptionId])
+}
+
+model BuildingFund {
+  id           Int      @id
+  targetAmount Int
+  totalRaised  Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String       @id @default(cuid())
+  topic     ContactTopic @default(GENERAL)
+  name      String
+  email     String
+  message   String
+  /** Cleared by whoever answers, so the inbox has a worked/unworked split. */
+  handled   Boolean      @default(false)
+  createdAt DateTime     @default(now())
+
+  @@index([handled, createdAt])
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  /** Who added this allowlist row (admin email), if known. */
+  addedBy   String?
+  createdAt DateTime @default(now())
+}
+
+enum PotType {
+  INDIVIDUAL
+  FAMILY
+  ALUMNI_GROUP
+  MINISTRY
+  OTHER_GROUP
+}
+
+enum PotStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  DISABLED
+  CLOSED
+}
+
+enum RestorationCategory {
+  ROOF_STRUCTURE
+  STONEWORK_EXTERIOR
+  WINDOWS
+  HEATING_ELECTRICAL
+  WORSHIP_SPACE
+  CHILDREN_YOUTH
+  COMMUNITY_FACILITIES
+  GENERAL
+}
+
+enum ContactTopic {
+  GIVING
+  POT
+  LEGACY
+  GRANTS
+  ALUMNI
+  VOLUNTEER
+  PRAYER
+  MEMBERSHIP
+  HERITAGE
+  PRESS
+  GENERAL
+}
+
+enum DonationStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CARD
+  BACS_DEBIT
+}
