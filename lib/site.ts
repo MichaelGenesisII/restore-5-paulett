@@ -18,7 +18,7 @@ export const organisation = {
   shortName: "PVN Belfast",
   addressLines: ["5 Paulett Avenue", "Belfast", "Northern Ireland"],
   /** Shown as a mailto link in the footer. */
-  email: "hello@pvnbelfast.org",
+  email: "info@placeofvictoryni.org",
   /** e.g. "NIC123456". Left empty until the registered number is confirmed. */
   charityNumber: "",
 } as const;

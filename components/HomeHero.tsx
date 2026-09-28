@@ -161,6 +161,13 @@ export function HomeHero({
                 <IconHeart className="h-4 w-4 shrink-0 text-pvn-navy" />
                 Give now
               </Link>
+              <Link
+                href="/fundraisers/create"
+                className="font-nav inline-flex items-center justify-center gap-2 rounded-md border border-pvn-gold bg-pvn-navy/35 px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-pvn-cream backdrop-blur-sm transition hover:border-pvn-gold-light hover:bg-pvn-navy/50 hover:text-pvn-gold sm:px-5 sm:text-sm"
+              >
+                <IconWall className="h-4 w-4 shrink-0 text-pvn-gold" />
+                Start a pot
+              </Link>
               <HomeShareButton />
             </div>
 
