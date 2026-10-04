@@ -16,7 +16,7 @@ export async function GET(
   try {
     const payload = await getHostPotAnalyticsCached(owned.pot.id);
     if (!payload) {
-      return NextResponse.json({ error: "Pot not found" }, { status: 404 });
+      return NextResponse.json({ error: "Fundraiser not found" }, { status: 404 });
     }
     return NextResponse.json(payload);
   } catch (error) {

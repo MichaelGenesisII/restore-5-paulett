@@ -428,7 +428,7 @@ export function AdminOverview() {
               <span className="text-pvn-cream/30"> · </span>
               avg {formatTidyGbp(data.kpis.averagePence)}
               <span className="text-pvn-cream/30"> · </span>
-              {data.kpis.pots.active} live pots
+              {data.kpis.pots.active} live fundraisers
               {data.kpis.pots.pending > 0 ? (
                 <>
                   <span className="text-pvn-cream/30"> · </span>
@@ -505,7 +505,7 @@ export function AdminOverview() {
                   Nothing urgent
                 </h2>
                 <p className="mx-auto mt-2 max-w-md text-sm text-pvn-navy/60">
-                  No stuck cards, open contacts, or pots waiting on a seed.
+                  No stuck cards, open contacts, or fundraisers waiting on a seed.
                 </p>
                 <button
                   type="button"
@@ -562,7 +562,7 @@ export function AdminOverview() {
 
                 {data.attention.unseededPots.length > 0 ? (
                   <AttentionBlock
-                    title="Pots awaiting seed"
+                    title="Fundraisers awaiting seed"
                     tone="muted"
                     href="/admin/pots"
                   >
@@ -599,7 +599,7 @@ export function AdminOverview() {
                 href="/admin/gifts?destination=DIRECT"
               />
               <KpiCell
-                label="Pot gifts"
+                label="Fundraiser gifts"
                 value={formatWholeGbp(data.kpis.pot.pence)}
                 hint={`${data.kpis.pot.count} gifts`}
                 href="/admin/gifts?destination=POT"
@@ -630,13 +630,13 @@ export function AdminOverview() {
             <section className="border border-pvn-navy/10 bg-white px-4 py-5 sm:px-5">
               <div className="flex items-baseline justify-between gap-2">
                 <p className="font-nav text-[0.6rem] font-bold tracking-[0.14em] text-pvn-navy/40 uppercase">
-                  Pots · live
+                  Fundraisers · live
                 </p>
                 <Link
                   href="/admin/pots"
                   className="font-nav text-[0.6rem] font-bold tracking-[0.12em] text-pvn-gold uppercase"
                 >
-                  All pots →
+                  All fundraisers →
                 </Link>
               </div>
               <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm sm:grid-cols-3">

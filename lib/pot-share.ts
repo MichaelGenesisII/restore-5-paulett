@@ -23,5 +23,5 @@ export function potShareBlurb(opts: {
   const lead = title
     ? `We're raising through “${title}” for Genesis Family toward restoring 5 Paulett.`
     : `We're raising for Genesis Family toward restoring 5 Paulett.`;
-  return `${lead} If you can chip in or share, here's the pot:\n${opts.url}`;
+  return `${lead} If you can chip in or share, here's the fundraiser:\n${opts.url}`;
 }

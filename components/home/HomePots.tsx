@@ -53,10 +53,10 @@ function EmptyPots() {
           Take your part of the wall
         </p>
         <h2 className="font-display mt-3 text-3xl font-semibold text-balance text-pvn-cream sm:text-4xl">
-          Be the first to start a pot
+          Be the first to start a fundraiser
         </h2>
         <p className="mt-3 text-pvn-cream/70">
-          No pots are rising yet. Take your section of the wall — for your
+          No fundraisers are rising yet. Take your section of the wall — for your
           family, alumni year, ministry, or friends — and invite others to
           build with you.
         </p>
@@ -76,7 +76,7 @@ function EmptyPots() {
             className="font-nav inline-flex items-center justify-center gap-2 rounded-md bg-pvn-gold px-5 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-pvn-navy transition hover:bg-pvn-gold-light"
           >
             <IconWall className="h-4 w-4 shrink-0 text-pvn-navy" />
-            Start the first pot
+            Start the first fundraiser
           </Link>
           <Link
             href="/give"
@@ -112,14 +112,16 @@ export function HomePots({ pots }: HomePotsProps) {
   const figures = [
     {
       value: String(pots.length),
-      label: pots.length === 1 ? "pot rising" : "pots rising",
+      label: pots.length === 1 ? "fundraiser rising" : "fundraisers rising",
     },
     { value: formatWholeGbp(totals.raised), label: "raised so far" },
     { value: String(totals.gifts), label: "gifts given" },
   ];
 
   const heading =
-    pots.length === 1 ? "A pot is already rising" : "Pots already rising";
+    pots.length === 1
+      ? "A fundraiser is already rising"
+      : "Fundraisers already rising";
 
   return (
     <SectionShell>
@@ -135,7 +137,7 @@ export function HomePots({ pots }: HomePotsProps) {
             {heading}
           </h2>
           <p className="mt-3 text-pvn-cream/70">
-            Every pot is someone&apos;s part of the wall — family, alumni,
+            Every fundraiser is someone&apos;s part of the wall — family, alumni,
             ministry, or city friends. All of them build the same house.
           </p>
         </div>
@@ -164,7 +166,7 @@ export function HomePots({ pots }: HomePotsProps) {
           <div className="w-full sm:max-w-[18rem]">
             <div className="font-nav flex items-baseline justify-between gap-3 text-[0.65rem] uppercase tracking-[0.2em] text-pvn-cream/45">
               <span>
-                {pots.length === 1 ? "This pot" : "Across every pot"}
+                {pots.length === 1 ? "This fundraiser" : "Across every fundraiser"}
               </span>
               <span className="text-pvn-gold">{wallPct}%</span>
             </div>
@@ -183,7 +185,7 @@ export function HomePots({ pots }: HomePotsProps) {
           className="font-nav inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-pvn-gold transition hover:text-pvn-gold-light"
         >
           <IconWall className="h-3.5 w-3.5" />
-          Start your own pot →
+          Start your own fundraiser →
         </Link>
       </div>
     </SectionShell>

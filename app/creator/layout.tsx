@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Host",
-  description: "Manage your pots, gift messages, and account.",
+  description: "Manage your fundraisers, gift messages, and account.",
   robots: { index: false, follow: false },
 };
 

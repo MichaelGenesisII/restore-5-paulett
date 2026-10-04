@@ -548,7 +548,7 @@ export function HostAccount() {
                 Public profile
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-pvn-navy/60">
-                What visitors see when they open your host profile from a pot.
+                What visitors see when they open your host profile from a fundraiser.
               </p>
             </div>
 
@@ -580,7 +580,7 @@ export function HostAccount() {
                   setProfileDirty(true);
                 }}
                 className={`${fieldClass} min-h-[6.5rem] resize-y`}
-                placeholder="A short word about why you host pots for 5 Paulett."
+                placeholder="A short word about why you host fundraisers for 5 Paulett."
               />
               <p className="mt-1 text-xs text-pvn-navy/40">{bio.length}/600</p>
             </label>
@@ -626,8 +626,8 @@ export function HostAccount() {
                   Make profile public
                 </span>
                 <span className="mt-0.5 block text-xs leading-relaxed text-pvn-navy/55">
-                  Visitors can open it from “Built by” on your pots and share
-                  the link.
+                  Visitors can open it from “Built by” on your fundraisers and
+                  share the link.
                 </span>
               </span>
             </label>

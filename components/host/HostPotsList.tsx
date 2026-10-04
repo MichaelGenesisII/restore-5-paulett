@@ -11,7 +11,7 @@ import { formatWholeGbp } from "@/lib/money";
 function HostPotsListSkeleton() {
   return (
     <div aria-busy="true" aria-live="polite">
-      <span className="sr-only">Loading your pots…</span>
+      <span className="sr-only">Loading your fundraisers…</span>
       <div className="h-8 w-40 animate-pulse rounded-sm bg-pvn-navy/10" />
       <div className="mt-2 h-4 w-full max-w-md animate-pulse rounded-sm bg-pvn-navy/8" />
       <ul className="mt-6 grid gap-2 sm:mt-8">
@@ -43,11 +43,11 @@ export function HostPotsList() {
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
         <div className="min-w-0">
           <h1 className="font-display text-3xl font-semibold text-pvn-navy sm:text-4xl">
-            Your pots
+            Your fundraisers
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-pvn-navy/65">
-            Portfolio of every pot on this account — progress, messages, and
-            quick links.
+            Portfolio of every fundraiser on this account — progress, messages,
+            and quick links.
           </p>
         </div>
         {data.pots.length > 0 ? (
@@ -55,17 +55,17 @@ export function HostPotsList() {
             href="/host/pots/new"
             className="font-nav inline-flex min-h-10 w-full items-center justify-center rounded-md bg-pvn-gold px-4 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light sm:w-auto"
           >
-            Start a pot
+            Start a fundraiser
           </Link>
         ) : null}
       </div>
 
       {data.pots.length === 0 ? (
         <HostEmptyState
-          title="No pots yet"
-          body="Open the first stone for your circle. A pot is a named place where gifts gather toward restoring 5 Paulett."
+          title="No fundraisers yet"
+          body="Open the first stone for your circle. A fundraiser is a named place where gifts gather toward restoring 5 Paulett."
           actionHref="/host/pots/new"
-          actionLabel="Start a pot"
+          actionLabel="Start a fundraiser"
         />
       ) : (
         <ul className="mt-6 grid gap-2 sm:mt-8">

@@ -28,7 +28,7 @@ const trustPoints = [
   {
     Icon: IconWall,
     title: "One restoration fund",
-    body: "Direct gifts and pots land in the same house.",
+    body: "Direct gifts and fundraisers land in the same house.",
   },
   {
     Icon: IconHouse,
@@ -262,7 +262,7 @@ export default async function GivePage({
                 Rather bring others with you?
               </p>
               <p className="mt-3 text-sm leading-relaxed text-pvn-navy/80">
-                A pot turns one gift into a hundred invitations. Set a target,
+                A fundraiser turns one gift into a hundred invitations. Set a target,
                 tell your story, and let your circle build alongside you.
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
@@ -270,13 +270,13 @@ export default async function GivePage({
                   href="/fundraisers/create"
                   className="font-nav inline-flex min-h-11 items-center rounded-md bg-pvn-navy px-5 text-xs font-bold uppercase tracking-[0.14em] text-pvn-cream transition hover:bg-pvn-navy-light"
                 >
-                  Start a pot
+                  Start a fundraiser
                 </Link>
                 <Link
                   href="/fundraisers"
                   className="font-nav inline-flex min-h-11 items-center rounded-md border border-pvn-navy/25 px-5 text-xs font-bold uppercase tracking-[0.14em] text-pvn-navy transition hover:border-pvn-gold hover:text-pvn-gold"
                 >
-                  Join a pot
+                  Join a fundraiser
                 </Link>
               </div>
             </div>

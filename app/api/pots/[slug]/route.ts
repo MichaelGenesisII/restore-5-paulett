@@ -23,7 +23,7 @@ export async function GET(
   });
 
   if (!pot || !isPubliclyVisible(pot.status)) {
-    return NextResponse.json({ error: "Pot not found" }, { status: 404 });
+    return NextResponse.json({ error: "Fundraiser not found" }, { status: 404 });
   }
 
   return NextResponse.json({

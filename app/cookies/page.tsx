@@ -22,7 +22,7 @@ const inUse = [
     name: "pvn_vid",
     kind: "Stored on your device — only if you allow analytics",
     purpose:
-      "A random id used to count pot page visits without storing your name. Hosts see totals and share sources, not who you are.",
+      "A random id used to count fundraiser page visits without storing your name. Hosts see totals and share sources, not who you are.",
     life: "Until you clear site data, or turn analytics off and clear storage.",
   },
   {
@@ -46,7 +46,7 @@ export default function CookiesPage() {
         <p>We do not sell your attention, and we do not follow you around the web.</p>
         <p>
           There is no advertising pixel. Optional analytics — counting visits to
-          pot pages so hosts can see whether their link is working — runs only
+          fundraiser pages so hosts can see whether their link is working — runs only
           if you turn on <strong className="font-semibold text-pvn-navy">Understanding the rebuild</strong>{" "}
           in the cookie banner. Until then, those visits are not recorded.
         </p>
@@ -124,7 +124,7 @@ export default function CookiesPage() {
               <strong className="font-semibold text-pvn-navy">
                 Understanding the rebuild.
               </strong>{" "}
-              Counting visits to pot pages (hashed visitor id, no names) so
+              Counting visits to fundraiser pages (hashed visitor id, no names) so
               hosts can see traffic and share sources. Off unless you turn it
               on.
             </>,

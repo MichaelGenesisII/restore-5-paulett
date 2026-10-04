@@ -33,7 +33,7 @@ const movements = [
   },
   {
     label: "Rebuild",
-    body: "Give, start a pot, or join one that is already rising.",
+    body: "Give, start a fundraiser, or join one that is already rising.",
   },
 ] as const;
 

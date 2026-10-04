@@ -48,7 +48,7 @@ export async function generateMetadata({
     pot = null;
   }
   if (!pot || !isPubliclyVisible(pot.status)) {
-    return { title: "Pot not found", robots: { index: false, follow: false } };
+    return { title: "Fundraiser not found", robots: { index: false, follow: false } };
   }
   return potPageMetadata(pot);
 }
@@ -146,7 +146,7 @@ export default async function PotPage({
                 Seed gift needed
               </p>
               <p className="text-sm leading-relaxed text-pvn-cream/80">
-                This pot joins the wall after a first gift of{" "}
+                This fundraiser joins the wall after a first gift of{" "}
                 {formatWholeGbp(MIN_POT_SEED_PENCE)} or more.
               </p>
             </div>
@@ -157,7 +157,7 @@ export default async function PotPage({
           <div className="relative z-10 border-b border-pvn-cream/20 bg-pvn-navy/60 backdrop-blur-[2px]">
             <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6">
               <p className="font-nav text-[0.65rem] font-bold tracking-[0.2em] text-pvn-gold uppercase">
-                This pot is paused
+                This fundraiser is paused
               </p>
               <p className="text-sm leading-relaxed text-pvn-cream/80">
                 The host has paused gifts for now. The story is still here to
@@ -171,7 +171,7 @@ export default async function PotPage({
           <div className="relative z-10 border-b border-pvn-cream/20 bg-pvn-navy/60 backdrop-blur-[2px]">
             <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6">
               <p className="font-nav text-[0.65rem] font-bold tracking-[0.2em] text-pvn-gold uppercase">
-                This pot is closed
+                This fundraiser is closed
               </p>
               <p className="text-sm leading-relaxed text-pvn-cream/80">
                 Giving has finished. Progress and messages remain as a record.
@@ -192,7 +192,7 @@ export default async function PotPage({
               href="/fundraisers"
               className="font-nav inline-flex w-fit items-center gap-2 text-xs font-bold tracking-[0.16em] text-pvn-cream/70 uppercase transition hover:text-pvn-gold"
             >
-              <span aria-hidden>←</span> All pots
+              <span aria-hidden>←</span> All fundraisers
             </Link>
 
             <div className="max-w-3xl pb-1">
@@ -214,7 +214,7 @@ export default async function PotPage({
                 {pot.title}
               </h1>
               <p className="mt-3 max-w-xl text-sm leading-relaxed text-pvn-cream/80 text-pretty sm:mt-4 sm:text-lg">
-                Your gift through this pot counts toward the one restoration
+                Your gift through this fundraiser counts toward the one restoration
                 fund for 5 Paulett.
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-2.5 sm:mt-8 sm:gap-3">
@@ -230,7 +230,7 @@ export default async function PotPage({
                     href="#give"
                     className="font-nav inline-flex min-h-12 items-center justify-center rounded-md bg-pvn-gold px-5 text-xs font-bold tracking-[0.16em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light sm:px-6"
                   >
-                    {awaitingSeed ? "Open with a gift" : "Give to this pot"}
+                    {awaitingSeed ? "Open with a gift" : "Give to this fundraiser"}
                   </a>
                 )}
                 <PotShareButton slug={pot.slug} title={pot.title} />
@@ -242,7 +242,7 @@ export default async function PotPage({
 
       <section
         className="border-b border-pvn-navy/10 bg-pvn-cream"
-        aria-label="Progress toward the pot target"
+        aria-label="Progress toward the fundraiser target"
       >
         <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6 sm:py-7">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
@@ -283,7 +283,7 @@ export default async function PotPage({
         <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:gap-12 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:items-start lg:gap-14 xl:gap-16">
           <div id="story" className="min-w-0 scroll-mt-24">
             <p className="font-nav text-[0.65rem] font-bold tracking-[0.2em] text-pvn-gold uppercase">
-              About this pot
+              About this fundraiser
             </p>
             <h2 className="font-display mt-2 text-[1.75rem] font-semibold text-pvn-navy sm:text-4xl">
               The pitch
@@ -376,10 +376,10 @@ export default async function PotPage({
           </div>
 
           <p className="font-nav mt-4 text-[0.65rem] font-bold tracking-[0.2em] text-pvn-gold uppercase">
-            Your pot → our house
+            Your fundraiser → our house
           </p>
           <p className="font-display mt-3 text-xl leading-snug text-pvn-navy text-pretty sm:text-2xl">
-            Every gift through this pot joins the one fund for 5 Paulett.
+            Every gift through this fundraiser joins the one fund for 5 Paulett.
           </p>
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -387,7 +387,7 @@ export default async function PotPage({
               href="/fundraisers"
               className="font-nav inline-flex items-center justify-center rounded-md border border-pvn-navy/25 px-5 py-3 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:border-pvn-gold hover:text-pvn-gold sm:text-sm"
             >
-              Browse other pots
+              Browse other fundraisers
             </Link>
             <Link
               href="/fundraisers/create"

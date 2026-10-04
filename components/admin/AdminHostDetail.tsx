@@ -188,7 +188,7 @@ export function AdminHostDetail({ id }: { id: string }) {
 
   const tabs: Array<{ id: Tab; label: string }> = [
     { id: "overview", label: "Overview" },
-    { id: "pots", label: `Pots (${host.potCount})` },
+    { id: "pots", label: `Fundraisers (${host.potCount})` },
     ...(host.isAlumni ? [{ id: "alumni" as const, label: "Alumni" }] : []),
   ];
 
@@ -228,7 +228,7 @@ export function AdminHostDetail({ id }: { id: string }) {
             href={`/admin/pots?q=${encodeURIComponent(host.email)}`}
             className="font-nav inline-flex min-h-10 items-center justify-center rounded-md border border-pvn-navy/20 bg-white px-4 text-[0.65rem] font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:border-pvn-gold"
           >
-            All pots
+            All fundraisers
           </Link>
         </div>
       </div>
@@ -270,13 +270,13 @@ export function AdminHostDetail({ id }: { id: string }) {
                 />
                 <div className="min-w-0 flex-1">
                   <p className="font-nav text-[0.6rem] font-bold tracking-[0.14em] text-pvn-navy/40 uppercase">
-                    Raised across pots
+                    Raised across fundraisers
                   </p>
                   <p className="font-display mt-1 text-2xl font-semibold text-pvn-navy sm:text-3xl">
                     {formatWholeGbp(host.totalRaised)}
                   </p>
                   <p className="mt-1 text-[0.75rem] text-pvn-navy/50">
-                    {host.potCount} {host.potCount === 1 ? "pot" : "pots"} ·{" "}
+                    {host.potCount} {host.potCount === 1 ? "fundraiser" : "fundraisers"} ·{" "}
                     {host.livePots} live
                   </p>
                 </div>
@@ -316,14 +316,14 @@ export function AdminHostDetail({ id }: { id: string }) {
 
         {tab === "pots" ? (
           host.pots.length === 0 ? (
-            <p className="text-sm text-pvn-navy/55">No pots for this host.</p>
+            <p className="text-sm text-pvn-navy/55">No fundraisers for this host.</p>
           ) : (
             <div className="overflow-x-auto rounded-sm border border-pvn-navy/10 bg-white">
               <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
                 <thead>
                   <tr className="border-b border-pvn-navy/10 bg-pvn-cream/60">
                     <th className="font-nav px-3 py-2.5 text-[0.6rem] font-bold tracking-[0.14em] text-pvn-navy/50 uppercase">
-                      Pot
+                      Fundraiser
                     </th>
                     <th className="font-nav px-3 py-2.5 text-[0.6rem] font-bold tracking-[0.14em] text-pvn-navy/50 uppercase">
                       Status
@@ -376,7 +376,7 @@ export function AdminHostDetail({ id }: { id: string }) {
                           href={`/admin/pots/${p.slug}`}
                           className={iconBtn}
                           aria-label={`View ${p.title}`}
-                          title="View pot"
+                          title="View fundraiser"
                         >
                           <IconEye className="h-4 w-4" />
                         </Link>

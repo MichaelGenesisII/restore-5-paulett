@@ -46,7 +46,7 @@ export function MobileTabBar() {
         <li>
           <TabBarItem
             href="/fundraisers"
-            label="Pots"
+            label="Fundraisers"
             Icon={IconWall}
             active={
               pathname.startsWith("/fundraisers") ||

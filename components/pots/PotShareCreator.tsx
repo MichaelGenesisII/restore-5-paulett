@@ -19,7 +19,7 @@ export function PotShareCreator({ slug, title }: Props) {
   const router = useRouter();
   const [loginOpen, setLoginOpen] = useState(false);
   const destination = `/host/pots/${slug}`;
-  const trimmed = title?.trim() || "this pot";
+  const trimmed = title?.trim() || "this fundraiser";
 
   useEffect(() => {
     let cancelled = false;
@@ -78,7 +78,7 @@ export function PotShareCreator({ slug, title }: Props) {
               Are you the host?
             </p>
             <p className="mt-1.5 text-sm leading-relaxed text-pvn-cream/70">
-              Share this pot, or sign in to update the page.
+              Share this fundraiser, or sign in to update the page.
             </p>
           </div>
 
@@ -129,9 +129,9 @@ export function PotShareCreator({ slug, title }: Props) {
         open={loginOpen}
         onClose={() => setLoginOpen(false)}
         clearManageHash
-        title="Is this your pot?"
-        lead="Only the person who hosts this pot can sign in here. Use the email you used when you opened it."
-        workingLabel="Opening your pot…"
+        title="Is this your fundraiser?"
+        lead="Only the person who hosts this fundraiser can sign in here. Use the email you used when you opened it."
+        workingLabel="Opening your fundraiser…"
         onSignedIn={async () => {
           // Keep the modal busy overlay up until the route is ready.
           await goToCreator();

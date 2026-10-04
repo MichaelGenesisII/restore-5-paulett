@@ -12,7 +12,7 @@ export function HostProfileShare({
   return (
     <ShareCta
       title={name}
-      text={`${name} is raising for the restoration of 5 Paulett. Take a look at their pots.`}
+      text={`${name} is raising for the restoration of 5 Paulett. Take a look at their fundraisers.`}
       label={`Share ${name}'s profile`}
       size="lg"
       getUrl={() => `${window.location.origin}/hosts/${profileSlug}`}

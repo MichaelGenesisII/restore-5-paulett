@@ -121,7 +121,7 @@ export default async function AlumniPage({
               href="/fundraisers/create"
               className="font-nav inline-flex rounded-md bg-pvn-gold px-5 py-3 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
             >
-              Start my pot
+              Start my fundraiser
             </Link>
           </div>
         </div>

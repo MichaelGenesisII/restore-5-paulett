@@ -81,8 +81,8 @@ export function HomeHero({
       key: "pots",
       icon: IconWall,
       count: potCount,
-      label: `${formatCount(potCount)} ${potCount === 1 ? "pot" : "pots"} building`,
-      short: `${formatCount(potCount)} ${potCount === 1 ? "pot" : "pots"}`,
+      label: `${formatCount(potCount)} ${potCount === 1 ? "fundraiser" : "fundraisers"} building`,
+      short: `${formatCount(potCount)} ${potCount === 1 ? "fundraiser" : "fundraisers"}`,
     },
     {
       key: "countries",
@@ -166,7 +166,7 @@ export function HomeHero({
                 className="font-nav inline-flex items-center justify-center gap-2 rounded-md border border-pvn-gold bg-pvn-navy/35 px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-pvn-cream backdrop-blur-sm transition hover:border-pvn-gold-light hover:bg-pvn-navy/50 hover:text-pvn-gold sm:px-5 sm:text-sm"
               >
                 <IconWall className="h-4 w-4 shrink-0 text-pvn-gold" />
-                Start a pot
+                Start a fundraiser
               </Link>
               <HomeShareButton />
             </div>
@@ -276,7 +276,7 @@ export function HomeHero({
                 href="/fundraisers"
                 className="font-nav inline-flex w-full items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-pvn-gold transition hover:text-pvn-gold-light"
               >
-                Browse pots →
+                Browse fundraisers →
               </Link>
             </div>
           </aside>

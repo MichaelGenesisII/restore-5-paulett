@@ -250,7 +250,7 @@ export function HostInbox() {
             </h1>
             <p className="mt-1 text-sm leading-snug text-pvn-cream/70">
               Oldest unreplied gift messages first. Tap a card to reply on the
-              pot.
+              fundraiser.
             </p>
           </div>
           {waiting > 0 ? (
@@ -266,7 +266,7 @@ export function HostInbox() {
           title="Nothing in the queue"
           body="When someone leaves words with a gift, they land here — oldest first."
           actionHref="/host/pots"
-          actionLabel="View your pots"
+          actionLabel="View your fundraisers"
         />
       ) : (
         <>
@@ -365,7 +365,7 @@ export function HostInbox() {
                         ) : null}
 
                         <p className="font-nav mt-2 text-[0.6rem] font-bold tracking-[0.12em] text-pvn-gold uppercase opacity-0 transition duration-300 group-hover:opacity-100">
-                          Reply on pot →
+                          Reply on fundraiser →
                         </p>
                       </div>
                     </Link>

@@ -6,10 +6,10 @@ import type { PotType, RestorationCategory } from "@prisma/client";
  */
 
 /** Public pot description — only on the pot details page (not on cards). */
-export const MIN_POT_DESCRIPTION_WORDS = 25;
+export const MIN_POT_DESCRIPTION_WORDS = 3;
 
 /** Personal “your story” — only on the pot details page. */
-export const MIN_FOUNDER_STORY_WORDS = 40;
+export const MIN_FOUNDER_STORY_WORDS = 3;
 
 export function wordCount(value: string): number {
   const trimmed = value.trim();
@@ -18,8 +18,8 @@ export function wordCount(value: string): number {
 }
 
 /**
- * Empty is fine (fill later). Once someone starts typing, the copy must be
- * long enough to carry the pot details page.
+ * Empty is fine (the host fills it in later from their account). Once someone
+ * starts typing, a stray word or two should not reach the pot page.
  */
 export function optionalCopyProblem(
   value: string,
@@ -30,7 +30,7 @@ export function optionalCopyProblem(
   if (words === 0) return null;
   if (words < minWords) {
     const left = minWords - words;
-    return `${label} needs at least ${minWords} words for the pot page (${left} more). Or leave it blank and add it later.`;
+    return `${label} needs at least ${minWords} words (${left} more). Or leave it blank and add it later from your host account.`;
   }
   return null;
 }
@@ -136,11 +136,13 @@ export const restorationCategories: RestorationOption[] = [
   },
 ];
 
-/** Sensible rungs for a pot target — modest at the bottom, ambitious at the top. */
-export const POT_TARGET_PRESETS = [25_000, 50_000, 100_000, 250_000, 500_000];
+/** £5k → £100k. Anything smaller goes through the custom amount. */
+export const POT_TARGET_PRESETS = [
+  5_000_00, 10_000_00, 25_000_00, 50_000_00, 100_000_00,
+];
 
 export function potTypeLabel(value: PotType): string {
-  return potTypes.find((option) => option.value === value)?.label ?? "A pot";
+  return potTypes.find((option) => option.value === value)?.label ?? "A fundraiser";
 }
 
 export function restorationLabel(value: RestorationCategory): string {

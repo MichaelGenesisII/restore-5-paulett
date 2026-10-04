@@ -67,7 +67,7 @@ export function HostShareKit({
     >
       <CopyPotLinkButton
         slug={slug}
-        label={compact ? "Copy link" : "Copy pot link"}
+        label={compact ? "Copy link" : "Copy fundraiser link"}
         className={compact ? compactBtn : undefined}
       />
       <button
@@ -76,7 +76,7 @@ export function HostShareKit({
         aria-label={
           copied === "whatsapp"
             ? "WhatsApp message copied"
-            : "Copy WhatsApp message with pot link"
+            : "Copy WhatsApp message with fundraiser link"
         }
         className={`${quietBtn} ${compact ? compactBtn : ""}`}
       >
@@ -92,7 +92,7 @@ export function HostShareKit({
         aria-label={
           copied === "email"
             ? "Email blurb copied"
-            : "Copy email blurb with pot link"
+            : "Copy email blurb with fundraiser link"
         }
         className={`${quietBtn} ${compact ? compactBtn : ""}`}
       >

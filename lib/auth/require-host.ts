@@ -96,7 +96,7 @@ export async function requireOwnedPot(
 
   const pot = await prisma.pot.findUnique({ where: { slug } });
   if (!pot || pot.fundraiserId !== session.fundraiser.id) {
-    return NextResponse.json({ error: "Pot not found" }, { status: 404 });
+    return NextResponse.json({ error: "Fundraiser not found" }, { status: 404 });
   }
 
   return {

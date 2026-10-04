@@ -35,8 +35,8 @@ export function HomeClosing() {
           </div>
 
           <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-pvn-navy/70 sm:text-base">
-            Give today, start a pot, or share the campaign — every part of the
-            wall matters.
+            Give today, start a fundraiser, or share the campaign — every part
+            of the wall matters.
           </p>
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -51,12 +51,12 @@ export function HomeClosing() {
               href="/fundraisers/create"
               className="font-nav inline-flex rounded-md border border-pvn-navy/25 px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-pvn-navy transition hover:border-pvn-gold hover:text-pvn-gold sm:text-sm"
             >
-              Start a pot
+              Start a fundraiser
             </Link>
           </div>
 
           <p className="font-nav mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-pvn-navy/35">
-            Your pot → our house
+            Your fundraiser → our house
           </p>
         </div>
       </div>

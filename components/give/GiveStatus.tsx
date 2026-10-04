@@ -99,11 +99,11 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
         <ResultModal
           open={!announced}
           variant="success"
-          title="Your pot is open"
+          title="Your fundraiser is open"
           body={
             typeof data?.amount === "number"
-              ? `${formatTidyGbp(data.amount)} opened the pot. It is on the wall now.`
-              : "Your seed gift opened the pot. It is on the wall now."
+              ? `${formatTidyGbp(data.amount)} opened the fundraiser. It is on the wall now.`
+              : "Your seed gift opened the fundraiser. It is on the wall now."
           }
           actionLabel={null}
           onClose={() => {
@@ -120,7 +120,7 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
               }}
               className="font-nav inline-flex min-h-11 items-center justify-center rounded-md bg-pvn-gold px-5 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
             >
-              View your pot
+              View your fundraiser
             </Link>
             <Link
               href={`/host/pots/${potSlug}`}
@@ -130,7 +130,7 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
               }}
               className="font-nav inline-flex min-h-11 items-center justify-center rounded-md border border-pvn-navy/25 px-5 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:border-pvn-gold hover:text-pvn-gold"
             >
-              Manage this pot
+              Manage this fundraiser
             </Link>
           </div>
         </ResultModal>
@@ -145,11 +145,11 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
         body={
           typeof data?.amount === "number"
             ? potPath && typeof data.potTotalRaised === "number"
-              ? `${formatTidyGbp(data.amount)} is in. This pot now stands at ${formatWholeGbp(data.potTotalRaised)}.`
+              ? `${formatTidyGbp(data.amount)} is in. This fundraiser now stands at ${formatWholeGbp(data.potTotalRaised)}.`
               : `${formatTidyGbp(data.amount)} is in the stonework. The total now stands at ${formatWholeGbp(data?.buildingFundTotalRaised ?? 0)}.`
             : `Your gift is in the stonework. The total now stands at ${formatWholeGbp(data?.buildingFundTotalRaised ?? 0)}.`
         }
-        actionLabel={potPath ? "Back to the pot" : null}
+        actionLabel={potPath ? "Back to the fundraiser" : null}
         onClose={() => {
           setAnnounced(true);
           clearProcessingUrl();
@@ -165,7 +165,7 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
               }}
               className="font-nav inline-flex min-h-11 items-center justify-center rounded-md bg-pvn-gold px-5 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
             >
-              Start a pot
+              Start a fundraiser
             </Link>
             <Link
               href="/the-wall"

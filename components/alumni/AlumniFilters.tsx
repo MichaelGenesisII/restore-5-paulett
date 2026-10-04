@@ -52,7 +52,7 @@ export function AlumniFilters({
         }}
       >
         <label className="sr-only" htmlFor="alumni-search">
-          Search alumni pots
+          Search alumni fundraisers
         </label>
         <input
           id="alumni-search"

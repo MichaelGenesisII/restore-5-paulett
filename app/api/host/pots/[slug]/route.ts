@@ -10,7 +10,7 @@ import {
   MIN_POT_DESCRIPTION_WORDS,
   optionalCopyProblem,
 } from "@/lib/pots";
-import { assertDonationPence } from "@/lib/money";
+import { assertPotTargetPence } from "@/lib/money";
 import { prisma } from "@/lib/prisma";
 import { normalizeSlug } from "@/lib/slug";
 import { isVisitorError } from "@/lib/visitor-safe";
@@ -41,13 +41,13 @@ export async function GET(
   try {
     const payload = await getHostPotManageCached(owned.pot.id);
     if (!payload) {
-      return NextResponse.json({ error: "Pot not found" }, { status: 404 });
+      return NextResponse.json({ error: "Fundraiser not found" }, { status: 404 });
     }
     return NextResponse.json(payload);
   } catch (error) {
     console.error("Host pot manage failed", error);
     return NextResponse.json(
-      { error: "Could not load this pot." },
+      { error: "Could not load this fundraiser." },
       { status: 500 },
     );
   }
@@ -125,7 +125,7 @@ export async function PATCH(
       });
       if (redirectHit && redirectHit.potId !== owned.pot.id) {
         return NextResponse.json(
-          { error: "That link is reserved by another pot. Try another." },
+          { error: "That link is reserved by another fundraiser. Try another." },
           { status: 409 },
         );
       }
@@ -139,7 +139,7 @@ export async function PATCH(
     const title = optionalString(input.title);
     if (!title || title.length < 3) {
       return NextResponse.json(
-        { error: "The pot needs a title of at least 3 characters." },
+        { error: "The fundraiser needs a title of at least 3 characters." },
         { status: 400 },
       );
     }
@@ -197,7 +197,7 @@ export async function PATCH(
     const type = optionalString(input.type);
     if (!type || !POT_TYPES.has(type)) {
       return NextResponse.json(
-        { error: "Choose a valid pot type." },
+        { error: "Choose a valid fundraiser type." },
         { status: 400 },
       );
     }
@@ -206,7 +206,7 @@ export async function PATCH(
 
   if ("targetAmountPence" in input || "targetAmount" in input) {
     try {
-      data.targetAmount = assertDonationPence(
+      data.targetAmount = assertPotTargetPence(
         input.targetAmountPence ?? input.targetAmount,
       );
     } catch (error) {
@@ -230,7 +230,7 @@ export async function PATCH(
         return NextResponse.json(
           {
             error:
-              "This pot opens after the first seed gift clears — it cannot be activated by hand.",
+              "This fundraiser opens after the first seed gift clears — it cannot be activated by hand.",
           },
           { status: 400 },
         );

@@ -84,25 +84,25 @@ export function statusChangeCopy(to: PotLifecycleStatus): {
   switch (to) {
     case "PAUSED":
       return {
-        title: "Pause this pot?",
+        title: "Pause this fundraiser?",
         body: "The story stays visible, but gifts pause and it leaves the browse list. You can resume anytime.",
-        confirmLabel: "Pause pot",
+        confirmLabel: "Pause fundraiser",
       };
     case "CLOSED":
       return {
-        title: "Close this pot?",
+        title: "Close this fundraiser?",
         body: "Visitors can still read the story as finished. No new gifts. You can reopen later if needed.",
-        confirmLabel: "Close pot",
+        confirmLabel: "Close fundraiser",
       };
     case "DISABLED":
       return {
-        title: "Hide this pot?",
+        title: "Hide this fundraiser?",
         body: "The public page will 404 and it will not appear on browse. Resume later to bring it back.",
-        confirmLabel: "Hide pot",
+        confirmLabel: "Hide fundraiser",
       };
     case "ACTIVE":
       return {
-        title: "Make this pot live again?",
+        title: "Make this fundraiser live again?",
         body: "It will accept gifts and appear on browse once more.",
         confirmLabel: "Go live",
       };

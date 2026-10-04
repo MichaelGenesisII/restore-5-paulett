@@ -50,14 +50,14 @@ export default function TermsPage() {
             </>,
             <>
               <strong className="font-semibold text-pvn-navy">
-                Start my pot.
+                Start my fundraiser.
               </strong>{" "}
               Set a target and ask your people to help build your part of the
               wall.
             </>,
             <>
               <strong className="font-semibold text-pvn-navy">
-                Join a pot.
+                Join a fundraiser.
               </strong>{" "}
               Build alongside your family, your ministry, your alumni group or
               your friends.
@@ -71,9 +71,9 @@ export default function TermsPage() {
           items={[
             <>
               Every gift funds the restoration of 5 Paulett Avenue and the work
-              of the church there. Money given through a pot counts toward that
-              pot and toward the same single restoration fund. Your pot, our
-              house.
+              of the church there. Money given through a fundraiser counts
+              toward that fundraiser and toward the same single restoration
+              fund. Your fundraiser, our house.
             </>,
             <>
               Gifts are voluntary. Nothing is sold on this site, and you receive
@@ -113,12 +113,12 @@ export default function TermsPage() {
 
       <LegalSection title="Taking your part of the wall">
         <p>
-          A pot is your part of the wall — a page carrying your name, your
+          A fundraiser is your part of the wall — a page carrying your name, your
           story, your photograph and your target, which you share with your own
           circle. An individual, a family, an alumni group, a ministry or any
           other group can hold one.
         </p>
-        <p>In starting a pot you agree that:</p>
+        <p>In starting a fundraiser you agree that:</p>
         <LegalList
           items={[
             <>
@@ -127,15 +127,15 @@ export default function TermsPage() {
               picture of someone else.
             </>,
             <>
-              Money given to your pot goes directly to the church. It never
+              Money given to your fundraiser goes directly to the church. It never
               passes through your hands, and you cannot withdraw it.
             </>,
             <>
-              A pot is for the restoration and nothing else. It may not be used
+              A fundraiser is for the restoration and nothing else. It may not be used
               to promote a business, a political campaign, or another cause.
             </>,
             <>
-              We may edit or remove a pot that breaks these terms, misleads
+              We may edit or remove a fundraiser that breaks these terms, misleads
               people, or brings the restoration into disrepute. Where we can, we
               will tell you why first.
             </>,
@@ -154,7 +154,7 @@ export default function TermsPage() {
           many people building their part.
         </p>
         <p>
-          Your name appears against a pot unless you choose to give anonymously,
+          Your name appears against a fundraiser unless you choose to give anonymously,
           in which case only the amount is shown. You can ask us to change that
           at any time.
         </p>

@@ -12,7 +12,7 @@ export default function NotFound() {
       centered
       kicker="404"
       title="This room isn't on the plans."
-      description="That address isn't part of 5 Paulett yet. Head home, browse the pots, or give straight to the restoration."
+      description="That address isn't part of 5 Paulett yet. Head home, browse the fundraisers, or give straight to the restoration."
     >
       <Link
         href="/"
@@ -24,7 +24,7 @@ export default function NotFound() {
         href="/fundraisers"
         className="rounded-full border border-pvn-navy/15 px-5 py-2.5 text-sm font-medium text-pvn-navy transition hover:border-pvn-navy/30 hover:bg-pvn-navy/5"
       >
-        Browse pots
+        Browse fundraisers
       </Link>
       <Link
         href="/give"

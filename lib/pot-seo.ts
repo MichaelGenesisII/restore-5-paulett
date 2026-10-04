@@ -15,7 +15,7 @@ export function potMetaDescription(pot: PublicPot): string {
   const raised = formatWholeGbp(pot.totalRaised);
   const target = formatWholeGbp(pot.targetAmount);
   return truncateMeta(
-    `${pot.title} — a pot hosted by ${host}. ${raised} of ${target} toward restoring 5 Paulett Avenue with PVN Belfast.`,
+    `${pot.title} — a fundraiser hosted by ${host}. ${raised} of ${target} toward restoring 5 Paulett Avenue with PVN Belfast.`,
   );
 }
 

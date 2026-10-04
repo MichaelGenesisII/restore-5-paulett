@@ -307,10 +307,10 @@ export function AdminHostsList() {
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0 max-w-xl">
             <p className="font-nav text-[0.6rem] font-bold tracking-[0.18em] text-pvn-gold uppercase">
-              Hosts
+              People
             </p>
             <h1 className="font-display mt-0.5 text-xl font-semibold text-balance sm:text-2xl">
-              Fundraisers
+              Hosts
             </h1>
             <p className="mt-1 text-sm leading-snug text-pvn-cream/70">
               {total} {total === 1 ? "host" : "hosts"}
@@ -331,7 +331,7 @@ export function AdminHostsList() {
               href="/admin/pots"
               className="font-nav inline-flex min-h-9 items-center rounded-md bg-pvn-gold px-3.5 text-[0.65rem] font-bold tracking-[0.12em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
             >
-              Pots
+              Fundraisers
             </Link>
             <Link
               href="/admin"
@@ -418,7 +418,7 @@ export function AdminHostsList() {
                 No hosts yet
               </h2>
               <p className="mt-2 max-w-sm text-sm leading-relaxed text-pvn-navy/60">
-                Hosts appear here when someone creates a pot.
+                Hosts appear here when someone creates a fundraiser.
               </p>
               <Link
                 href="/admin"
@@ -433,12 +433,12 @@ export function AdminHostsList() {
         <>
           <div className="mt-6 overflow-x-auto border border-pvn-navy/10 bg-white">
             <div
-              className="font-nav grid min-w-[44rem] grid-cols-[minmax(11rem,1.2fr)_minmax(10rem,1.1fr)_4rem_5.5rem_2rem] gap-3 border-b border-pvn-navy/10 bg-pvn-cream/60 px-3 py-2.5 text-[0.6rem] font-bold tracking-[0.14em] text-pvn-navy/50 uppercase sm:px-4"
+              className="font-nav grid min-w-[44rem] grid-cols-[minmax(11rem,1.2fr)_minmax(10rem,1.1fr)_5rem_5.5rem_2rem] gap-3 border-b border-pvn-navy/10 bg-pvn-cream/60 px-3 py-2.5 text-[0.6rem] font-bold tracking-[0.14em] text-pvn-navy/50 uppercase sm:px-4"
               aria-hidden
             >
               <span>Name</span>
               <span>Email</span>
-              <span>Pots</span>
+              <span className="min-w-0 truncate">Fundraisers</span>
               <span>Raised</span>
               <span className="sr-only">Open</span>
             </div>
@@ -447,7 +447,7 @@ export function AdminHostsList() {
                 <li key={h.id}>
                   <Link
                     href={`/admin/hosts/${h.id}`}
-                    className="group grid grid-cols-[minmax(11rem,1.2fr)_minmax(10rem,1.1fr)_4rem_5.5rem_2rem] items-center gap-3 px-3 py-3 transition hover:bg-pvn-cream/50 sm:px-4"
+                    className="group grid grid-cols-[minmax(11rem,1.2fr)_minmax(10rem,1.1fr)_5rem_5.5rem_2rem] items-center gap-3 px-3 py-3 transition hover:bg-pvn-cream/50 sm:px-4"
                   >
                     <span className="flex min-w-0 items-center gap-2.5">
                       <AdminImageFrame

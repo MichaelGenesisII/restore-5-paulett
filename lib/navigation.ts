@@ -25,8 +25,8 @@ export const exploreNav: NavItem[] = [
 export const giveNav: NavItem[] = [
   { href: "/give", label: "Give now" },
   { href: "/the-wall", label: "The Wall" },
-  { href: "/fundraisers/create", label: "Start a pot" },
-  { href: "/fundraisers", label: "Browse pots" },
+  { href: "/fundraisers/create", label: "Start a fundraiser" },
+  { href: "/fundraisers", label: "Browse fundraisers" },
 ];
 
 /** Footer Login hover menu under Ways to build. */

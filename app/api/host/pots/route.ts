@@ -4,7 +4,7 @@ import {
   isAuthFailure,
   requireHost,
 } from "@/lib/auth/require-host";
-import { assertDonationPence } from "@/lib/money";
+import { assertPotTargetPence } from "@/lib/money";
 import {
   MIN_FOUNDER_STORY_WORDS,
   MIN_POT_DESCRIPTION_WORDS,
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
   const storyProblem = optionalCopyProblem(
     story ?? "",
     MIN_POT_DESCRIPTION_WORDS,
-    "The pot description",
+    "The fundraiser description",
   );
   if (storyProblem) {
     return NextResponse.json({ error: storyProblem }, { status: 400 });
@@ -95,12 +95,12 @@ export async function POST(request: Request) {
     );
   }
   if (!type || !POT_TYPES.has(type)) {
-    return NextResponse.json({ error: "Invalid pot type." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid fundraiser type." }, { status: 400 });
   }
 
   let targetAmount: number;
   try {
-    targetAmount = assertDonationPence(data.targetAmountPence);
+    targetAmount = assertPotTargetPence(data.targetAmountPence);
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Choose a valid target amount.";
@@ -173,7 +173,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         pot,
-        message: "Pot ready. Seed with £25 or more to open it.",
+        message: "Fundraiser ready. Seed with £25 or more to open it.",
       },
       { status: 201 },
     );
@@ -183,7 +183,7 @@ export async function POST(request: Request) {
       {
         error: isVisitorError(error)
           ? error.message
-          : "We could not create your pot. Please try again.",
+          : "We could not create your fundraiser. Please try again.",
       },
       { status: 500 },
     );

@@ -108,7 +108,7 @@ export function PotMorePotsFallback() {
     <section
       className="border-t border-pvn-navy/10 bg-pvn-cream py-10 sm:py-12"
       aria-busy="true"
-      aria-label="Loading other pots"
+      aria-label="Loading other fundraisers"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="h-3 w-36 animate-pulse rounded-sm bg-pvn-navy/10" />

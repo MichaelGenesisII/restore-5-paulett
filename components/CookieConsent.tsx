@@ -46,8 +46,8 @@ const categories: CategoryRow[] = [
   {
     key: "analytics",
     name: "Understanding the rebuild",
-    body: "Counts visits to pot pages (no names) so hosts can see whether their link is being opened, and which share routes bring people.",
-    inUse: "In use on pot pages when you allow this. Off by default until you say yes.",
+    body: "Counts visits to fundraiser pages (no names) so hosts can see whether their link is being opened, and which share routes bring people.",
+    inUse: "In use on fundraiser pages when you allow this. Off by default until you say yes.",
   },
   {
     key: "marketing",

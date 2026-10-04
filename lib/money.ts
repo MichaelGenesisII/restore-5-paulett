@@ -68,6 +68,34 @@ export function poundsToPence(input: string): number | null {
   return Math.round(value * 100);
 }
 
+/**
+ * Pot targets carry no business cap. This is only the ceiling of the Int
+ * column they are stored in (~£21.4m), rounded down.
+ */
+export const MAX_POT_TARGET_PENCE = 21_000_000_00;
+
+export function isValidPotTargetPence(value: number | null): value is number {
+  return (
+    value !== null &&
+    Number.isInteger(value) &&
+    value >= MIN_DONATION_PENCE &&
+    value <= MAX_POT_TARGET_PENCE
+  );
+}
+
+export function assertPotTargetPence(value: unknown): number {
+  if (!isPositivePence(value)) {
+    throw new Error("Enter a valid target amount.");
+  }
+  if (value < MIN_DONATION_PENCE) {
+    throw new Error("The smallest target is £1.");
+  }
+  if (value > MAX_POT_TARGET_PENCE) {
+    throw new Error("That target is larger than we can hold.");
+  }
+  return value;
+}
+
 /** Building fund campaign target — higher ceiling than a single gift. */
 export const MIN_BUILDING_FUND_TARGET_PENCE = 10_000_00; // £10,000
 export const MAX_BUILDING_FUND_TARGET_PENCE = 100_000_000_00; // £100m

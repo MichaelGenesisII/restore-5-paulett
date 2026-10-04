@@ -36,8 +36,8 @@ export async function AlumniHeroAside() {
           </p>
           <p className="mt-1 truncate text-xs leading-snug text-pvn-cream/85">
             {alumniPotCount > 0
-              ? `${alumniPotCount} alumni ${alumniPotCount === 1 ? "pot" : "pots"} rising`
-              : "No alumni pot open yet"}
+              ? `${alumniPotCount} alumni ${alumniPotCount === 1 ? "fundraiser" : "fundraisers"} rising`
+              : "No alumni fundraiser open yet"}
           </p>
         </div>
         <Link
@@ -54,13 +54,13 @@ export async function AlumniHeroAside() {
         </p>
         <p className="font-display mt-2 text-2xl leading-tight font-semibold tracking-tight text-pvn-cream sm:text-3xl">
           {alumniPotCount > 0
-            ? `${alumniPotCount} alumni ${alumniPotCount === 1 ? "pot" : "pots"}`
+            ? `${alumniPotCount} alumni ${alumniPotCount === 1 ? "fundraiser" : "fundraisers"}`
             : "The wall is open"}
         </p>
         <p className="mt-2 text-sm leading-relaxed text-pvn-cream/70">
           {alumniPotCount > 0
             ? "Already rising — by year, city and ministry. Find your people, or name a section of your own."
-            : "No alumni pot has opened yet. Be the first to name a section for your year, city or ministry."}
+            : "No alumni fundraiser has opened yet. Be the first to name a section for your year, city or ministry."}
         </p>
         <p className="font-nav mt-3 text-[0.65rem] font-semibold tracking-[0.12em] text-pvn-cream/40 uppercase">
           {scatteredTo.slice(0, 5).join(" · ")}
@@ -139,8 +139,8 @@ export async function AlumniReconnect({ city, ministry, search }: ReconnectProps
             Find your people on the wall
           </h2>
           <p className="mt-4 text-base leading-relaxed text-pvn-navy/75 text-pretty">
-            Alumni pots and pots run by alumni. Filter by city or ministry, or
-            search for a name you still know.
+            Alumni fundraisers and fundraisers run by alumni. Filter by city or
+            ministry, or search for a name you still know.
           </p>
         </div>
 
@@ -163,14 +163,14 @@ export async function AlumniReconnect({ city, ministry, search }: ReconnectProps
             </p>
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-pvn-navy/70">
               {filtered
-                ? "Clear the filters, or be the first to open a pot for that city or ministry."
+                ? "Clear the filters, or be the first to open a fundraiser for that city or ministry."
                 : "Be the first to name a section for your year, your city, or your ministry. The people who already know you will follow."}
             </p>
             <Link
               href="/fundraisers/create"
               className="font-nav mt-6 inline-flex rounded-md bg-pvn-gold px-5 py-3 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
             >
-              Start an alumni pot →
+              Start an alumni fundraiser →
             </Link>
           </div>
         ) : (
@@ -191,7 +191,7 @@ export function AlumniReconnectFallback() {
       id="reconnect"
       className="border-t border-pvn-navy/5 bg-pvn-cream pt-14 pb-14 sm:pt-20 sm:pb-20"
       aria-busy="true"
-      aria-label="Searching alumni pots"
+      aria-label="Searching alumni fundraisers"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="max-w-2xl">

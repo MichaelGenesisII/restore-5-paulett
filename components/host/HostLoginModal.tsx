@@ -24,7 +24,7 @@ export function HostLoginModal({
   onClose,
   onSignedIn,
   title = "Sign in as host",
-  lead = "Use the email and password from when you created your pot.",
+  lead = "Use the email and password from when you created your fundraiser.",
   workingLabel,
   clearManageHash = false,
 }: HostLoginModalProps) {
@@ -76,7 +76,7 @@ export function HostLoginModal({
       <div className="px-5 py-6 sm:px-6">
         <div className="mb-5">
           <p className="font-nav text-[0.65rem] font-bold tracking-[0.18em] text-pvn-gold uppercase">
-            Pot host
+            Fundraiser host
           </p>
           <h2
             id="host-login-title"

@@ -17,6 +17,7 @@ import { hostFetch } from "@/lib/host-client";
 import {
   formatTidyGbp,
   formatWholeGbp,
+  isValidPotTargetPence,
   MAX_DONATION_PENCE,
   MIN_POT_SEED_PENCE,
   poundsToPence,
@@ -41,6 +42,13 @@ const COVER_MAX = 5 * 1024 * 1024;
 const COVER_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const TITLE_MAX = 80;
 
+function copyHint(value: string, minWords: number): string {
+  const words = wordCount(value);
+  if (words === 0) return `optional · ${minWords}+ words if written`;
+  if (words < minWords) return `optional · ${minWords - words} more`;
+  return `optional · ${words} words`;
+}
+
 /**
  * Compact authenticated pot create — one page, then seed CTA.
  * Public visitors use CreatePotWizard at /fundraisers/create instead
@@ -55,7 +63,7 @@ export function HostNewPot() {
   const [title, setTitle] = useState("");
   const [story, setStory] = useState("");
   const [founderStory, setFounderStory] = useState("");
-  const [preset, setPreset] = useState<number | null>(50_000);
+  const [preset, setPreset] = useState<number | null>(null);
   const [custom, setCustom] = useState("");
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState("");
@@ -150,21 +158,17 @@ export function HostNewPot() {
 
     const trimmedTitle = title.trim();
     if (trimmedTitle.length < 3) {
-      toast.error("Name your pot", "Use at least 3 characters.");
+      toast.error("Name your fundraiser", "Use at least 3 characters.");
       return;
     }
-    if (
-      targetPence === null ||
-      targetPence < 100 ||
-      targetPence > MAX_DONATION_PENCE
-    ) {
+    if (!isValidPotTargetPence(targetPence)) {
       toast.error("Choose a target", "Pick a preset or enter a valid amount.");
       return;
     }
     const storyProblem = optionalCopyProblem(
       story,
       MIN_POT_DESCRIPTION_WORDS,
-      "The pot description",
+      "The fundraiser description",
     );
     if (storyProblem) {
       toast.error("Description", storyProblem);
@@ -228,17 +232,17 @@ export function HostNewPot() {
           visitorSafeApiError(
             response.status,
             json.error,
-            "We could not create your pot.",
+            "We could not create your fundraiser.",
           ),
         );
       }
 
       setCreated({ slug: json.pot.slug, title: json.pot.title });
-      toast.success("Pot created", "Seed it with £25 or more to go live.");
+      toast.success("Fundraiser created", "Seed it with £25 or more to go live.");
       await refresh();
     } catch (err) {
       toast.error(
-        "Could not create pot",
+        "Could not create fundraiser",
         visitorSafeMessage(
           err instanceof Error ? err.message : null,
           "Please try again.",
@@ -309,8 +313,8 @@ export function HostNewPot() {
           {created.title}
         </h1>
         <p className="mt-3 max-w-lg text-sm leading-relaxed text-pvn-navy/65">
-          Your pot is ready but not live yet. Lay the first stone (£25+) to open
-          it, or come back later from Manage.
+          Your fundraiser is ready but not live yet. Lay the first stone (£25+)
+          to open it, or come back later from Manage.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-3">
@@ -319,7 +323,7 @@ export function HostNewPot() {
             href={`/host/pots/${created.slug}`}
             className="font-nav inline-flex min-h-10 items-center rounded-md border border-pvn-navy/15 px-4 text-[0.65rem] font-bold tracking-[0.14em] text-pvn-navy/70 uppercase transition hover:border-pvn-navy/30 hover:text-pvn-navy"
           >
-            Manage pot
+            Manage fundraiser
           </Link>
           <Link
             href={`/pots/${created.slug}`}
@@ -331,7 +335,7 @@ export function HostNewPot() {
 
         <section className="mt-10 max-w-md border border-pvn-navy/10 bg-white/60 p-5">
           <h2 className="font-display text-xl font-semibold text-pvn-navy">
-            Seed this pot
+            Seed this fundraiser
           </h2>
           <p className="mt-1 text-sm text-pvn-navy/60">
             Minimum {formatWholeGbp(MIN_POT_SEED_PENCE)}. Card checkout opens
@@ -384,7 +388,7 @@ export function HostNewPot() {
               ? "Starting checkout…"
               : seedPence !== null
                 ? `Seed with ${formatTidyGbp(seedPence)}`
-                : "Seed pot"}
+                : "Seed fundraiser"}
           </button>
         </section>
       </div>
@@ -397,14 +401,14 @@ export function HostNewPot() {
         href="/host/pots"
         className="font-nav text-[0.65rem] font-bold tracking-[0.12em] text-pvn-navy/50 uppercase transition hover:text-pvn-gold"
       >
-        ← Your pots
+        ← Your fundraisers
       </Link>
       <h1 className="font-display mt-2 text-3xl font-semibold text-pvn-navy sm:text-4xl">
-        Start a pot
+        Start a fundraiser
       </h1>
       <p className="mt-2 max-w-xl text-sm leading-relaxed text-pvn-navy/65">
-        One short form for signed-in hosts. Description and story can wait —
-        seed after create to go live.
+        Only a name and a target are needed. Description, story and cover are
+        optional — add them later from Manage. Seed after create to go live.
       </p>
 
       <form onSubmit={onSubmit} className="mt-8 max-w-xl space-y-6">
@@ -440,12 +444,12 @@ export function HostNewPot() {
         </fieldset>
 
         <label className="block">
-          <span className={labelClass}>Pot name</span>
+          <span className={labelClass}>Fundraiser name</span>
           <input
             className={`${fieldClass} mt-1.5`}
             value={title}
             maxLength={TITLE_MAX}
-            placeholder={activeType?.placeholder ?? "Name your pot"}
+            placeholder={activeType?.placeholder ?? "Name your fundraiser"}
             onChange={(e) => {
               markStarted();
               setTitle(e.target.value);
@@ -493,13 +497,16 @@ export function HostNewPot() {
               }}
             />
           </label>
+          <p className="mt-2 text-xs text-pvn-navy/50">
+            Aiming lower? Type any amount from £1 — no upper limit.
+          </p>
         </fieldset>
 
         <label className="block">
           <span className={labelClass}>
             Description{" "}
             <span className="normal-case tracking-normal text-pvn-navy/40">
-              (optional · {wordCount(story)}/{MIN_POT_DESCRIPTION_WORDS}+ words)
+              ({copyHint(story, MIN_POT_DESCRIPTION_WORDS)})
             </span>
           </span>
           <textarea
@@ -509,7 +516,7 @@ export function HostNewPot() {
               markStarted();
               setStory(e.target.value);
             }}
-            placeholder="What is this pot for?"
+            placeholder="What is this fundraiser for?"
           />
         </label>
 
@@ -517,8 +524,7 @@ export function HostNewPot() {
           <span className={labelClass}>
             Your story{" "}
             <span className="normal-case tracking-normal text-pvn-navy/40">
-              (optional · {wordCount(founderStory)}/{MIN_FOUNDER_STORY_WORDS}+
-              words)
+              ({copyHint(founderStory, MIN_FOUNDER_STORY_WORDS)})
             </span>
           </span>
           <textarea
@@ -533,7 +539,12 @@ export function HostNewPot() {
         </label>
 
         <div>
-          <p className={labelClass}>Cover image (landscape)</p>
+          <p className={labelClass}>
+            Cover image{" "}
+            <span className="normal-case tracking-normal text-pvn-navy/40">
+              (optional · landscape)
+            </span>
+          </p>
           <input
             ref={coverInputRef}
             type="file"
@@ -591,7 +602,7 @@ export function HostNewPot() {
             disabled={pending}
             className="font-nav inline-flex min-h-11 items-center rounded-md bg-pvn-gold px-5 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light disabled:opacity-50"
           >
-            {pending ? "Creating…" : "Create pot"}
+            {pending ? "Creating…" : "Create fundraiser"}
           </button>
           <button
             type="button"

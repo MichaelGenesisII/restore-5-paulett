@@ -5,7 +5,7 @@ import { organisation, socialLinks } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Talk to the team behind Restore 5 Paulett — giving and Gift Aid, pots, alumni, heritage and community, or press.",
+    "Talk to the team behind Restore 5 Paulett — giving and Gift Aid, fundraisers, alumni, heritage and community, or press.",
   alternates: { canonical: "/contact" },
 };
 
@@ -45,7 +45,7 @@ export default function ContactPage() {
             Talk to us
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-pvn-cream/80 text-pretty sm:text-lg">
-            Whether you are giving, building a pot, coming back after years
+            Whether you are giving, building a fundraiser, coming back after years
             away, or simply curious about the building on the corner — there is
             someone here to answer you.
           </p>

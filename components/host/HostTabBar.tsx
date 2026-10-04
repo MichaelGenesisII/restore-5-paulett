@@ -52,7 +52,7 @@ export function HostTabBar({
         },
         {
           href: "/host/pots",
-          label: "Your pots",
+          label: "Fundraisers",
           Icon: IconWall,
           center: true,
           active:
@@ -76,7 +76,7 @@ export function HostTabBar({
         },
         primaryAction: {
           href: "/host/pots/new",
-          label: "Start a pot",
+          label: "Start a fundraiser",
           Icon: IconWall,
         },
         sections: [

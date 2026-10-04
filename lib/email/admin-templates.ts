@@ -61,7 +61,7 @@ export function adminInviteEmail(input: {
       bodyHtml: [
         p("Hello,"),
         p(
-          `<strong>${inviter}</strong> — an admin at <strong>PVN Belfast</strong> — has invited you onto the <strong>Operations Desk</strong> for <strong>Restore 5 Paulett</strong>: house-wide gifts, pots and hosts, inbox, exports, and the quiet work that keeps the campaign honest.`,
+          `<strong>${inviter}</strong> — an admin at <strong>PVN Belfast</strong> — has invited you onto the <strong>Operations Desk</strong> for <strong>Restore 5 Paulett</strong>: house-wide gifts, fundraisers and hosts, inbox, exports, and the quiet work that keeps the campaign honest.`,
         ),
         p(
           "This is staff access only — not Host home, and not a public page. It is the admin desk behind the restoration.",
@@ -125,7 +125,7 @@ export function adminPasswordResetEmail(input: {
       cta: { label: "Enter Operations Desk", href: adminUrl },
       secondaryCta: { label: "Change password", href: settingsUrl },
       footnote:
-        "Admin email · Restore 5 Paulett · PVN Belfast. This is not a pot-host password reset.",
+        "Admin email · Restore 5 Paulett · PVN Belfast. This is not a fundraiser host password reset.",
     }),
   };
 }

@@ -18,8 +18,8 @@ const reviewDue = "26 March 2027";
 const working = [
   "Every page can be reached and used with a keyboard alone, and the focus outline stays visible as you move.",
   "A “Skip to content” link appears when focused, so you can jump past the main navigation.",
-  "Animations stop for anyone whose device asks for reduced motion, including the moving row of pots.",
-  "The home pot row has an explicit Pause control as well as pausing on hover.",
+  "Animations stop for anyone whose device asks for reduced motion, including the moving row of fundraisers.",
+  "The home fundraiser row has an explicit Pause control as well as pausing on hover.",
   "Text is real text, never an image of text, so it survives being zoomed to 200% or restyled by your browser.",
   "Photographs carry descriptions, and purely decorative shapes are hidden from screen readers rather than read aloud.",
   "Form fields have permanent visible labels, not placeholder text that disappears the moment you type.",

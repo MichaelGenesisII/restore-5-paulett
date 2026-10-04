@@ -106,7 +106,7 @@ function IconPotsEmpty({ className }: { className?: string }) {
 function AdminPotsSkeleton() {
   return (
     <div aria-busy="true" aria-live="polite">
-      <span className="sr-only">Loading pots…</span>
+      <span className="sr-only">Loading fundraisers…</span>
       <div className="relative overflow-hidden rounded-sm bg-pvn-navy px-4 py-4 sm:px-6 sm:py-5">
         <div className="h-2.5 w-12 animate-pulse rounded-sm bg-pvn-cream/15" />
         <div className="mt-2 h-7 w-28 animate-pulse rounded-sm bg-pvn-cream/20" />
@@ -207,7 +207,7 @@ function AdminPotsListInner() {
           visitorSafeApiError(
             response.status,
             json.error,
-            "We could not load pots.",
+            "We could not load fundraisers.",
           ),
         );
       }
@@ -251,7 +251,7 @@ function AdminPotsListInner() {
     void load(1, status, type, q, pageSize, soft).catch((err) => {
       if (cancelled) return;
       toast.error(
-        "Pots unavailable",
+        "Fundraisers unavailable",
         visitorSafeMessage(
           err instanceof Error ? err.message : null,
           "Please try again.",
@@ -282,7 +282,7 @@ function AdminPotsListInner() {
     if (nextPage < 1 || nextPage > totalPages) return;
     void load(nextPage, status, type, q, pageSize, true).catch((err) => {
       toast.error(
-        "Pots unavailable",
+        "Fundraisers unavailable",
         visitorSafeMessage(
           err instanceof Error ? err.message : null,
           "Please try again.",
@@ -296,7 +296,7 @@ function AdminPotsListInner() {
     setPageSize(size);
     void load(1, status, type, q, size, true).catch((err) => {
       toast.error(
-        "Pots unavailable",
+        "Fundraisers unavailable",
         visitorSafeMessage(
           err instanceof Error ? err.message : null,
           "Please try again.",
@@ -338,13 +338,13 @@ function AdminPotsListInner() {
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0 max-w-xl">
             <p className="font-nav text-[0.6rem] font-bold tracking-[0.18em] text-pvn-gold uppercase">
-              Pots
+              Fundraisers
             </p>
             <h1 className="font-display mt-0.5 text-xl font-semibold text-balance sm:text-2xl">
-              {pendingCount > 0 ? "Needs seed" : "All pots"}
+              {pendingCount > 0 ? "Needs seed" : "All fundraisers"}
             </h1>
             <p className="mt-1 text-sm leading-snug text-pvn-cream/70">
-              {total} {total === 1 ? "pot" : "pots"}
+              {total} {total === 1 ? "fundraiser" : "fundraisers"}
               {liveCount > 0 ? (
                 <>
                   <span className="text-pvn-cream/30"> · </span>
@@ -402,7 +402,7 @@ function AdminPotsListInner() {
 
       <nav
         className="mt-6 flex gap-1 overflow-x-auto border-b border-pvn-navy/10 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        aria-label="Pot status"
+        aria-label="Fundraiser status"
       >
         {STATUS_TABS.map((t) => {
           const active = status === t.id;
@@ -471,7 +471,7 @@ function AdminPotsListInner() {
           {filtersActive ? (
             <>
               <h2 className="font-display mt-5 text-2xl font-semibold text-pvn-navy">
-                No matching pots
+                No matching fundraisers
               </h2>
               <p className="mt-2 max-w-sm text-sm leading-relaxed text-pvn-navy/60">
                 Nothing matches this status, type, or search.
@@ -487,10 +487,10 @@ function AdminPotsListInner() {
           ) : (
             <>
               <h2 className="font-display mt-5 text-2xl font-semibold text-pvn-navy">
-                No pots yet
+                No fundraisers yet
               </h2>
               <p className="mt-2 max-w-sm text-sm leading-relaxed text-pvn-navy/60">
-                When hosts create pots, they will show up here for moderation.
+                When hosts create fundraisers, they will show up here for moderation.
               </p>
               <Link
                 href="/admin"
@@ -508,7 +508,7 @@ function AdminPotsListInner() {
               className="font-nav grid min-w-[44rem] grid-cols-[minmax(12rem,1.4fr)_6.5rem_5.5rem_minmax(7rem,0.9fr)_2rem] gap-3 border-b border-pvn-navy/10 bg-pvn-cream/60 px-3 py-2.5 text-[0.6rem] font-bold tracking-[0.14em] text-pvn-navy/50 uppercase sm:px-4"
               aria-hidden
             >
-              <span>Pot</span>
+              <span>Fundraiser</span>
               <span>Status</span>
               <span>Raised</span>
               <span>Host</span>

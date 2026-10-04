@@ -49,18 +49,18 @@ export async function FundraisersGrid({ type, search, page }: Props) {
       <div className="mt-10 border border-dashed border-pvn-navy/20 bg-white/45 px-6 py-14 text-center">
         <IconPeople className="mx-auto h-8 w-8 text-pvn-gold" />
         <h2 className="font-display mt-4 text-2xl font-semibold text-pvn-navy">
-          {filtered ? "No pot matches that yet" : "No pot found yet"}
+          {filtered ? "No fundraiser matches that yet" : "No fundraiser found yet"}
         </h2>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-pvn-navy/65">
           {filtered
-            ? "Clear the search, or be the first to open a pot for that story."
+            ? "Clear the search, or be the first to open a fundraiser for that story."
             : "Be the first to name a section for your family, ministry, year or friends."}
         </p>
         <Link
           href="/fundraisers/create"
           className="font-nav mt-6 inline-flex items-center gap-2 rounded-md bg-pvn-gold px-5 py-3 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
         >
-          Start a pot <span aria-hidden>→</span>
+          Start a fundraiser <span aria-hidden>→</span>
         </Link>
       </div>
     );
@@ -96,7 +96,7 @@ export function FundraisersGridFallback() {
     <div
       className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
       aria-busy="true"
-      aria-label="Loading pots"
+      aria-label="Loading fundraisers"
     >
       {Array.from({ length: 8 }, (_, i) => (
         <div

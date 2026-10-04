@@ -341,7 +341,7 @@ export function AdminGiftDetail({ id }: { id: string }) {
             <Field label="Where">
               {gift.pot ? (
                 <span>
-                  Pot{" "}
+                  Fundraiser{" "}
                   <Link
                     href={`/pots/${gift.pot.slug}`}
                     className="font-medium underline decoration-pvn-gold/40 underline-offset-2"
@@ -401,7 +401,7 @@ export function AdminGiftDetail({ id }: { id: string }) {
               )}
               {gift.commentHidden ? (
                 <span className="mt-1 block text-pvn-navy/45">
-                  Hidden from public pot page
+                  Hidden from public fundraiser page
                 </span>
               ) : null}
             </Field>

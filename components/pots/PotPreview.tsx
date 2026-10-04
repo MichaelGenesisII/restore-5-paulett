@@ -23,8 +23,7 @@ export function PotPreview({
   fundraiserName: string;
 }) {
   const showPhoto = /^(https?:\/\/|blob:)\S+/i.test(photoUrl.trim());
-  const target = targetPence ?? 0;
-  const pct = percentOf(0, target);
+  const pct = percentOf(0, targetPence ?? 0);
   const typeLabel = type.replaceAll("_", " ");
   const named = Boolean(title.trim());
   const host = fundraiserName.trim() || "your name here";
@@ -76,7 +75,7 @@ export function PotPreview({
             named ? "text-pvn-navy" : "text-pvn-navy/25"
           }`}
         >
-          {named ? title.trim() : "Your pot needs a name"}
+          {named ? title.trim() : "Your fundraiser needs a name"}
         </h3>
 
         <div className="mt-auto pt-3">
@@ -93,10 +92,12 @@ export function PotPreview({
           <div className="mt-2.5 flex items-baseline justify-between gap-3">
             <p className="font-nav text-sm font-bold tracking-tight text-pvn-navy">
               {formatWholeGbp(0)}
-              <span className="font-normal text-pvn-navy/45">
-                {" "}
-                / {targetPence === null ? "—" : formatWholeGbp(targetPence)}
-              </span>
+              {targetPence !== null ? (
+                <span className="font-normal text-pvn-navy/45">
+                  {" "}
+                  / {formatWholeGbp(targetPence)}
+                </span>
+              ) : null}
             </p>
             <p className="font-nav shrink-0 text-[0.65rem] uppercase tracking-[0.12em] text-pvn-navy/45">
               0 gifts

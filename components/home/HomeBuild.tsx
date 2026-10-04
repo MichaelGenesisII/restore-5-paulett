@@ -37,7 +37,7 @@ export function HomeBuild() {
         </blockquote>
 
         <p className="font-nav mt-8 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-pvn-navy/35">
-          Every gift, in every pot, restores the same house
+          Every gift, in every fundraiser, restores the same house
         </p>
       </div>
     </section>

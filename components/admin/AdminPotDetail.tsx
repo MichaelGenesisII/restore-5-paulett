@@ -109,7 +109,7 @@ export function AdminPotDetail({ slug }: { slug: string }) {
         visitorSafeApiError(
           response.status,
           json.error,
-          "We could not load this pot.",
+          "We could not load this fundraiser.",
         ),
       );
     }
@@ -124,7 +124,7 @@ export function AdminPotDetail({ slug }: { slug: string }) {
     void load().catch((err) => {
       if (cancelled) return;
       toast.error(
-        "Pot unavailable",
+        "Fundraiser unavailable",
         visitorSafeMessage(
           err instanceof Error ? err.message : null,
           "Please try again.",
@@ -157,7 +157,7 @@ export function AdminPotDetail({ slug }: { slug: string }) {
           ),
         );
       }
-      toast.success(`Pot is now ${to.label.toLowerCase()}`);
+      toast.success(`Fundraiser is now ${to.label.toLowerCase()}`);
       setPending(null);
       await load();
     } catch (err) {
@@ -181,7 +181,7 @@ export function AdminPotDetail({ slug }: { slug: string }) {
           aria-hidden
         />
         <p className="font-nav text-xs font-bold tracking-[0.14em] text-pvn-navy/50 uppercase">
-          Loading pot…
+          Loading fundraiser…
         </p>
       </div>
     );
@@ -194,20 +194,20 @@ export function AdminPotDetail({ slug }: { slug: string }) {
           href="/admin/pots"
           className="font-nav text-[0.65rem] font-bold tracking-[0.12em] text-pvn-gold uppercase"
         >
-          ← Pots
+          ← Fundraisers
         </Link>
         <div className="mx-auto mt-6 flex min-h-[42vh] max-w-lg flex-col items-center justify-center rounded-sm border border-dashed border-pvn-navy/15 bg-gradient-to-b from-pvn-cream/80 to-white px-5 py-12 text-center sm:mt-8 sm:min-h-[38vh] sm:px-10 sm:py-14">
           <h1 className="font-display text-2xl font-semibold text-pvn-navy sm:text-[1.75rem]">
-            Pot not found
+            Fundraiser not found
           </h1>
           <p className="mt-2 max-w-sm text-sm leading-relaxed text-pvn-navy/60">
-            This pot may have been removed, or the link is incorrect.
+            This fundraiser may have been removed, or the link is incorrect.
           </p>
           <Link
             href="/admin/pots"
             className="font-nav mt-6 inline-flex min-h-11 w-full max-w-xs items-center justify-center rounded-md bg-pvn-navy px-5 text-[0.65rem] font-bold tracking-[0.14em] text-pvn-cream uppercase transition hover:bg-pvn-navy/90 sm:w-auto"
           >
-            View all pots
+            View all fundraisers
           </Link>
         </div>
       </div>
@@ -225,7 +225,7 @@ export function AdminPotDetail({ slug }: { slug: string }) {
         href="/admin/pots"
         className="font-nav text-[0.65rem] font-bold tracking-[0.12em] text-pvn-gold uppercase"
       >
-        ← Pots
+        ← Fundraisers
       </Link>
 
       <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
@@ -258,7 +258,7 @@ export function AdminPotDetail({ slug }: { slug: string }) {
 
       <nav
         className="mt-6 flex gap-1 overflow-x-auto border-b border-pvn-navy/10 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        aria-label="Pot sections"
+        aria-label="Fundraiser sections"
       >
         {TABS.map((t) => {
           const active = tab === t.id;
@@ -369,8 +369,8 @@ export function AdminPotDetail({ slug }: { slug: string }) {
               Status actions
             </h2>
             <p className="mt-2 max-w-lg text-sm text-pvn-navy/60">
-              Same lifecycle rules as Host home. Unseeded pots cannot be forced
-              live from Needs seed without a gift.
+              Same lifecycle rules as Host home. Unseeded fundraisers cannot be
+              forced live from Needs seed without a gift.
             </p>
             {pot.transitions.length === 0 ? (
               <p className="mt-5 text-sm text-pvn-navy/50">

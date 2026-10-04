@@ -47,14 +47,14 @@ export function HomePotsRoll({ pots }: { pots: PotRollTileData[] }) {
           aria-pressed={paused}
           className="font-nav inline-flex min-h-10 items-center rounded-md border border-pvn-cream/25 px-4 text-[0.65rem] font-bold tracking-[0.16em] text-pvn-cream/80 uppercase transition hover:border-pvn-gold/50 hover:text-pvn-gold"
         >
-          {paused ? "Play pot row" : "Pause pot row"}
+          {paused ? "Play fundraiser row" : "Pause fundraiser row"}
         </button>
         <p
           className="font-nav hidden items-center justify-center gap-3 text-[0.6rem] uppercase tracking-[0.22em] text-pvn-cream/35 sm:flex"
           aria-hidden
         >
           <span className="h-1 w-1 rotate-45 bg-pvn-gold/50" />
-          Hover or pause · open any pot
+          Hover or pause · open any fundraiser
           <span className="h-1 w-1 rotate-45 bg-pvn-gold/50" />
         </p>
       </div>

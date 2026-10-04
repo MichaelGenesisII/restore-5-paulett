@@ -589,7 +589,7 @@ export function AdminGiftsList() {
           type="search"
           value={draftQ}
           onChange={(e) => setDraftQ(e.target.value)}
-          placeholder="Search email, name, pot, Stripe id…"
+          placeholder="Search email, name, fundraiser, Stripe id…"
           className="w-full flex-1 rounded-sm border border-pvn-navy/15 bg-white px-3.5 py-2.5 text-sm text-pvn-navy placeholder:text-pvn-navy/40 focus:border-pvn-gold focus:ring-2 focus:ring-pvn-gold/30 focus:outline-none"
         />
         <div className="flex gap-2">
@@ -625,8 +625,8 @@ export function AdminGiftsList() {
             }
             aria-label="Destination"
           >
-            <option value="ALL">Pot + direct</option>
-            <option value="POT">Pot gifts</option>
+            <option value="ALL">Fundraiser + direct</option>
+            <option value="POT">Fundraiser gifts</option>
             <option value="DIRECT">Direct /give</option>
           </select>
           <select
@@ -690,7 +690,7 @@ export function AdminGiftsList() {
                 No gifts yet
               </h2>
               <p className="mt-2 max-w-sm text-sm leading-relaxed text-pvn-navy/60">
-                Checkout attempts from /give and pot pages will show up here.
+                Checkout attempts from /give and fundraiser pages will show up here.
               </p>
               <Link
                 href="/admin"

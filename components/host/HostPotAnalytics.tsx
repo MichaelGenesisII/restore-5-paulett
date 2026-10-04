@@ -339,8 +339,8 @@ export function HostPotAnalytics({ slug }: { slug: string }) {
         <div className="mt-6 space-y-5">
           {!traffic || traffic.pageViewsAll === 0 ? (
             <p className="rounded-sm border border-dashed border-pvn-navy/15 bg-white/40 px-4 py-6 text-sm text-pvn-navy/55">
-              No page views recorded yet. Share your pot link — visits from the
-              public page appear here (after a short delay).
+              No page views recorded yet. Share your fundraiser link — visits from
+              the public page appear here (after a short delay).
             </p>
           ) : (
             <>

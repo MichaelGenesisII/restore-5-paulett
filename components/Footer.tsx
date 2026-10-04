@@ -1,51 +1,12 @@
 import Link from "next/link";
 import { CookiePreferencesButton } from "@/components/CookiePreferencesButton";
+import { FooterLoginMenu } from "@/components/FooterLoginMenu";
 import { Logo } from "@/components/Logo";
-import { exploreNav, giveNav, legalNav, loginNav } from "@/lib/navigation";
+import { exploreNav, giveNav, legalNav } from "@/lib/navigation";
 import { organisation, socialLinks } from "@/lib/site";
 
 const linkClass =
   "inline-flex min-h-9 items-center text-pvn-cream/75 transition hover:text-pvn-gold-light";
-
-function FooterLoginMenu() {
-  return (
-    <div className="group/login relative">
-      <button
-        type="button"
-        className={`${linkClass} gap-1.5`}
-        aria-haspopup="menu"
-        aria-controls="footer-login-menu"
-      >
-        Login
-        <span
-          aria-hidden
-          className="inline-block text-[0.55rem] text-pvn-cream/45 transition duration-300 ease-out group-hover/login:translate-y-0.5 group-hover/login:text-pvn-gold-light group-focus-within/login:translate-y-0.5 group-focus-within/login:text-pvn-gold-light"
-        >
-          ▾
-        </span>
-      </button>
-      <div
-        id="footer-login-menu"
-        role="menu"
-        className="grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity] duration-300 ease-out group-hover/login:grid-rows-[1fr] group-hover/login:opacity-100 group-focus-within/login:grid-rows-[1fr] group-focus-within/login:opacity-100"
-      >
-        <ul className="min-h-0 overflow-hidden pl-3">
-          {loginNav.map((item) => (
-            <li key={item.href} role="none">
-              <Link
-                href={item.href}
-                role="menuitem"
-                className={`${linkClass} translate-y-1 opacity-0 transition duration-300 ease-out delay-75 group-hover/login:translate-y-0 group-hover/login:opacity-100 group-focus-within/login:translate-y-0 group-focus-within/login:opacity-100`}
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
 
 function FooterColumn({
   title,
@@ -151,7 +112,7 @@ export function Footer() {
                 <FooterColumn
                   title="Ways to build"
                   items={giveNav}
-                  extra={<FooterLoginMenu />}
+                  extra={<FooterLoginMenu linkClass={linkClass} />}
                 />
                 <FooterColumn
                   title="Legal"
@@ -198,7 +159,7 @@ export function Footer() {
               ) : null}
             </div>
             <p className="font-nav uppercase tracking-[0.2em]">
-              Your pot <span className="text-pvn-gold">→</span> our house
+              Your fundraiser <span className="text-pvn-gold">→</span> our house
             </p>
           </div>
         </div>

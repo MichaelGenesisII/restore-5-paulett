@@ -143,17 +143,17 @@ export async function POST(request: Request) {
     : null;
 
   if (potSlug && !pot) {
-    return NextResponse.json({ error: "Pot not found" }, { status: 404 });
+    return NextResponse.json({ error: "Fundraiser not found" }, { status: 404 });
   }
   if (pot && !acceptsGifts(pot.status)) {
     return NextResponse.json(
       {
         error:
           pot.status === "PAUSED"
-            ? "This pot is paused and is not accepting gifts."
+            ? "This fundraiser is paused and is not accepting gifts."
             : pot.status === "CLOSED"
-              ? "This pot is closed and is not accepting gifts."
-              : "This pot is not accepting gifts.",
+              ? "This fundraiser is closed and is not accepting gifts."
+              : "This fundraiser is not accepting gifts.",
       },
       { status: 400 },
     );
@@ -165,7 +165,7 @@ export async function POST(request: Request) {
   ) {
     return NextResponse.json(
       {
-        error: `The first gift that opens this pot must be at least ${formatWholeGbp(MIN_POT_SEED_PENCE)}.`,
+        error: `The first gift that opens this fundraiser must be at least ${formatWholeGbp(MIN_POT_SEED_PENCE)}.`,
       },
       { status: 400 },
     );

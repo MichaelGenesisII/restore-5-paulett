@@ -13,7 +13,7 @@ type Props = {
  * Pot hero Share — public pot link with src=share attribution.
  */
 export function PotShareButton({ slug, title, className = "" }: Props) {
-  const trimmed = title.trim() || "this pot";
+  const trimmed = title.trim() || "this fundraiser";
 
   return (
     <ShareCta

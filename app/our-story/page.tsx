@@ -73,7 +73,7 @@ const chapters = [
     lead: "Rise up and build.",
     body: [
       "We cannot rebuild this alone. Nehemiah’s wall went up in sections — families, individuals and groups each took a part.",
-      "That is the invitation now: take your part of the wall. Give. Start a pot. Join one. Watch the ruins rise.",
+      "That is the invitation now: take your part of the wall. Give. Start a fundraiser. Join one. Watch the ruins rise.",
     ],
   },
 ] as const;

@@ -78,7 +78,7 @@ const nav = [
   { href: "/host", label: "Overview", match: (p: string) => p === "/host" },
   {
     href: "/host/pots",
-    label: "Your pots",
+    label: "Your fundraisers",
     match: (p: string) =>
       p.startsWith("/host/pots") && !p.startsWith("/host/pots/new"),
   },
@@ -379,7 +379,7 @@ export function HostDashboardShell({ children }: { children: ReactNode }) {
                   href="/host/pots/new"
                   className="font-nav inline-flex min-h-10 w-full items-center justify-center rounded-md bg-pvn-gold/95 px-3 text-[0.65rem] font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold"
                 >
-                  Start a pot
+                  Start a fundraiser
                 </Link>
                 <button
                   type="button"

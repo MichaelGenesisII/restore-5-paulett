@@ -17,7 +17,7 @@ const topicGroups: { group: string; items: Topic[] }[] = [
       },
       {
         value: "POT",
-        label: "My pot",
+        label: "My fundraiser",
         hint: "Starting your part of the wall, or editing and sharing it.",
       },
       {

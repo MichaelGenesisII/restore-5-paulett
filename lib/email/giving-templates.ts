@@ -28,7 +28,7 @@ function greet(name: string | null) {
 
 function destination(ctx: GivingEmailContext) {
   if (ctx.potTitle) {
-    return `the pot <strong style="color:#0c1b33;">${escapeHtml(ctx.potTitle)}</strong>`;
+    return `the fundraiser <strong style="color:#0c1b33;">${escapeHtml(ctx.potTitle)}</strong>`;
   }
   return "the one restoration fund for <strong style=\"color:#0c1b33;\">5 Paulett Avenue</strong>";
 }
@@ -80,7 +80,7 @@ export function giftThankYouEmail(ctx: GivingEmailContext) {
     p(
       recurring
         ? `Your first monthly card gift has cleared. Every month from here, that same amount joins ${destination(ctx)} — one fund, one house rising. We will email a short receipt each time a payment lands.`
-        : `Your gift has landed. It joins ${destination(ctx)}. One pot, one fund, one house coming back to life.`,
+        : `Your gift has landed. It joins ${destination(ctx)}. One fundraiser, one fund, one house coming back to life.`,
     ),
     ctx.message?.trim()
       ? `${p("We received your word with the gift:")}${quoteBlock(ctx.message.trim())}`
@@ -105,21 +105,21 @@ export function giftThankYouEmail(ctx: GivingEmailContext) {
       highlightHtml: amountBlock(ctx, recurring ? " · monthly" : undefined),
       cta: ctx.potSlug
         ? {
-            label: "View this pot",
+            label: "View this fundraiser",
             href: destHref(ctx),
           }
         : {
-            label: "Start a pot",
+            label: "Start a fundraiser",
             href: `${appBaseUrl()}/fundraisers/create`,
           },
       secondaryCta: ctx.potSlug
         ? ctx.isSeedGift
           ? {
-              label: "Manage this pot",
+              label: "Manage this fundraiser",
               href: `${appBaseUrl()}/host/pots/${ctx.potSlug}`,
             }
           : {
-              label: "Browse pots",
+              label: "Browse fundraisers",
               href: `${appBaseUrl()}/fundraisers`,
             }
         : {
@@ -152,7 +152,7 @@ export function monthlyRenewalEmail(ctx: GivingEmailContext) {
       highlightHtml: amountBlock(ctx, " · this month"),
       cta: ctx.potSlug
         ? {
-            label: "View this pot",
+            label: "View this fundraiser",
             href: destHref(ctx),
           }
         : {
@@ -161,7 +161,7 @@ export function monthlyRenewalEmail(ctx: GivingEmailContext) {
           },
       secondaryCta: ctx.potSlug
         ? {
-            label: "Browse pots",
+            label: "Browse fundraisers",
             href: `${appBaseUrl()}/fundraisers`,
           }
         : {
@@ -287,7 +287,7 @@ export function giftRefundedEmail(ctx: GivingEmailContext) {
       highlightHtml: amountBlock(ctx, " · refunded"),
       cta: ctx.potSlug
         ? {
-            label: "View this pot",
+            label: "View this fundraiser",
             href: destHref(ctx),
           }
         : {
@@ -382,7 +382,7 @@ export function checkoutCancelledEmail(ctx: GivingEmailContext) {
       },
       secondaryCta: ctx.potSlug
         ? {
-            label: "Browse pots",
+            label: "Browse fundraisers",
             href: `${appBaseUrl()}/fundraisers`,
           }
         : {
@@ -410,8 +410,8 @@ export function hostPotGiftReceivedEmail(input: {
     html: emailShell({
       tone: "success",
       preheader: `${formatTidyGbp(input.amountPence)} joined ${input.potTitle}.`,
-      eyebrow: "Your pot · new gift",
-      title: "Someone gave to your pot",
+      eyebrow: "Your fundraiser · new gift",
+      title: "Someone gave to your fundraiser",
       bodyHtml: [
         p(`Dear ${first},`),
         p(
@@ -424,7 +424,7 @@ export function hostPotGiftReceivedEmail(input: {
         .filter(Boolean)
         .join(""),
       cta: {
-        label: "Manage this pot",
+        label: "Manage this fundraiser",
         href: `${appBaseUrl()}/host/pots/${input.potSlug}`,
       },
       secondaryCta: {
@@ -432,7 +432,7 @@ export function hostPotGiftReceivedEmail(input: {
         href: `${appBaseUrl()}/host/inbox`,
       },
       footnote:
-        "You are receiving this because you host this pot. The giver also received their own receipt.",
+        "You are receiving this because you host this fundraiser. The giver also received their own receipt.",
     }),
   };
 }

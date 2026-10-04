@@ -14,7 +14,7 @@ export function HomePotsFallback() {
       id="pots"
       className="relative overflow-hidden bg-pvn-navy py-14 text-pvn-cream sm:py-16"
       aria-busy="true"
-      aria-label="Loading pots"
+      aria-label="Loading fundraisers"
     >
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="max-w-xl">

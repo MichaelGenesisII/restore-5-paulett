@@ -247,7 +247,7 @@ export function GiveForm({
       }
       if (amountPence < minGiftPence) {
         return seedRequired
-          ? `The first gift that opens this pot must be at least ${formatWholeGbp(minGiftPence)}.`
+          ? `The first gift that opens this fundraiser must be at least ${formatWholeGbp(minGiftPence)}.`
           : `The smallest gift we can take is ${formatWholeGbp(minGiftPence)}.`;
       }
       if (amountPence > MAX_DONATION_PENCE) {
@@ -476,7 +476,7 @@ export function GiveForm({
                 <div className="flex flex-col gap-7">
                   {seedRequired ? (
                     <p className="rounded-sm border border-pvn-gold/40 bg-pvn-gold/10 px-3.5 py-3 text-sm leading-relaxed text-pvn-navy/75">
-                      This pot is not on the wall yet. The first gift must be at
+                      This fundraiser is not on the wall yet. The first gift must be at
                       least {formatWholeGbp(minGiftPence)}.
                     </p>
                   ) : null}

@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "The Wall",
   description:
-    "Words left with gifts to the restoration of 5 Paulett Avenue — direct gifts first, and recent pot messages too.",
+    "Words left with gifts to the restoration of 5 Paulett Avenue — direct gifts first, and recent fundraiser messages too.",
   alternates: { canonical: "/the-wall" },
 };
 
@@ -71,7 +71,7 @@ export default async function TheWallPage({
           </h1>
           <p className="mt-4 max-w-md text-base leading-relaxed text-pvn-cream/80 text-pretty sm:text-lg">
             Words left with gifts — first from those who gave to the house,
-            then recent voices from the pots. Each message is a stone.
+            then recent voices from the fundraisers. Each message is a stone.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link

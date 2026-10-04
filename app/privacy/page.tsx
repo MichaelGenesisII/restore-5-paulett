@@ -75,7 +75,7 @@ export default function PrivacyPage() {
               <strong className="font-semibold text-pvn-navy">
                 If you allow analytics cookies:
               </strong>{" "}
-              a random id on your device so we can count visits to pot pages
+              a random id on your device so we can count visits to fundraiser pages
               without storing your name. Hosts see totals and share sources, not
               who visited. Off unless you say yes — see the{" "}
               <Link
@@ -143,7 +143,7 @@ export default function PrivacyPage() {
           items={[
             <>
               <strong className="font-semibold text-pvn-navy">Contract.</strong>{" "}
-              To take your gift, issue a receipt, and run the pot you created.
+              To take your gift, issue a receipt, and run the fundraiser you created.
             </>,
             <>
               <strong className="font-semibold text-pvn-navy">
@@ -202,9 +202,9 @@ export default function PrivacyPage() {
 
       <LegalSection title="What is public, and what is not">
         <p>
-          Pots are public by design. The title, the story, the photograph and
-          the running total are visible to anyone — that is how a pot gathers
-          people.
+          Fundraisers are public by design. The title, the story, the photograph
+          and the running total are visible to anyone — that is how a fundraiser
+          gathers people.
         </p>
         <p>
           Your name appears against a gift unless you give anonymously, in which
@@ -222,7 +222,8 @@ export default function PrivacyPage() {
               after the gift, as tax law requires.
             </>,
             <>
-              Pots and the stories on them: while the pot is live, and
+              Fundraisers and the stories on them: while the fundraiser is
+              live, and
               afterwards as part of the record of how this house was rebuilt.
             </>,
             <>

@@ -3,7 +3,7 @@ import { AdminDashboardShell } from "@/components/admin/AdminDashboardShell";
 
 export const metadata: Metadata = {
   title: "Admin",
-  description: "House-wide gifts, pots, and ops for 5 Paulett.",
+  description: "House-wide gifts, fundraisers, and ops for 5 Paulett.",
   robots: { index: false, follow: false },
 };
 

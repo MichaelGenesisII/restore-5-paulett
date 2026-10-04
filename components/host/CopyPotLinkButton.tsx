@@ -30,7 +30,7 @@ const variantClass: Record<Variant, string> = {
  */
 export function CopyPotLinkButton({
   slug,
-  label = "Copy pot link",
+  label = "Copy fundraiser link",
   variant = "gold",
   className = "",
   src = "host",
@@ -66,7 +66,7 @@ export function CopyPotLinkButton({
     <button
       type="button"
       onClick={() => void copy()}
-      aria-label={copied ? "Pot link copied" : `Copy link to ${slug}`}
+      aria-label={copied ? "Fundraiser link copied" : `Copy link to ${slug}`}
       className={`creator-copy-link font-nav group relative inline-flex min-h-8 items-center justify-center gap-1.5 overflow-hidden rounded-md border px-2.5 text-[0.6rem] font-bold tracking-[0.12em] uppercase transition duration-300 ease-out ${variantClass[variant]} ${
         copied ? "creator-copy-link--done" : "creator-copy-link--idle"
       } ${className}`}

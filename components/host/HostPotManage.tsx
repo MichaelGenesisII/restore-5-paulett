@@ -3,6 +3,7 @@
 import {
   formatWholeGbp,
   formatTidyGbp,
+  isValidPotTargetPence,
   MAX_DONATION_PENCE,
   MIN_DONATION_PENCE,
   MIN_POT_SEED_PENCE,
@@ -133,7 +134,7 @@ function applyManagePot(
 function HostPotManageSkeleton({ title }: { title?: string | null }) {
   return (
     <div className="space-y-8" aria-busy="true" aria-live="polite">
-      <span className="sr-only">Loading pot…</span>
+      <span className="sr-only">Loading fundraiser…</span>
       <div>
         <div className="h-3 w-24 animate-pulse rounded-sm bg-pvn-navy/10" />
         <div
@@ -295,7 +296,7 @@ export function HostPotManage() {
         visitorSafeApiError(
           response.status,
           json.error,
-          "We could not load this pot.",
+          "We could not load this fundraiser.",
         ),
       );
     }
@@ -325,7 +326,7 @@ export function HostPotManage() {
     void load().catch((err) => {
       if (cancelled) return;
       toast.error(
-        "Could not load pot",
+        "Could not load fundraiser",
         visitorSafeMessage(
           err instanceof Error ? err.message : null,
           "Please try again.",
@@ -360,14 +361,10 @@ export function HostPotManage() {
     }
 
     const targetAmountPence = poundsToPence(targetPounds);
-    if (
-      targetAmountPence === null ||
-      targetAmountPence < MIN_DONATION_PENCE ||
-      targetAmountPence > MAX_DONATION_PENCE
-    ) {
+    if (!isValidPotTargetPence(targetAmountPence)) {
       toast.error(
         "Target amount",
-        `Choose a target between ${formatWholeGbp(MIN_DONATION_PENCE)} and ${formatWholeGbp(MAX_DONATION_PENCE)}.`,
+        `Choose a target of ${formatWholeGbp(MIN_DONATION_PENCE)} or more.`,
       );
       return;
     }
@@ -398,7 +395,7 @@ export function HostPotManage() {
       await load();
       await refresh();
       setDetailsDirty(false);
-      toast.success("Pot updated", "Your public page shows the new details.");
+      toast.success("Fundraiser updated", "Your public page shows the new details.");
     } catch (err) {
       toast.error(
         "Not saved",
@@ -456,7 +453,7 @@ export function HostPotManage() {
           visitorSafeApiError(
             patch.status,
             patchJson.error,
-            "Image uploaded, but we could not attach it to the pot.",
+            "Image uploaded, but we could not attach it to the fundraiser.",
           ),
         );
       }
@@ -563,7 +560,7 @@ export function HostPotManage() {
       toast.success(
         comment.commentHidden ? "Comment visible" : "Comment hidden",
         comment.commentHidden
-          ? "It shows on the public pot page again."
+          ? "It shows on the public fundraiser page again."
           : "Visitors will not see this gift message.",
       );
     } catch (err) {
@@ -639,7 +636,7 @@ export function HostPotManage() {
             visitorSafeApiError(
               response.status,
               json.error,
-              "Could not change the pot link.",
+              "Could not change the fundraiser link.",
             ),
           );
         }
@@ -665,7 +662,7 @@ export function HostPotManage() {
             visitorSafeApiError(
               response.status,
               json.error,
-              "Could not update pot status.",
+              "Could not update fundraiser status.",
             ),
           );
         }
@@ -789,12 +786,14 @@ export function HostPotManage() {
   if (!pot) {
     return (
       <div>
-        <p className="text-sm text-pvn-navy/65">Pot not found on this account.</p>
+        <p className="text-sm text-pvn-navy/65">
+          Fundraiser not found on this account.
+        </p>
         <Link
           href="/host/pots"
           className="font-nav mt-4 inline-flex text-xs font-bold tracking-[0.12em] text-pvn-gold uppercase"
         >
-          Back to pots
+          Back to fundraisers
         </Link>
       </div>
     );
@@ -807,7 +806,7 @@ export function HostPotManage() {
           href="/host/pots"
           className="font-nav text-[0.65rem] font-bold tracking-[0.12em] text-pvn-navy/50 uppercase transition hover:text-pvn-gold"
         >
-          ← Your pots
+          ← Your fundraisers
         </Link>
 
         <div className="relative mt-3 overflow-hidden rounded-sm bg-pvn-navy px-4 py-4 text-pvn-cream sm:px-6 sm:py-5">
@@ -845,7 +844,7 @@ export function HostPotManage() {
               </div>
               <div className="min-w-0">
                 <p className="font-nav text-[0.6rem] font-bold tracking-[0.18em] text-pvn-gold uppercase">
-                  Manage pot
+                  Manage fundraiser
                 </p>
                 <h1 className="font-display mt-0.5 truncate text-xl font-semibold text-balance sm:text-2xl">
                   {pot.title}
@@ -886,7 +885,7 @@ export function HostPotManage() {
           </h2>
           <p className="mt-2 max-w-lg text-sm text-pvn-navy/65">
             A first gift of {formatWholeGbp(MIN_POT_SEED_PENCE)} or more opens
-            this pot on browse and unlocks pause / close controls.
+            this fundraiser on browse and unlocks pause / close controls.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             {[MIN_POT_SEED_PENCE, 5_000, 10_000].map((value) => {
@@ -936,7 +935,7 @@ export function HostPotManage() {
                 ? "Starting checkout…"
                 : seedPence !== null
                   ? `Seed with ${formatTidyGbp(seedPence)}`
-                  : "Seed pot"}
+                  : "Seed fundraiser"}
             </button>
             <Link
               href={`/pots/${pot.slug}`}
@@ -967,7 +966,7 @@ export function HostPotManage() {
         return (
           <nav
             className="flex gap-1 overflow-x-auto border-b border-pvn-navy/10 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            aria-label="Manage pot sections"
+            aria-label="Manage fundraiser sections"
           >
             {manageTabs.map((item) => {
               const active = tab === item.id;
@@ -1183,13 +1182,13 @@ export function HostPotManage() {
                 setStory(e.target.value);
                 setDetailsDirty(true);
               }}
-              placeholder="What is this pot raising toward?"
+              placeholder="What is this fundraiser raising toward?"
               className={`${fieldClass} resize-y`}
             />
             {!story.trim() ? (
               <p className="mt-2 text-xs text-pvn-navy/50">
-                Tip: add 25+ words so visitors understand why this stone in the
-                wall matters.
+                Tip: a few sentences help visitors understand why this stone in
+                the wall matters.
               </p>
             ) : null}
           </label>
@@ -1237,8 +1236,9 @@ export function HostPotManage() {
               Visibility
             </h2>
             <p className={sectionLead}>
-              Pause soft-stops gifts (story stays). Close marks the pot finished.
-              Hide removes the public page (404). Browse only lists live pots.
+              Pause soft-stops gifts (story stays). Close marks the fundraiser
+              finished. Hide removes the public page (404). Browse only lists
+              live fundraisers.
             </p>
           </div>
 
@@ -1251,8 +1251,8 @@ export function HostPotManage() {
 
           {pot.status === "PENDING" ? (
             <p className="rounded-sm border border-amber-600/20 bg-amber-500/10 px-3.5 py-3 text-sm text-amber-950/80">
-              Seed this pot first (panel above). After it goes live you can
-              pause, close, or hide it.
+              Seed this fundraiser first (panel above). After it goes live you
+              can pause, close, or hide it.
             </p>
           ) : (
             <div className="flex flex-wrap gap-2">
@@ -1303,7 +1303,7 @@ export function HostPotManage() {
           </h2>
           <p className="mt-2 text-sm text-pvn-navy/60">
             Filter, reply once, hide, redact, or delete. Same tools work on the
-            public pot page when you are signed in.
+            public fundraiser page when you are signed in.
           </p>
 
           {pot.donations.length > 0 ? (
@@ -1760,7 +1760,7 @@ export function HostPotManage() {
         variant="confirm"
         title={
           confirm?.kind === "change-slug"
-            ? "Change this pot’s public link?"
+            ? "Change this fundraiser’s public link?"
             : confirm?.kind === "status"
             ? statusChangeCopy(confirm.to).title
             : confirm?.kind === "remove-cover"
@@ -1777,12 +1777,12 @@ export function HostPotManage() {
             : confirm?.kind === "status"
             ? statusChangeCopy(confirm.to).body
             : confirm?.kind === "remove-cover"
-              ? "The public pot page will show no cover image. You can upload a new one anytime."
+              ? "The public fundraiser page will show no cover image. You can upload a new one anytime."
               : confirm?.kind === "redact-comment"
                 ? "Visitors will see your new wording. The giver’s original text is kept privately for your records."
                 : confirm?.kind === "delete-reply"
                   ? "The gift message stays. Your reply will be removed."
-                  : "This removes the giver’s words and any reply. The gift amount stays on the pot."
+                  : "This removes the giver’s words and any reply. The gift amount stays on the fundraiser."
         }
         confirmLabel={
           confirm?.kind === "change-slug"

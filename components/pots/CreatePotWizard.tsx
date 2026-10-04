@@ -18,10 +18,12 @@ import {
 } from "@/components/icons";
 import {
   MAX_DONATION_PENCE,
+  MAX_POT_TARGET_PENCE,
   MIN_DONATION_PENCE,
   MIN_POT_SEED_PENCE,
   formatTidyGbp,
   formatWholeGbp,
+  isValidPotTargetPence,
   poundsToPence,
 } from "@/lib/money";
 import { POT_TARGET_PRESETS, potTypes, MIN_FOUNDER_STORY_WORDS, MIN_POT_DESCRIPTION_WORDS, optionalCopyProblem, wordCount } from "@/lib/pots";
@@ -34,24 +36,24 @@ const steps = [
   {
     rail: "Who",
     title: "Who is building?",
-    lead: "Pick the shape of your pot.",
+    lead: "Pick the shape of your fundraiser.",
   },
   {
     rail: "Name",
-    title: "Name your pot",
+    title: "Name your fundraiser",
     lead: "Short enough to say out loud.",
   },
   {
     rail: "Words",
     title: "Words & cover",
-    lead: "Add now, or leave blank and finish later.",
+    lead: "All optional — skip and add them later from your host account.",
   },
   {
     rail: "Target",
     title: "Set the target",
     lead: "A number your people can reach.",
   },
-  { rail: "You", title: "About you", lead: "So we know whose pot this is." },
+  { rail: "You", title: "About you", lead: "So we know whose fundraiser this is." },
   { rail: "Review", title: "Read it back", lead: "Then lay the first stone." },
 ] as const;
 
@@ -108,7 +110,7 @@ export function CreatePotWizard() {
   const [photoPreview, setPhotoPreview] = useState("");
   const [photoError, setPhotoError] = useState<string | null>(null);
 
-  const [preset, setPreset] = useState<number | null>(50_000);
+  const [preset, setPreset] = useState<number | null>(null);
   const [custom, setCustom] = useState("");
 
   const [fundraiserName, setFundraiserName] = useState("");
@@ -205,10 +207,7 @@ export function CreatePotWizard() {
     [custom, preset],
   );
 
-  const targetValid =
-    targetPence !== null &&
-    targetPence >= MIN_DONATION_PENCE &&
-    targetPence <= MAX_DONATION_PENCE;
+  const targetValid = isValidPotTargetPence(targetPence);
 
   const slug = slugifyTitle(title);
 
@@ -223,10 +222,10 @@ export function CreatePotWizard() {
   function problemWith(index: number): string | null {
     if (index === 1) {
       if (!title.trim()) {
-        return "The pot needs a title — this is required.";
+        return "The fundraiser needs a title — this is required.";
       }
       if (title.trim().length < 3) {
-        return "Give the pot a name — three characters at the very least.";
+        return "Give the fundraiser a name — three characters at the very least.";
       }
       if (title.trim().length > TITLE_MAX) {
         return `Keep the name under ${TITLE_MAX} characters so the link stays readable.`;
@@ -237,7 +236,7 @@ export function CreatePotWizard() {
       const descriptionProblem = optionalCopyProblem(
         description,
         MIN_POT_DESCRIPTION_WORDS,
-        "The pot description",
+        "The fundraiser description",
       );
       if (descriptionProblem) return descriptionProblem;
       const founderProblem = optionalCopyProblem(
@@ -258,20 +257,20 @@ export function CreatePotWizard() {
       if (targetPence < MIN_DONATION_PENCE) {
         return `The smallest target we can hold is ${formatWholeGbp(MIN_DONATION_PENCE)}.`;
       }
-      if (targetPence > MAX_DONATION_PENCE) {
-        return `Targets above ${formatWholeGbp(MAX_DONATION_PENCE)} need a word with us first — please get in touch.`;
+      if (targetPence > MAX_POT_TARGET_PENCE) {
+        return "That target is larger than we can hold — try a smaller number.";
       }
     }
 
     if (index === 4) {
       if (!fundraiserName.trim()) {
-        return "Your name is required — a pot belongs to somebody.";
+        return "Your name is required — a fundraiser belongs to somebody.";
       }
       if (!fundraiserEmail.trim()) {
-        return "Your email is required so we can reach you about the pot.";
+        return "Your email is required so we can reach you about the fundraiser.";
       }
       if (!looksLikeEmail(fundraiserEmail)) {
-        return "A working email address, so we can reach you about the pot.";
+        return "A working email address, so we can reach you about the fundraiser.";
       }
       if (isAlumni) {
         const from = parseYear(alumniYearsFrom);
@@ -345,7 +344,7 @@ export function CreatePotWizard() {
       const accessToken = await hostAccessToken();
       if (returningCreator && !accessToken) {
         throw new Error(
-          "This email already has a Host login. Sign in at /host, then create the pot — or use a different email.",
+          "This email already has a Host login. Sign in at /host, then create the fundraiser — or use a different email.",
         );
       }
 
@@ -421,7 +420,7 @@ export function CreatePotWizard() {
           visitorSafeApiError(
             response.status,
             data.error,
-            "We could not open your pot. Please try again.",
+            "We could not open your fundraiser. Please try again.",
           ),
         );
       }
@@ -440,12 +439,12 @@ export function CreatePotWizard() {
       });
       if (data.account?.isNewAccount) {
         toast.success(
-          "Pot created — check your inbox",
+          "Fundraiser created — check your inbox",
           "Your Host login and temporary password are in your email.",
         );
       } else {
         toast.success(
-          "Pot created",
+          "Fundraiser created",
           "Linked to your existing host login. Lay the first stone to open it.",
         );
       }
@@ -453,7 +452,7 @@ export function CreatePotWizard() {
       setPending(false);
       setConfirming(false);
       toast.error(
-        "The pot did not open",
+        "The fundraiser did not open",
         visitorSafeMessage(
           err instanceof Error ? err.message : null,
           "Nothing was lost — please try again.",
@@ -553,15 +552,15 @@ export function CreatePotWizard() {
               {seeding
                 ? "Opening secure checkout…"
                 : returningCreator
-                  ? "Creating your pot…"
-                  : "Creating your pot & account…"}
+                  ? "Creating your fundraiser…"
+                  : "Creating your fundraiser & account…"}
             </p>
             <p className="max-w-xs px-4 text-center text-sm text-pvn-navy/60">
               {seeding
                 ? "Hang on while we start your seed gift."
                 : returningCreator
-                  ? "Saving your pot and linking it to your host login."
-                  : "Saving your pot and setting up your login. This can take a moment."}
+                  ? "Saving your fundraiser and linking it to your host login."
+                  : "Saving your fundraiser and setting up your login. This can take a moment."}
             </p>
           </div>
         )}
@@ -582,7 +581,7 @@ export function CreatePotWizard() {
         )}
 
         <fieldset disabled={pending || seeding} className="block">
-          <legend className="sr-only">Start a pot</legend>
+          <legend className="sr-only">Start a fundraiser</legend>
 
           {created ? (
             <>
@@ -682,16 +681,16 @@ export function CreatePotWizard() {
 
                 <div className="mt-6 rounded-sm border border-pvn-navy/10 bg-pvn-cream/50 px-4 py-4">
                   <p className="font-nav text-[0.65rem] font-bold tracking-[0.14em] text-pvn-navy/50 uppercase">
-                    Your pot is waiting
+                    Your fundraiser is waiting
                   </p>
                   <p className="mt-1 break-all text-sm font-semibold text-pvn-navy">
                     {potPath}
                   </p>
                   <div className="mt-4 flex flex-wrap items-center gap-2.5">
                     <ShareCta
-                      title={title.trim() || "My pot"}
-                      text={`Join me on “${title.trim() || "my pot"}” — raising for the restoration of 5 Paulett.`}
-                      label="Share this pot"
+                      title={title.trim() || "My fundraiser"}
+                      text={`Join me on “${title.trim() || "my fundraiser"}” — raising for the restoration of 5 Paulett.`}
+                      label="Share this fundraiser"
                       size="lg"
                       className="min-h-11 border-pvn-navy/20 bg-white px-4 text-[0.65rem] tracking-[0.14em] text-pvn-navy hover:border-pvn-gold hover:text-pvn-gold sm:min-h-10"
                       getUrl={() => potPublicUrl(created.slug, "share")}
@@ -700,7 +699,7 @@ export function CreatePotWizard() {
                       href={potPath}
                       className="font-nav inline-flex min-h-11 items-center justify-center rounded-md border border-pvn-navy/20 bg-white px-4 text-[0.65rem] font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:border-pvn-gold hover:text-pvn-gold sm:min-h-10"
                     >
-                      View pot
+                      View fundraiser
                     </Link>
                     <Link
                       href={`/host/pots/${created.slug}`}
@@ -711,7 +710,7 @@ export function CreatePotWizard() {
                   </div>
                   <p className="mt-3 text-xs leading-relaxed text-pvn-navy/55">
                     You can seed now, or come back later with your host login.
-                    Until you seed, the pot stays off the wall.
+                    Until you seed, the fundraiser stays off the wall.
                   </p>
                 </div>
               </div>
@@ -753,7 +752,7 @@ export function CreatePotWizard() {
                 {step === 0 ? (
                   <div
                     role="radiogroup"
-                    aria-label="What kind of pot is this?"
+                    aria-label="What kind of fundraiser is this?"
                     className="grid gap-3 sm:grid-cols-2"
                   >
                     {potTypes.map((option) => {
@@ -800,7 +799,7 @@ export function CreatePotWizard() {
                 {step === 1 ? (
                   <div className="flex flex-col gap-2">
                     <label htmlFor="pot-title" className={labelClass}>
-                      Pot title{" "}
+                      Fundraiser title{" "}
                       <span className="text-pvn-gold">(required)</span>
                     </label>
                     <input
@@ -834,14 +833,17 @@ export function CreatePotWizard() {
                   <div className="flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
                       <label htmlFor="pot-description" className={labelClass}>
-                        Pot description
+                        Fundraiser description{" "}
+                        <span className="normal-case tracking-normal text-pvn-navy/45">
+                          (optional)
+                        </span>
                       </label>
                       <textarea
                         id="pot-description"
                         className={`${fieldClass} min-h-28 resize-y`}
                         value={description}
                         onChange={(event) => setDescription(event.target.value)}
-                        placeholder="What this pot is for — a short paragraph for your pot page."
+                        placeholder="What this fundraiser is for — a short paragraph for your fundraiser page."
                       />
                       <p className="font-nav text-[0.65rem] font-bold tracking-[0.12em] text-pvn-navy/45 uppercase tabular-nums">
                         {descriptionWords === 0
@@ -854,7 +856,10 @@ export function CreatePotWizard() {
 
                     <div className="flex flex-col gap-2">
                       <label htmlFor="pot-story" className={labelClass}>
-                        Your story
+                        Your story{" "}
+                        <span className="normal-case tracking-normal text-pvn-navy/45">
+                          (optional)
+                        </span>
                       </label>
                       <textarea
                         id="pot-story"
@@ -865,7 +870,7 @@ export function CreatePotWizard() {
                         }
                         placeholder={
                           activeType?.storyHint ??
-                          "Why you are building this pot."
+                          "Why you are building this fundraiser."
                         }
                       />
                       <p className="font-nav text-[0.65rem] font-bold tracking-[0.12em] text-pvn-navy/45 uppercase tabular-nums">
@@ -879,7 +884,10 @@ export function CreatePotWizard() {
 
                     <div className="flex flex-col gap-2">
                       <p className={labelClass} id="pot-cover-label">
-                        Cover image (landscape)
+                        Cover image{" "}
+                        <span className="normal-case tracking-normal text-pvn-navy/45">
+                          (optional · landscape)
+                        </span>
                       </p>
                       <input
                         ref={coverInputRef}
@@ -1050,8 +1058,8 @@ export function CreatePotWizard() {
                       />
                     </label>
                     <p className="text-xs text-pvn-navy/50">
-                      Targets from {formatWholeGbp(MIN_DONATION_PENCE)} to{" "}
-                      {formatWholeGbp(MAX_DONATION_PENCE)}.
+                      Aiming lower? Type any amount from{" "}
+                      {formatWholeGbp(MIN_DONATION_PENCE)} — no upper limit.
                     </p>
 
                     {targetValid && targetPence !== null ? (
@@ -1073,7 +1081,7 @@ export function CreatePotWizard() {
                     ) : null}
 
                     <p className="text-xs leading-relaxed text-pvn-navy/55">
-                      A target is a rallying point, not a ceiling. Pots that
+                      A target is a rallying point, not a ceiling. Fundraisers that
                       pass it keep taking gifts, and every penny goes to the
                       same building.
                     </p>
@@ -1148,10 +1156,14 @@ export function CreatePotWizard() {
                       aria-hidden={!isAlumni}
                     >
                       <div>
-                        <div className="grid gap-4 pt-1 sm:grid-cols-2">
+                        <p className="pt-1 text-xs leading-relaxed text-pvn-navy/55">
+                          Ticking the box is enough. The details below are all
+                          optional.
+                        </p>
+                        <div className="grid gap-4 pt-3 sm:grid-cols-2">
                           <div className="flex flex-col gap-2">
                             <label htmlFor="pot-from" className={labelClass}>
-                              Years here, from
+                              Years here, from (optional)
                             </label>
                             <input
                               id="pot-from"
@@ -1166,7 +1178,7 @@ export function CreatePotWizard() {
                           </div>
                           <div className="flex flex-col gap-2">
                             <label htmlFor="pot-to" className={labelClass}>
-                              To
+                              To (optional)
                             </label>
                             <input
                               id="pot-to"
@@ -1228,7 +1240,7 @@ export function CreatePotWizard() {
                         One restoration fund
                       </p>
                       <p className="font-display mt-2 text-3xl leading-tight font-semibold text-balance">
-                        {title.trim() || "Untitled pot"}
+                        {title.trim() || "Untitled fundraiser"}
                       </p>
                       <p className="font-nav mt-3 border-t border-pvn-cream/15 pt-3 text-xs font-bold tracking-[0.12em] text-pvn-cream/70 uppercase">
                         Aiming at{" "}
@@ -1243,7 +1255,7 @@ export function CreatePotWizard() {
                     <dl className="flex flex-col divide-y divide-pvn-navy/10 border-y border-pvn-navy/10">
                       {[
                         {
-                          term: "Kind of pot",
+                          term: "Kind of fundraiser",
                           value: activeType?.label ?? "—",
                           goto: 0,
                         },
@@ -1297,7 +1309,7 @@ export function CreatePotWizard() {
                     </dl>
 
                     <p className="text-xs leading-relaxed text-pvn-navy/60">
-                      The pot stays behind the door until you lay the first stone
+                      The fundraiser stays behind the door until you lay the first stone
                       — a gift of {formatWholeGbp(MIN_POT_SEED_PENCE)} or more.
                       Then it opens on the wall for everyone else.
                     </p>
@@ -1332,14 +1344,14 @@ export function CreatePotWizard() {
                 className="pvn-figure relative inline-flex items-center gap-2"
               >
                 {pending ? (
-                  "Opening your pot…"
+                  "Opening your fundraiser…"
                 ) : created ? (
                   seeding ? (
                     "Opening secure checkout…"
                   ) : seedPence !== null ? (
                     `Seed with ${formatTidyGbp(seedPence)}`
                   ) : (
-                    "Seed my pot"
+                    "Seed my fundraiser"
                   )
                 ) : step < LAST ? (
                   <>
@@ -1349,7 +1361,7 @@ export function CreatePotWizard() {
                     </span>
                   </>
                 ) : (
-                  "Open this pot"
+                  "Open this fundraiser"
                 )}
               </span>
             </button>
@@ -1373,10 +1385,10 @@ export function CreatePotWizard() {
           busy={pending}
           busyLabel={
             returningCreator
-              ? "Creating your pot…"
-              : "Creating your pot & account…"
+              ? "Creating your fundraiser…"
+              : "Creating your fundraiser & account…"
           }
-          title="Open this pot?"
+          title="Open this fundraiser?"
           body={
             returningCreator
               ? `This email already has a Host login — stay signed in (or sign in at Host home first). Next you’ll seed it (${formatWholeGbp(MIN_POT_SEED_PENCE)}+) so it goes live.`
@@ -1413,14 +1425,14 @@ export function CreatePotWizard() {
         </ResultModal>
       </form>
 
-      <aside className="flex h-fit flex-col gap-5 lg:sticky lg:top-24">
+      <aside className="hidden h-fit flex-col gap-5 lg:sticky lg:top-24 lg:flex">
         <div>
           <p className="font-nav text-[0.65rem] font-bold tracking-[0.2em] text-pvn-navy/45 uppercase">
             Live preview
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-pvn-navy/60">
             As it will appear on the wall — title, cover and progress. Your
-            longer story sits on the pot page.
+            longer story sits on the fundraiser page.
           </p>
         </div>
 
@@ -1435,12 +1447,12 @@ export function CreatePotWizard() {
 
         <div className="rounded-sm border border-pvn-gold/40 bg-pvn-gold/10 p-5">
           <p className="font-nav text-[0.65rem] font-bold tracking-[0.2em] text-pvn-navy uppercase">
-            Your pot → our house
+            Your fundraiser → our house
           </p>
           <p className="mt-2 text-sm leading-relaxed text-pvn-navy/75">
-            Every gift into your pot counts twice over: once against your
-            target, and once against the one total for 5 Paulett. No pot
-            competes with another, and there is no leaderboard.
+            Every gift into your fundraiser counts twice over: once against
+            your target, and once against the one total for 5 Paulett. No
+            fundraiser competes with another, and there is no leaderboard.
           </p>
         </div>
       </aside>

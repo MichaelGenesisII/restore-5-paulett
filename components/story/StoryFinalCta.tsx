@@ -7,7 +7,7 @@ const messages = [
   {
     title: "Take your part of the wall",
     subtitle:
-      "We cannot build this alone. Every gift — into a pot or straight to the fund — lands in the same house.",
+      "We cannot build this alone. Every gift — through a fundraiser or straight to the fund — lands in the same house.",
     citation: "This is our moment",
   },
   {
@@ -98,7 +98,7 @@ export function StoryFinalCta() {
             href="/fundraisers/create"
             className="font-nav inline-flex rounded-md border border-pvn-navy/25 px-5 py-3 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:border-pvn-gold hover:text-pvn-gold"
           >
-            Start a pot
+            Start a fundraiser
           </Link>
           <Link
             href="/our-new-home"

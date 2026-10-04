@@ -11,20 +11,20 @@ import { IconHeart, IconWall } from "@/components/icons";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Browse pots",
+  title: "Browse fundraisers",
   description:
-    "Explore live pots raising for the restoration of 5 Paulett Avenue — individuals, families, alumni, and ministries building together with PVN Belfast.",
+    "Explore live fundraisers for the restoration of 5 Paulett Avenue — individuals, families, alumni, and ministries building together with PVN Belfast.",
   alternates: { canonical: "/fundraisers" },
   openGraph: {
-    title: "Browse pots",
+    title: "Browse fundraisers",
     description:
-      "Explore live pots raising for the restoration of 5 Paulett Avenue.",
+      "Explore live fundraisers for the restoration of 5 Paulett Avenue.",
     url: "/fundraisers",
   },
 };
 
 const potTypes = [
-  { value: "", label: "All pots" },
+  { value: "", label: "All fundraisers" },
   { value: PotType.INDIVIDUAL, label: "Individuals" },
   { value: PotType.FAMILY, label: "Families" },
   { value: PotType.ALUMNI_GROUP, label: "Alumni groups" },
@@ -91,10 +91,10 @@ export default async function FundraisersPage({
                 </p>
                 <h2 className="font-display mt-2 text-3xl font-semibold text-pvn-cream sm:text-4xl">
                   {search
-                    ? "Matching pots"
+                    ? "Matching fundraisers"
                     : type
-                      ? (selectedType?.label ?? "Matching pots")
-                      : "Pots already rising"}
+                      ? (selectedType?.label ?? "Matching fundraisers")
+                      : "Fundraisers already rising"}
                 </h2>
                 <p className="mt-2 text-sm text-pvn-cream/65 sm:text-base">
                   Choose a story to join, or start one for the people who know
@@ -110,7 +110,7 @@ export default async function FundraisersPage({
                   href="/fundraisers/create"
                   className="inline-flex items-center gap-2 rounded-md bg-pvn-gold px-4 py-2.5 font-nav text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
                 >
-                  <IconHeart className="h-4 w-4" /> Start a pot
+                  <IconHeart className="h-4 w-4" /> Start a fundraiser
                 </Link>
               </div>
             </div>
@@ -127,12 +127,12 @@ export default async function FundraisersPage({
                 id="fundraiser-search"
                 name="search"
                 defaultValue={search}
-                placeholder="Search pots or people"
+                placeholder="Search fundraisers or people"
                 className="min-h-11 w-full min-w-0 rounded-md border border-pvn-cream/15 bg-pvn-cream px-3 text-base text-pvn-navy outline-none placeholder:text-pvn-navy/40 focus:border-pvn-gold focus:ring-2 focus:ring-pvn-gold/20 sm:text-sm"
               />
               <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2.5 sm:contents">
                 <label className="sr-only" htmlFor="fundraiser-type">
-                  Filter by pot type
+                  Filter by fundraiser type
                 </label>
                 <select
                   id="fundraiser-type"

@@ -44,7 +44,7 @@ export function AdminTabBar({
         },
         {
           href: "/admin/pots",
-          label: "Pots",
+          label: "Fundraisers",
           Icon: IconWall,
           active: under("/admin/pots"),
         },

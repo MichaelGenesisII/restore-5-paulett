@@ -3,9 +3,9 @@ import Link from "next/link";
 import { CreatePotWizard } from "@/components/pots/CreatePotWizard";
 
 export const metadata: Metadata = {
-  title: "Start a pot",
+  title: "Start a fundraiser",
   description:
-    "Open your own pot for the restoration of 5 Paulett Avenue, name it, tell your story and invite the people who already know you.",
+    "Open your own fundraiser for the restoration of 5 Paulett Avenue, name it, tell your story and invite the people who already know you.",
   alternates: { canonical: "/fundraisers/create" },
 };
 
@@ -18,12 +18,12 @@ const nehemiah = [
   {
     step: "02",
     title: "Describe it",
-    body: "Words for the pot page when you are ready — the wall cards lead with the title.",
+    body: "Words for the fundraiser page when you are ready — the wall cards lead with the title.",
   },
   {
     step: "03",
     title: "Seed it",
-    body: "You lay the first stone. Then the pot opens for everyone else.",
+    body: "You lay the first stone. Then the fundraiser opens for everyone else.",
   },
 ];
 
@@ -61,7 +61,7 @@ export default function CreatePotPage() {
                 className="h-1.5 w-1.5 shrink-0 rotate-45 bg-pvn-gold"
                 aria-hidden
               />
-              Your pot → our house
+              Your fundraiser → our house
             </p>
             <h1 className="font-nav mt-2.5 text-[2.5rem] leading-[0.95] font-bold tracking-tight text-pvn-cream uppercase sm:mt-3 sm:text-5xl lg:text-6xl">
               Take your part
@@ -73,13 +73,13 @@ export default function CreatePotPage() {
                 in the same fund.
               </span>
               <span className="hidden sm:inline">
-                A pot is a section of the rebuild with your name against it.
+                A fundraiser is a section of the rebuild with your name against it.
                 You open it, you tell people why it matters, and they give
                 through you. Every penny lands in the same fund.
               </span>
             </p>
             <p className="mt-4 hidden max-w-xl text-sm leading-relaxed text-pvn-cream/60 sm:block">
-              The short story of a pot is below. The form itself is six steps,
+              The short story of a fundraiser is below. The form itself is six steps,
               then your seed gift — and you can watch the finished card change
               as you write.
             </p>
@@ -164,7 +164,7 @@ export default function CreatePotPage() {
           </blockquote>
 
           <p className="mt-5 text-sm leading-relaxed text-pvn-navy/70 text-pretty">
-            Would you rather give than run a pot?
+            Would you rather give than run a fundraiser?
           </p>
 
           <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
@@ -178,7 +178,7 @@ export default function CreatePotPage() {
               href="/fundraisers"
               className="font-nav inline-flex min-h-10 items-center rounded-md border border-pvn-navy/25 px-5 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:border-pvn-gold hover:text-pvn-gold"
             >
-              Join a pot
+              Join a fundraiser
             </Link>
           </div>
         </div>

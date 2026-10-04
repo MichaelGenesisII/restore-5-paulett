@@ -40,16 +40,16 @@ export function HostGate({ error, onSignedIn }: HostGateProps) {
             Host home
           </p>
           <h1 className="font-display hidden max-w-md text-[2.15rem] leading-[1.12] font-semibold text-balance sm:text-4xl lg:mt-3 lg:block">
-            Your pots. Your replies. One login.
+            Your fundraisers. Your replies. One login.
           </h1>
           <p className="mt-0 hidden max-w-sm text-sm leading-relaxed text-pvn-cream/68 lg:mt-4 lg:block">
-            Sign in with the email you used when you opened a pot. Manage
-            details, covers, and gift messages from here.
+            Sign in with the email you used when you opened a fundraiser.
+            Manage details, covers, and gift messages from here.
           </p>
 
           <ul className="mt-8 hidden space-y-3.5 text-sm text-pvn-cream/72 lg:block">
             {[
-              "Edit pot story and cover",
+              "Edit fundraiser story and cover",
               "Reply once to each gift message",
               "Change your password anytime",
             ].map((item) => (
@@ -70,7 +70,7 @@ export function HostGate({ error, onSignedIn }: HostGateProps) {
               href="/fundraisers/create"
               className="font-semibold text-pvn-gold underline decoration-pvn-gold/35 underline-offset-4 transition hover:text-pvn-gold-light"
             >
-              Start a pot
+              Start a fundraiser
             </Link>
           </p>
         </div>
@@ -89,7 +89,7 @@ export function HostGate({ error, onSignedIn }: HostGateProps) {
                 Sign in
               </h2>
               <p className="mt-1.5 text-[0.8rem] leading-snug text-pvn-navy/58 sm:text-sm">
-                Email and password from when you created your pot.
+                Email and password from when you created your fundraiser.
               </p>
             </div>
 

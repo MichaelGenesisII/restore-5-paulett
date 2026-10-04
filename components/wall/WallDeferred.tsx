@@ -114,8 +114,8 @@ export async function WallStonesSection({ page }: { page: number }) {
             >
               Give now
             </Link>{" "}
-            come first. Recent messages from pots follow — each pot still keeps
-            its full conversation on its own page.
+            come first. Recent messages from fundraisers follow — each
+            fundraiser still keeps its full conversation on its own page.
           </p>
         </div>
 
@@ -125,8 +125,8 @@ export async function WallStonesSection({ page }: { page: number }) {
               No words yet — only bare stone.
             </p>
             <p className="relative mx-auto mt-3 max-w-md text-sm leading-relaxed text-pvn-navy/60">
-              When someone gives to the house — or through a pot — and leaves a
-              sentence, a verse, or a memory, it will be set here.
+              When someone gives to the house — or through a fundraiser — and
+              leaves a sentence, a verse, or a memory, it will be set here.
             </p>
             <Link
               href="/give"
@@ -158,7 +158,7 @@ export async function WallStonesSection({ page }: { page: number }) {
                     : "/give";
                 const ariaLabel =
                   stone.source === "pot" && stone.pot
-                    ? `Open ${stone.pot.title} pot`
+                    ? `Open ${stone.pot.title} fundraiser`
                     : "Give to the house";
 
                 return (
@@ -182,7 +182,7 @@ export async function WallStonesSection({ page }: { page: number }) {
                       <span className="the-wall-stone-sheen" aria-hidden />
                       {stone.source === "pot" && stone.pot ? (
                         <p className="font-nav relative mb-3 text-[0.6rem] font-bold tracking-[0.16em] text-pvn-gold uppercase">
-                          via {stone.pot.title} pot
+                          via {stone.pot.title} fundraiser
                         </p>
                       ) : (
                         <p className="font-nav relative mb-3 text-[0.6rem] font-bold tracking-[0.16em] text-pvn-navy/35 uppercase">

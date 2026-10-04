@@ -66,7 +66,7 @@ export async function GET(request: Request, context: RouteContext) {
   });
 
   if (!pot) {
-    return NextResponse.json({ error: "Pot not found" }, { status: 404 });
+    return NextResponse.json({ error: "Fundraiser not found" }, { status: 404 });
   }
 
   const transitions = allowedPotTransitions(pot.status).map((to) => ({
@@ -118,7 +118,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     select: { id: true, status: true, slug: true },
   });
   if (!pot) {
-    return NextResponse.json({ error: "Pot not found" }, { status: 404 });
+    return NextResponse.json({ error: "Fundraiser not found" }, { status: 404 });
   }
 
   if (!canTransitionPotStatus(pot.status, nextStatus)) {
@@ -126,7 +126,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json(
         {
           error:
-            "A pot still needs its first seed gift before it can go live.",
+            "A fundraiser still needs its first seed gift before it can go live.",
         },
         { status: 400 },
       );

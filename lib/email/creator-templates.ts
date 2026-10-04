@@ -13,16 +13,16 @@ export function creatorCredentialsEmail(input: {
   const hostUrl = `${appBaseUrl()}/host`;
 
   return {
-    subject: `Your pot login for “${input.potTitle}”`,
+    subject: `Your fundraiser login for “${input.potTitle}”`,
     html: emailShell({
       tone: "success",
-      preheader: `Your pot is ready. Sign in with ${input.email} and the temporary password in this email.`,
-      eyebrow: "Pot host account",
+      preheader: `Your fundraiser is ready. Sign in with ${input.email} and the temporary password in this email.`,
+      eyebrow: "Fundraiser host account",
       title: "Your login is ready",
       bodyHtml: [
         p(`Dear ${escapeHtml(first)},`),
         p(
-          `Your pot <strong>${escapeHtml(input.potTitle)}</strong> is on the wall (pending your seed gift). We have opened a host login so you can manage it later.`,
+          `Your fundraiser <strong>${escapeHtml(input.potTitle)}</strong> is on the wall (pending your seed gift). We have opened a host login so you can manage it later.`,
         ),
         p(
           "No email verification is needed — use these details to sign in. You can change the password after you are in.",
@@ -43,9 +43,9 @@ export function creatorCredentialsEmail(input: {
         ),
       ].join(""),
       cta: { label: "Open host home", href: hostUrl },
-      secondaryCta: { label: "Manage this pot", href: manageUrl },
+      secondaryCta: { label: "Manage this fundraiser", href: manageUrl },
       footnote:
-        "This email is for the person who hosts the pot. If that was not you, reply and we will help.",
+        "This email is for the person who hosts the fundraiser. If that was not you, reply and we will help.",
     }),
   };
 }
@@ -59,7 +59,7 @@ export function creatorPasswordResetEmail(input: {
   const hostUrl = `${appBaseUrl()}/host`;
 
   return {
-    subject: "Your new temporary pot-host password",
+    subject: "Your new temporary fundraiser host password",
     html: emailShell({
       tone: "pending",
       preheader: "A new temporary password is ready. Sign in, then change it when you can.",
@@ -68,7 +68,7 @@ export function creatorPasswordResetEmail(input: {
       bodyHtml: [
         p(`Dear ${escapeHtml(first)},`),
         p(
-          "You asked for a new password for your pot-host login. Use the temporary password below — the old one no longer works.",
+          "You asked for a new password for your fundraiser host login. Use the temporary password below — the old one no longer works.",
         ),
         `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0 18px;background:#ffffff;border:1px solid rgba(12,27,51,0.1);border-radius:8px;">
           <tr>

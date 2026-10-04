@@ -198,11 +198,11 @@ export function HostOverview() {
       : pending > 0
         ? {
             href: `/host/pots/${needsAttention.find((p) => p.status === "PENDING")?.slug ?? data.pots[0]?.slug ?? ""}`,
-            label: "Seed a pot",
+            label: "Seed a fundraiser",
           }
         : data.pots.length === 0
-          ? { href: "/host/pots/new", label: "Start a pot" }
-          : { href: "/host/pots", label: "Your pots" };
+          ? { href: "/host/pots/new", label: "Start a fundraiser" }
+          : { href: "/host/pots", label: "Your fundraisers" };
 
   const tabs: Array<{ id: Tab; label: string; badge?: number }> = [
     {
@@ -211,7 +211,7 @@ export function HostOverview() {
       badge: focusCount > 0 ? focusCount : undefined,
     },
     { id: "movers", label: "Movers" },
-    { id: "pots", label: "Pots" },
+    { id: "pots", label: "Fundraisers" },
   ];
 
   return (
@@ -247,12 +247,12 @@ export function HostOverview() {
               </h1>
               <p className="mt-1 text-sm leading-snug text-pvn-cream/70">
                 {data.pots.length === 0
-                  ? "No pots yet — open the first one and Overview will fill with progress and gift messages."
+                  ? "No fundraisers yet — open the first one and Overview will fill with progress and gift messages."
                   : unreplied > 0
                     ? `${unreplied} gift ${unreplied === 1 ? "message" : "messages"} waiting for a reply. Start there.`
                     : pending > 0
-                      ? `${pending} ${pending === 1 ? "pot still needs" : "pots still need"} a seed to go live.`
-                      : `No gift messages waiting for a reply. ${live} live ${live === 1 ? "pot" : "pots"} on the wall.`}
+                      ? `${pending} ${pending === 1 ? "fundraiser still needs" : "fundraisers still need"} a seed to go live.`
+                      : `No gift messages waiting for a reply. ${live} live ${live === 1 ? "fundraiser" : "fundraisers"} on the wall.`}
               </p>
             </div>
           </div>
@@ -269,7 +269,7 @@ export function HostOverview() {
                 href="/host/pots/new"
                 className="font-nav inline-flex min-h-9 items-center rounded-md border border-pvn-cream/30 px-3 text-[0.65rem] font-bold tracking-[0.12em] text-pvn-cream uppercase transition hover:border-pvn-gold hover:text-pvn-gold"
               >
-                Start a pot
+                Start a fundraiser
               </Link>
             ) : null}
           </div>
@@ -279,7 +279,7 @@ export function HostOverview() {
           <div className="relative mt-5 grid gap-4 border-t border-pvn-cream/12 pt-4 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] sm:items-end">
             <div>
               <p className="font-nav text-[0.55rem] font-bold tracking-[0.16em] text-pvn-cream/45 uppercase">
-                Raised across pots
+                Raised across fundraisers
               </p>
               <p className="font-display mt-0.5 text-3xl font-semibold tracking-tight text-pvn-cream sm:text-4xl">
                 {formatWholeGbp(raised)}
@@ -342,9 +342,9 @@ export function HostOverview() {
       {data.pots.length === 0 ? (
         <HostEmptyState
           title="Your wall is waiting"
-          body="Start a pot, seed it, and invite your people. Overview will fill with movers, thank-yous, and progress."
+          body="Start a fundraiser, seed it, and invite your people. Overview will fill with movers, thank-yous, and progress."
           actionHref="/host/pots/new"
-          actionLabel="Start a pot"
+          actionLabel="Start a fundraiser"
         />
       ) : (
         <>
@@ -390,8 +390,8 @@ export function HostOverview() {
                     Nothing waiting
                   </p>
                   <p className="mx-auto mt-2 max-w-sm text-sm text-pvn-navy/55">
-                    No unreplied messages and no pots stuck on seed. Check
-                    Movers for who’s leading the wall.
+                    No unreplied messages and no fundraisers stuck on seed.
+                    Check Movers for who’s leading the wall.
                   </p>
                   <button
                     type="button"
@@ -433,7 +433,7 @@ export function HostOverview() {
                             </div>
                             <p className="mt-2 text-sm text-pvn-navy/55">
                               {needsSeed
-                                ? "Lay the first stone so this pot can go live."
+                                ? "Lay the first stone so this fundraiser can go live."
                                 : "Someone left words — a thank-you is waiting."}
                             </p>
                           </div>
@@ -448,7 +448,7 @@ export function HostOverview() {
                             className="font-nav inline-flex min-h-9 shrink-0 items-center rounded-md bg-pvn-gold px-3.5 text-[0.65rem] font-bold tracking-[0.12em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
                           >
                             {needsSeed
-                              ? "Seed pot"
+                              ? "Seed fundraiser"
                               : unrepliedCount > 0
                                 ? "Reply"
                                 : "Manage"}
@@ -467,7 +467,7 @@ export function HostOverview() {
               <h2 className="sr-only">Top movers</h2>
               {topMovers.length === 0 ? (
                 <p className="text-sm text-pvn-navy/55">
-                  No gifts yet — share a pot link and this board will fill.
+                  No gifts yet — share a fundraiser link and this board will fill.
                 </p>
               ) : (
                 <ul className="grid gap-3">
@@ -520,7 +520,7 @@ export function HostOverview() {
           {tab === "pots" ? (
             <section className="mt-6 animate-[pvn-rise_0.35s_ease-out]">
               <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
-                <h2 className="sr-only">Your pots</h2>
+                <h2 className="sr-only">Your fundraisers</h2>
                 <p className="text-sm text-pvn-navy/55">
                   {data.pots.length} on this account
                 </p>

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   const description =
     host.bio?.trim().slice(0, 140) ||
-    `Pots hosted by ${host.name} for the restoration of 5 Paulett Avenue.`;
+    `Fundraisers hosted by ${host.name} for the restoration of 5 Paulett Avenue.`;
   const path = `/hosts/${profileSlug}`;
   return {
     title: host.name,
@@ -71,11 +71,14 @@ function alumniLine(host: {
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="px-3 py-4 text-center sm:px-6 sm:py-5">
-      <p className="font-display text-2xl leading-none font-semibold text-pvn-cream sm:text-3xl">
+    <div className="min-w-0 px-3 py-4 text-center sm:px-6 sm:py-5">
+      <p className="font-display truncate text-2xl leading-none font-semibold text-pvn-cream sm:text-3xl">
         {value}
       </p>
-      <p className="font-nav mt-2 text-[0.6rem] font-bold tracking-[0.16em] text-pvn-gold-light uppercase sm:text-[0.65rem]">
+      <p
+        className="font-nav mt-2 truncate text-[0.6rem] font-bold tracking-[0.16em] text-pvn-gold-light uppercase sm:text-[0.65rem]"
+        title={label}
+      >
         {label}
       </p>
     </div>
@@ -222,7 +225,7 @@ export default async function HostPublicProfilePage({
                     className="font-nav inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-pvn-gold px-5 text-xs font-bold tracking-[0.16em] text-pvn-navy uppercase shadow-[0_10px_24px_-10px_rgba(201,168,76,0.8)] transition hover:bg-pvn-gold-light active:scale-[0.97]"
                   >
                     <IconHeart className="h-4 w-4" />
-                    Give to {livePots === 1 ? "this pot" : "a pot"}
+                    Give to {livePots === 1 ? "this fundraiser" : "a fundraiser"}
                   </Link>
                 ) : null}
                 {host.profileSlug ? (
@@ -240,7 +243,7 @@ export default async function HostPublicProfilePage({
             <Stat value={gifts.toLocaleString("en-GB")} label={gifts === 1 ? "Gift" : "Gifts"} />
             <Stat
               value={livePots.toString()}
-              label={livePots === 1 ? "Live pot" : "Live pots"}
+              label={livePots === 1 ? "Live fundraiser" : "Live fundraisers"}
             />
           </div>
         </div>
@@ -269,7 +272,7 @@ export default async function HostPublicProfilePage({
               Hosted by {firstName}
             </p>
             <h2 className="font-display mt-1 text-3xl font-semibold text-pvn-navy">
-              Live pots
+              Live fundraisers
             </h2>
           </div>
           {livePots > 0 ? (
@@ -283,17 +286,17 @@ export default async function HostPublicProfilePage({
           <div className="mt-8 flex flex-col items-center rounded-xl border border-dashed border-pvn-navy/15 bg-white/50 px-6 py-12 text-center">
             <span className="h-2 w-2 rotate-45 bg-pvn-gold" aria-hidden />
             <p className="font-display mt-4 text-xl font-semibold text-pvn-navy">
-              No live pots just now
+              No live fundraisers just now
             </p>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-pvn-navy/60">
-              {firstName}&apos;s pots have closed, but the restoration goes on.
-              Find another pot to give to.
+              {firstName}&apos;s fundraisers have closed, but the restoration
+              goes on. Find another fundraiser to give to.
             </p>
             <Link
               href="/fundraisers"
               className="font-nav mt-6 inline-flex min-h-11 items-center justify-center rounded-md bg-pvn-navy px-5 text-xs font-bold tracking-[0.16em] text-pvn-cream uppercase transition hover:bg-pvn-navy-light active:scale-[0.97]"
             >
-              Browse all pots
+              Browse all fundraisers
             </Link>
           </div>
         ) : (
@@ -308,7 +311,7 @@ export default async function HostPublicProfilePage({
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              label={`${firstName}'s pots pagination`}
+              label={`${firstName}'s fundraisers pagination`}
               hrefFor={(p) =>
                 `${p > 1 ? `${profilePath}?page=${p}` : profilePath}#pots`
               }

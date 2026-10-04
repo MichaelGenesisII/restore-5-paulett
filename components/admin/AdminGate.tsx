@@ -40,7 +40,7 @@ export function AdminGate({ error, onSignedIn }: AdminGateProps) {
             Admin
           </p>
           <h1 className="font-display hidden max-w-md text-[2.15rem] leading-[1.12] font-semibold text-balance sm:text-4xl lg:mt-3 lg:block">
-            Gifts, pots, and house ops.
+            Gifts, fundraisers, and house ops.
           </h1>
           <p className="mt-0 hidden max-w-sm text-sm leading-relaxed text-pvn-cream/68 lg:mt-4 lg:block">
             Sign in with a staff email on the admin allowlist. Exports, inbox,
@@ -50,7 +50,7 @@ export function AdminGate({ error, onSignedIn }: AdminGateProps) {
           <ul className="mt-8 hidden space-y-3.5 text-sm text-pvn-cream/72 lg:block">
             {[
               "Review gifts and Gift Aid exports",
-              "Moderate inbox and pot hosts",
+              "Moderate inbox and fundraiser hosts",
               "Manage who else can open this desk",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3">
@@ -64,7 +64,7 @@ export function AdminGate({ error, onSignedIn }: AdminGateProps) {
           </ul>
 
           <p className="text-center text-[0.8rem] leading-relaxed text-pvn-cream/55 lg:mt-10 lg:text-left lg:text-sm">
-            Looking for your pot?{" "}
+            Looking for your fundraiser?{" "}
             <Link
               href="/host"
               className="font-semibold text-pvn-gold underline decoration-pvn-gold/35 underline-offset-4 transition hover:text-pvn-gold-light"

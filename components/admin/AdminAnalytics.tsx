@@ -81,7 +81,7 @@ const MAIN_TABS: Array<{ id: MainTab; label: string }> = [
   { id: "overview", label: "Overview" },
   { id: "trends", label: "Trends" },
   { id: "checkout", label: "Checkout" },
-  { id: "pots", label: "Pots" },
+  { id: "pots", label: "Fundraisers" },
 ];
 
 const TREND_METRICS: Array<{ id: TrendMetric; label: string }> = [
@@ -566,7 +566,7 @@ export function AdminAnalytics() {
               <span className="text-pvn-cream/30"> · </span>
               {data.totals.direct.count} direct
               <span className="text-pvn-cream/30"> · </span>
-              {data.totals.pot.count} pot
+              {data.totals.pot.count} fundraiser
             </p>
           </div>
 
@@ -628,7 +628,7 @@ export function AdminAnalytics() {
                 hint={`${data.totals.direct.count} gifts`}
               />
               <KpiCell
-                label="Pot gifts"
+                label="Fundraiser gifts"
                 value={formatWholeGbp(data.totals.pot.pence)}
                 hint={`${data.totals.pot.count} gifts`}
               />
@@ -754,7 +754,7 @@ export function AdminAnalytics() {
             <div
               className="flex flex-wrap gap-1 border border-pvn-navy/10 bg-white p-1"
               role="tablist"
-              aria-label="Pot rankings"
+              aria-label="Fundraiser rankings"
             >
               {(
                 [
@@ -784,14 +784,14 @@ export function AdminAnalytics() {
               {potSub === "raised" ? (
                 <>
                   <h2 className="font-nav text-[0.65rem] font-bold tracking-[0.16em] text-pvn-gold uppercase">
-                    Top pots by £
+                    Top fundraisers by £
                   </h2>
                   <p className="mt-1 text-[0.75rem] text-pvn-navy/50">
                     Succeeded gifts in the selected range
                   </p>
                   <div className="mt-5">
                     <BarList
-                      empty="No pot gifts in this range."
+                      empty="No fundraiser gifts in this range."
                       valueFormat="money"
                       items={data.topPotsByRaised.map((p) => ({
                         label: p.title,
@@ -806,14 +806,14 @@ export function AdminAnalytics() {
               {potSub === "count" ? (
                 <>
                   <h2 className="font-nav text-[0.65rem] font-bold tracking-[0.16em] text-pvn-gold uppercase">
-                    Top pots by gifts
+                    Top fundraisers by gifts
                   </h2>
                   <p className="mt-1 text-[0.75rem] text-pvn-navy/50">
                     Succeeded gifts in the selected range
                   </p>
                   <div className="mt-5">
                     <BarList
-                      empty="No pot gifts in this range."
+                      empty="No fundraiser gifts in this range."
                       items={data.topPotsByCount.map((p) => ({
                         label: p.title,
                         value: p.count,
@@ -830,11 +830,11 @@ export function AdminAnalytics() {
                     Lifetime leaders
                   </h2>
                   <p className="mt-1 text-[0.75rem] text-pvn-navy/50">
-                    Pot totals from the database — independent of range
+                    Fundraiser totals from the database — independent of range
                   </p>
                   <div className="mt-5">
                     <BarList
-                      empty="No pots yet."
+                      empty="No fundraisers yet."
                       valueFormat="money"
                       items={data.lifetimeTopPots.slice(0, 10).map((p) => ({
                         label: p.title,

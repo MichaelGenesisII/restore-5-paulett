@@ -51,7 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <ToastProvider>
           <Header />
-          <div id="main-content" className="flex-1" tabIndex={-1}>
+          <div id="main-content" className="flex-1 focus:outline-none" tabIndex={-1}>
             {children}
           </div>
           <Footer />

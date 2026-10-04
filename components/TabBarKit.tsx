@@ -145,7 +145,7 @@ export function TabBarCenterItem({
       href={href}
       aria-current={active ? "page" : undefined}
       onClick={() => onNavigate(href)}
-      className="group relative flex h-full flex-col items-center justify-end pb-2 text-[0.6875rem] font-semibold tracking-wide whitespace-nowrap text-pvn-navy select-none [-webkit-tap-highlight-color:transparent]"
+      className="group relative flex h-full w-full min-w-0 flex-col items-center justify-end pb-2 text-[0.6875rem] font-semibold tracking-wide whitespace-nowrap text-pvn-navy select-none [-webkit-tap-highlight-color:transparent]"
     >
       {/* The cradle: a cream disc behind the button reads as a notch cut into
           the bar's top edge. */}
@@ -168,7 +168,7 @@ export function TabBarCenterItem({
         </span>
       </span>
 
-      <span className="relative">{label}</span>
+      <span className="relative block max-w-full truncate px-1">{label}</span>
     </Link>
   );
 }
@@ -211,7 +211,7 @@ export function TabBarItem(props: TabBarItemProps) {
           </span>
         ) : null}
       </span>
-      <span className="relative whitespace-nowrap">{label}</span>
+      <span className="relative block max-w-full truncate px-1">{label}</span>
       {active ? (
         <span
           className="pvn-tab-dot absolute bottom-1.5 h-1 w-1 rounded-full bg-pvn-gold"

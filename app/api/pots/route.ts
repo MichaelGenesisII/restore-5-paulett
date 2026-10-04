@@ -11,7 +11,7 @@ import { bearerToken } from "@/lib/auth/require-host";
 import { verifyAccessToken } from "@/lib/auth/verify-access-token";
 import { notifyCreatorCredentials } from "@/lib/email/creator-notify";
 import { uniquePotSlug } from "@/lib/slug";
-import { assertDonationPence, formatWholeGbp, MIN_POT_SEED_PENCE } from "@/lib/money";
+import { assertPotTargetPence, formatWholeGbp, MIN_POT_SEED_PENCE } from "@/lib/money";
 import {
   MIN_FOUNDER_STORY_WORDS,
   MIN_POT_DESCRIPTION_WORDS,
@@ -140,7 +140,7 @@ export async function POST(request: Request) {
   const storyProblem = optionalCopyProblem(
     story ?? "",
     MIN_POT_DESCRIPTION_WORDS,
-    "The pot description",
+    "The fundraiser description",
   );
   if (storyProblem) {
     return NextResponse.json({ error: storyProblem }, { status: 400 });
@@ -175,12 +175,12 @@ export async function POST(request: Request) {
     );
   }
   if (!type || !POT_TYPES.has(type)) {
-    return NextResponse.json({ error: "Invalid pot type." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid fundraiser type." }, { status: 400 });
   }
 
   let targetAmount: number;
   try {
-    targetAmount = assertDonationPence(data.targetAmountPence);
+    targetAmount = assertPotTargetPence(data.targetAmountPence);
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Choose a valid target amount.";
@@ -198,7 +198,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             error:
-              "This email already has a Host login. Sign in at Host home, then create the pot — or use a different email.",
+              "This email already has a Host login. Sign in at Host home, then create the fundraiser — or use a different email.",
           },
           { status: 401 },
         );
@@ -310,8 +310,8 @@ export async function POST(request: Request) {
           credentialsEmailed,
         },
         message: account.isNewAccount
-          ? `Pot ready. Check your inbox for your Host login, then seed with ${formatWholeGbp(MIN_POT_SEED_PENCE)} or more to open it.`
-          : `Pot ready — linked to your existing login. Seed with ${formatWholeGbp(MIN_POT_SEED_PENCE)} or more to open it.`,
+          ? `Fundraiser ready. Check your inbox for your Host login, then seed with ${formatWholeGbp(MIN_POT_SEED_PENCE)} or more to open it.`
+          : `Fundraiser ready — linked to your existing login. Seed with ${formatWholeGbp(MIN_POT_SEED_PENCE)} or more to open it.`,
       },
       { status: 201 },
     );
@@ -321,7 +321,7 @@ export async function POST(request: Request) {
       {
         error: isVisitorError(error)
           ? error.message
-          : "We could not create your pot. Please try again.",
+          : "We could not create your fundraiser. Please try again.",
       },
       { status: 500 },
     );

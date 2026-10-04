@@ -2,7 +2,7 @@ import { ContactTopic } from "@prisma/client";
 
 export const CONTACT_TOPIC_LABELS: Record<ContactTopic, string> = {
   GIVING: "Giving & Gift Aid",
-  POT: "My pot",
+  POT: "My fundraiser",
   LEGACY: "Legacy & gifts in wills",
   GRANTS: "Grants & trusts",
   ALUMNI: "Alumni",

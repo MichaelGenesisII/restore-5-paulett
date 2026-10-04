@@ -53,7 +53,7 @@ const nav = [
   },
   {
     href: "/admin/pots",
-    label: "Pots",
+    label: "Fundraisers",
     match: (p: string) => p.startsWith("/admin/pots"),
   },
   {

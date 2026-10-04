@@ -4,7 +4,7 @@
 
 export const SITE_NAME = "Restore 5 Paulett";
 export const SITE_TAGLINE =
-  "Help Place of Victory for All Nations Belfast restore 5 Paulett Avenue — YOUR POT → OUR HOUSE.";
+  "Help Place of Victory for All Nations Belfast restore 5 Paulett Avenue — YOUR FUNDRAISER → OUR HOUSE.";
 
 export function siteOrigin(): string {
   return (
