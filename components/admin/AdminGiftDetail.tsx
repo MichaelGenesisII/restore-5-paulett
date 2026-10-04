@@ -35,7 +35,6 @@ type GiftDetail = {
   stripeInvoiceId: string | null;
   totalsApplied?: boolean;
   subscriptionCancelledAt: string | null;
-  paymentMethod: string;
   createdAt: string;
   destination: "POT" | "DIRECT";
   pot: {
@@ -64,8 +63,7 @@ function formatWhen(iso: string) {
   });
 }
 
-function methodLabel(method: string, recurring: boolean) {
-  if (method === "BACS_DEBIT") return "Bank standing order (Bacs)";
+function methodLabel(recurring: boolean) {
   return recurring ? "Card · monthly" : "Card · one-off";
 }
 
@@ -365,7 +363,7 @@ export function AdminGiftDetail({ id }: { id: string }) {
               )}
             </Field>
             <Field label="Method">
-              {methodLabel(gift.paymentMethod, gift.isRecurring)}
+              {methodLabel(gift.isRecurring)}
             </Field>
             <Field label="Category">
               {gift.restorationCategory.replaceAll("_", " ").toLowerCase()}

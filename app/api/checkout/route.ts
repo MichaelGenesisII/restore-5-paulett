@@ -1,16 +1,12 @@
 import { NextResponse } from "next/server";
 import {
   DonationStatus,
+  PaymentMethod,
   PotStatus,
   RestorationCategory,
 } from "@prisma/client";
 import { GBP } from "@/lib/constants";
-import {
-  isStandingOrder,
-  isSubscription,
-  parseGiftMode,
-  prismaPaymentMethod,
-} from "@/lib/gift-mode";
+import { isSubscription, parseGiftMode } from "@/lib/gift-mode";
 import { assertDonationPence, formatWholeGbp, MIN_POT_SEED_PENCE } from "@/lib/money";
 import { acceptsGifts } from "@/lib/pot-lifecycle";
 import { prisma } from "@/lib/prisma";
@@ -129,9 +125,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          giftMode === "bacs_standing_order"
-            ? "Email is required for bank standing orders."
-            : "Email is required for monthly card gifts so we can send receipts.",
+          "Email is required for monthly card gifts so we can send receipts.",
       },
       { status: 400 },
     );
@@ -185,7 +179,7 @@ export async function POST(request: Request) {
     pot?.restorationCategory ?? RestorationCategory.GENERAL;
   const successPath = pot ? `/pots/${pot.slug}` : "/give";
   const cancelPath = successPath;
-  const paymentMethod = prismaPaymentMethod(giftMode);
+  const paymentMethod = PaymentMethod.CARD;
   const recurring = isSubscription(giftMode);
 
   // Double-submit: reuse a still-open Checkout session for the same gift.
@@ -256,15 +250,14 @@ export async function POST(request: Request) {
     ? `5 Paulett — ${pot.title}`
     : "5 Paulett restoration";
 
-  const standingOrder = isStandingOrder(giftMode);
-
   try {
     const session = await getStripe().checkout.sessions.create({
       mode: recurring ? "subscription" : "payment",
       currency: GBP,
       customer_email: donorEmail ?? undefined,
-      payment_method_types: standingOrder ? ["bacs_debit"] : undefined,
-      billing_address_collection: standingOrder ? "required" : "auto",
+      // Card only (Apple Pay / Google Pay ride on card); keeps Dashboard-enabled
+      // delayed methods such as Bacs out of Checkout.
+      payment_method_types: ["card"],
       success_url: `${origin}${successPath}?checkout=processing&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}${cancelPath}?checkout=cancelled&donation_id=${donation.id}`,
       metadata,
@@ -312,10 +305,9 @@ export async function POST(request: Request) {
       potSlug: pot?.slug ?? null,
     });
 
-    const failMessage =
-      error instanceof Error && error.message.includes("bacs_debit")
-        ? "Bank standing orders are not available yet. Please give by card instead."
-        : "We could not start checkout. Please try again.";
-    return NextResponse.json({ error: failMessage }, { status: 500 });
+    return NextResponse.json(
+      { error: "We could not start checkout. Please try again." },
+      { status: 500 },
+    );
   }
 }

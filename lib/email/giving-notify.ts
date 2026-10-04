@@ -8,7 +8,6 @@ import {
   monthlyRenewalEmail,
   orgDirectGiftReceivedEmail,
   paymentFailedEmail,
-  standingOrderSetupEmail,
   type GivingEmailContext,
 } from "@/lib/email/giving-templates";
 import { sendEmail } from "@/lib/email/send";
@@ -36,7 +35,6 @@ function toContext(
     amountPence: donation.amount,
     giftAid: donation.giftAid,
     isRecurring: donation.isRecurring,
-    paymentMethod: donation.paymentMethod,
     potTitle: donation.pot?.title ?? null,
     potSlug: donation.pot?.slug ?? null,
     message: donation.message,
@@ -174,26 +172,6 @@ export async function notifyGiftSucceeded(donationId: string) {
   } catch (err) {
     console.error("Host/org gift notice failed", err);
   }
-}
-
-export async function notifyStandingOrderSetup(donationId: string) {
-  const donation = await loadDonation(donationId);
-  if (!donation) return;
-  const isSeedGift = await isSeedGiftFor(donation);
-  const ctx = toContext(donation, { isSeedGift });
-  if (!ctx) return;
-
-  const payload = standingOrderSetupEmail(ctx);
-  await sendEmail({
-    to: ctx.donorEmail,
-    subject: payload.subject,
-    html: payload.html,
-    idempotencyKey: `standing-order-setup/${donationId}`,
-    tags: [
-      { name: "kind", value: "standing_order_setup" },
-      { name: "donation_id", value: donationId.slice(0, 48) },
-    ],
-  });
 }
 
 export async function notifyMonthlyRenewal(donationId: string) {

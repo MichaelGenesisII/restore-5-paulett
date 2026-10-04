@@ -177,7 +177,7 @@ export default function PrivacyPage() {
           items={[
             <>
               <strong className="font-semibold text-pvn-navy">Stripe</strong> —
-              processes card and direct debit payments.
+              processes card payments.
             </>,
             <>
               <strong className="font-semibold text-pvn-navy">Supabase</strong>{" "}

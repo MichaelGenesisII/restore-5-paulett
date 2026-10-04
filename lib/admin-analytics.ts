@@ -46,7 +46,6 @@ async function loadAdminAnalytics(range: AdminAnalyticsRange) {
         potId: true,
         giftAid: true,
         isRecurring: true,
-        paymentMethod: true,
         createdAt: true,
         pot: { select: { slug: true, title: true } },
       },
@@ -90,10 +89,8 @@ async function loadAdminAnalytics(range: AdminAnalyticsRange) {
 
   let cardOneOff = 0;
   let cardMonthly = 0;
-  let bacs = 0;
   for (const d of succeeded) {
-    if (d.paymentMethod === "BACS_DEBIT") bacs += 1;
-    else if (d.isRecurring) cardMonthly += 1;
+    if (d.isRecurring) cardMonthly += 1;
     else cardOneOff += 1;
   }
 
@@ -187,7 +184,6 @@ async function loadAdminAnalytics(range: AdminAnalyticsRange) {
       methods: {
         cardOneOff,
         cardMonthly,
-        bacs,
       },
       giftAid: {
         count: giftAidGifts.length,

@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ResultModal } from "@/components/ResultModal";
 import { StepRail } from "@/components/StepRail";
 import { useToast } from "@/components/toast/ToastProvider";
-import type { GiftMode } from "@/lib/gift-mode";
+import { parseGiftMode, type GiftMode } from "@/lib/gift-mode";
 import {
   MAX_DONATION_PENCE,
   MIN_DONATION_PENCE,
@@ -28,11 +28,6 @@ const modes: { value: GiftMode; label: string; note: string }[] = [
     value: "card_monthly",
     label: "Monthly",
     note: "A gift every month by card, until you stop it.",
-  },
-  {
-    value: "bacs_standing_order",
-    label: "Standing order",
-    note: "A monthly Direct Debit straight from your UK bank account. The first payment takes a few working days to clear.",
   },
 ];
 
@@ -124,7 +119,7 @@ export function GiveForm({
     // sessionStorage only exists after hydration, so this one-time restore has
     // to happen here; a layout effect applies it before the first paint.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setGiftMode(saved.giftMode as GiftMode);
+    setGiftMode(parseGiftMode({ giftMode: saved.giftMode }));
     setPreset(saved.preset);
     setCustom(saved.custom);
     setDonorName(saved.donorName);
@@ -155,7 +150,6 @@ export function GiveForm({
   }
 
   const recurring = giftMode !== "card_once";
-  const standingOrder = giftMode === "bacs_standing_order";
   const presets = (recurring ? MONTHLY_PRESETS : ONE_OFF_PRESETS).filter(
     (value) => value >= minGiftPence,
   );
@@ -492,14 +486,14 @@ export function GiveForm({
                     <div
                       role="radiogroup"
                       aria-label="How often would you like to give?"
-                      className="relative mt-3 grid grid-cols-3 gap-1.5 rounded-sm border border-pvn-navy/12 bg-pvn-navy/[0.03] p-1.5"
+                      className="relative mt-3 grid grid-cols-2 gap-1.5 rounded-sm border border-pvn-navy/12 bg-pvn-navy/[0.03] p-1.5"
                     >
                       {/* The selected pill slides between options rather than blinking */}
                       <span
                         className="pointer-events-none absolute inset-y-1.5 left-1.5 rounded-sm bg-pvn-navy shadow-[0_10px_24px_-14px_rgba(12,27,51,0.9)] transition-transform duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
                         aria-hidden
                         style={{
-                          width: "calc((100% - 1.5rem) / 3)",
+                          width: "calc((100% - 1.125rem) / 2)",
                           transform: `translateX(calc(${modeIndex} * (100% + 0.375rem)))`,
                         }}
                       />
@@ -671,11 +665,9 @@ export function GiveForm({
                       aria-hidden
                     />
                     <p className="font-nav text-[0.65rem] font-bold tracking-[0.2em] text-pvn-gold uppercase">
-                      {standingOrder
-                        ? "Monthly, by standing order"
-                        : recurring
-                          ? "Every month, by card"
-                          : "A single gift, by card"}
+                      {recurring
+                        ? "Every month, by card"
+                        : "A single gift, by card"}
                     </p>
                     <p className="font-display mt-2 text-4xl leading-none font-semibold tracking-tight sm:text-5xl">
                       {amountPence === null ? "—" : formatTidyGbp(amountPence)}
@@ -809,8 +801,6 @@ export function GiveForm({
                     →
                   </span>
                 </>
-              ) : standingOrder ? (
-                "Set up my standing order"
               ) : valid && amountPence !== null ? (
                 `Give ${formatTidyGbp(amountPence)}${per}`
               ) : (
@@ -845,13 +835,7 @@ export function GiveForm({
         variant="confirm"
         busy={pending}
         busyLabel="Taking you to checkout…"
-        title={
-          standingOrder
-            ? "Set up this standing order?"
-            : recurring
-              ? "Start this monthly gift?"
-              : "Send this gift?"
-        }
+        title={recurring ? "Start this monthly gift?" : "Send this gift?"}
         body="We will hand you to Stripe’s secure page to finish. Nothing is taken until you do."
         confirmLabel={
           amountPence === null
@@ -867,11 +851,7 @@ export function GiveForm({
         <dl className="divide-y divide-pvn-navy/10 rounded-sm border border-pvn-navy/10 bg-white/60">
           {[
             {
-              term: standingOrder
-                ? "Monthly, by standing order"
-                : recurring
-                  ? "Every month"
-                  : "One gift",
+              term: recurring ? "Every month" : "One gift",
               value:
                 amountPence === null ? "—" : `${formatTidyGbp(amountPence)}`,
             },

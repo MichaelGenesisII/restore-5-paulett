@@ -40,7 +40,6 @@ const giftSelect = {
   stripeInvoiceId: true,
   totalsApplied: true,
   subscriptionCancelledAt: true,
-  paymentMethod: true,
   createdAt: true,
   pot: {
     select: {

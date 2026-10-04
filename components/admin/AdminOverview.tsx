@@ -54,13 +54,6 @@ type OverviewPayload = {
       destination: string;
       pot: { slug: string; title: string } | null;
     }>;
-    bacsPending: Array<{
-      id: string;
-      amount: number;
-      donorEmail: string | null;
-      createdAt: string;
-      pot: { slug: string; title: string } | null;
-    }>;
     unseededPots: Array<{
       slug: string;
       title: string;
@@ -254,9 +247,6 @@ export function AdminOverview() {
       data.attention.unhandledContacts.length +
       data.attention.unseededPots.length
     : 0;
-  const attentionTotal = data
-    ? urgentCount + data.attention.bacsPending.length
-    : 0;
 
   // Default tab once: Needs you when something is waiting, else Snapshot.
   useEffect(() => {
@@ -327,15 +317,13 @@ export function AdminOverview() {
   const statusLine =
     urgentCount > 0
       ? `${urgentCount} item${urgentCount === 1 ? "" : "s"} need a decision.`
-      : data.attention.bacsPending.length > 0
-        ? `${data.attention.bacsPending.length} Bacs still clearing — expected.`
-        : "You’re clear on urgent work.";
+      : "You’re clear on urgent work.";
 
   const tabs: Array<{ id: Tab; label: string; badge?: number }> = [
     {
       id: "attention",
       label: "Needs you",
-      badge: attentionTotal > 0 ? attentionTotal : undefined,
+      badge: urgentCount > 0 ? urgentCount : undefined,
     },
     { id: "snapshot", label: "Snapshot" },
     { id: "activity", label: "Activity" },
@@ -511,14 +499,13 @@ export function AdminOverview() {
       <div className="mt-6">
         {activeTab === "attention" ? (
           <div className="space-y-4">
-            {attentionTotal === 0 ? (
+            {urgentCount === 0 ? (
               <section className="border border-pvn-navy/10 bg-white px-4 py-8 text-center sm:px-5">
                 <h2 className="font-display text-xl font-semibold text-pvn-navy">
                   Nothing urgent
                 </h2>
                 <p className="mx-auto mt-2 max-w-md text-sm text-pvn-navy/60">
-                  No stuck cards, open contacts, or pots waiting on a seed. Bacs
-                  clearance will show here when present.
+                  No stuck cards, open contacts, or pots waiting on a seed.
                 </p>
                 <button
                   type="button"
@@ -594,19 +581,6 @@ export function AdminOverview() {
                           {p.hostName}
                         </span>
                       </li>
-                    ))}
-                  </AttentionBlock>
-                ) : null}
-
-                {data.attention.bacsPending.length > 0 ? (
-                  <AttentionBlock
-                    title="Bacs awaiting bank clearance"
-                    tone="info"
-                    hint="Expected while the bank clears — not a failure until Stripe marks it failed."
-                    href="/admin/gifts?status=PENDING"
-                  >
-                    {data.attention.bacsPending.map((g) => (
-                      <AttentionGiftRow key={g.id} gift={g} />
                     ))}
                   </AttentionBlock>
                 ) : null}
@@ -761,22 +735,18 @@ function PotStat({
 function AttentionBlock({
   title,
   tone,
-  hint,
   href,
   children,
 }: {
   title: string;
-  tone: "warn" | "info" | "muted";
-  hint?: string;
+  tone: "warn" | "muted";
   href?: string;
   children: ReactNode;
 }) {
   const border =
     tone === "warn"
       ? "border-amber-800/25 bg-amber-50/60"
-      : tone === "info"
-        ? "border-sky-800/20 bg-sky-50/50"
-        : "border-pvn-navy/10 bg-white";
+      : "border-pvn-navy/10 bg-white";
 
   return (
     <section className={`rounded-sm border px-4 py-4 sm:px-5 ${border}`}>
@@ -793,9 +763,6 @@ function AttentionBlock({
           </Link>
         ) : null}
       </div>
-      {hint ? (
-        <p className="mt-1.5 text-[0.8rem] text-pvn-navy/55">{hint}</p>
-      ) : null}
       <ul className="mt-2">{children}</ul>
     </section>
   );

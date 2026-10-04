@@ -11,7 +11,6 @@ import {
   notifyGiftSucceeded,
   notifyMonthlyRenewal,
   notifyPaymentFailed,
-  notifyStandingOrderSetup,
 } from "@/lib/email/giving-notify";
 import { prisma } from "@/lib/prisma";
 import { getStripe, stripeId } from "@/lib/stripe";
@@ -80,32 +79,11 @@ async function creditCheckoutSession(session: Stripe.Checkout.Session) {
 }
 
 async function onCheckoutCompleted(session: Stripe.Checkout.Session) {
-  // Bacs standing orders: mandate is set up here but payment is still processing.
-  // Totals are credited on async_payment_succeeded or invoice.payment_succeeded.
   if (session.payment_status && session.payment_status !== "paid") {
-    const donationId = meta(session.metadata, "donationId");
-    if (donationId) {
-      scheduleNotify(() => notifyStandingOrderSetup(donationId));
-    }
     return;
   }
 
   await creditCheckoutSession(session);
-}
-
-async function onCheckoutAsyncPaymentSucceeded(
-  session: Stripe.Checkout.Session,
-) {
-  await creditCheckoutSession(session);
-}
-
-async function onCheckoutAsyncPaymentFailed(session: Stripe.Checkout.Session) {
-  const donationId = meta(session.metadata, "donationId");
-  if (!donationId) return;
-  const result = await failPendingDonation(donationId);
-  if (result.didFail) {
-    scheduleNotify(() => notifyPaymentFailed(result.donationId));
-  }
 }
 
 async function invoicePaymentIntentId(
@@ -170,12 +148,6 @@ async function onInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
   }
 
   if (invoice.billing_reason === "subscription_create") {
-    // Bacs first payment is credited via checkout.session.async_payment_succeeded.
-    // Stripe also sends invoice.payment_succeeded — skip to avoid a race.
-    if (meta(metadata, "giftMode") === "bacs_standing_order") {
-      return;
-    }
-
     const fresh = firstDonationId
       ? await prisma.donation.findUnique({ where: { id: firstDonationId } })
       : null;
@@ -308,12 +280,6 @@ export async function POST(request: Request) {
     switch (event.type) {
       case "checkout.session.completed":
         await onCheckoutCompleted(event.data.object);
-        break;
-      case "checkout.session.async_payment_succeeded":
-        await onCheckoutAsyncPaymentSucceeded(event.data.object);
-        break;
-      case "checkout.session.async_payment_failed":
-        await onCheckoutAsyncPaymentFailed(event.data.object);
         break;
       case "invoice.payment_succeeded":
         await onInvoicePaymentSucceeded(event.data.object);

@@ -6,7 +6,6 @@ export type GiftRow = {
   createdAt: Date;
   donorEmail: string | null;
   giftAid: boolean;
-  paymentMethod: string;
   isRecurring: boolean;
   message: string | null;
   commentHidden: boolean;
@@ -112,13 +111,6 @@ export function computeGiftAnalytics(input: {
     0,
   );
 
-  let card = 0;
-  let bacs = 0;
-  for (const g of input.gifts) {
-    if (g.paymentMethod === "BACS") bacs += 1;
-    else card += 1;
-  }
-
   const lastGift = input.gifts[0]
     ? [...input.gifts].sort(
         (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
@@ -173,7 +165,7 @@ export function computeGiftAnalytics(input: {
     returningDonorCount: returningDonorGifts,
     giftAidCount: giftAidGifts.length,
     giftAidEstimatePence,
-    methodSplit: { card, bacs },
+    oneOffCount: input.gifts.filter((g) => !g.isRecurring).length,
     recurringCount: input.gifts.filter((g) => g.isRecurring).length,
     messagesTotal: withMessage.length,
     messagesUnreplied,

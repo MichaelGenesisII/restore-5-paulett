@@ -30,7 +30,6 @@ type GiftRow = {
   message: string | null;
   isRecurring: boolean;
   giftAid: boolean;
-  paymentMethod: string;
   createdAt: string;
   destination: "POT" | "DIRECT";
   pot: { slug: string; title: string } | null;
@@ -47,7 +46,6 @@ type StatusCounts = {
 type Filters = {
   status: string;
   destination: string;
-  paymentMethod: string;
   giftAid: string;
   recurring: string;
   q: string;
@@ -64,7 +62,6 @@ type GiftsPayload = {
 const DEFAULT_FILTERS: Filters = {
   status: "ALL",
   destination: "ALL",
-  paymentMethod: "ALL",
   giftAid: "ALL",
   recurring: "ALL",
   q: "",
@@ -93,7 +90,6 @@ function filtersAreActive(f: Filters) {
   return (
     f.status !== "ALL" ||
     f.destination !== "ALL" ||
-    f.paymentMethod !== "ALL" ||
     f.giftAid !== "ALL" ||
     f.recurring !== "ALL" ||
     f.q.trim() !== ""
@@ -103,7 +99,6 @@ function filtersAreActive(f: Filters) {
 function secondaryFiltersActive(f: Filters) {
   return (
     f.destination !== "ALL" ||
-    f.paymentMethod !== "ALL" ||
     f.giftAid !== "ALL" ||
     f.recurring !== "ALL"
   );
@@ -127,7 +122,6 @@ function filtersFromParams(params: URLSearchParams): Filters {
       "ALL",
     ]),
     destination: pick("destination", ["DIRECT", "POT", "ALL"]),
-    paymentMethod: pick("paymentMethod", ["CARD", "BACS_DEBIT", "ALL"]),
     giftAid: pick("giftAid", ["true", "false", "ALL"]),
     recurring: pick("recurring", ["true", "false", "ALL"]),
     q: params.get("q")?.trim() ?? "",
@@ -139,7 +133,7 @@ function giftsCacheKey(
   nextFilters: Filters,
   nextSize: number,
 ) {
-  return `admin-gifts:${nextPage}:${nextSize}:${nextFilters.status}:${nextFilters.destination}:${nextFilters.paymentMethod}:${nextFilters.giftAid}:${nextFilters.recurring}:${nextFilters.q.trim().toLowerCase()}`;
+  return `admin-gifts:${nextPage}:${nextSize}:${nextFilters.status}:${nextFilters.destination}:${nextFilters.giftAid}:${nextFilters.recurring}:${nextFilters.q.trim().toLowerCase()}`;
 }
 
 const selectClass =
@@ -194,8 +188,7 @@ function formatWhenShort(iso: string) {
   });
 }
 
-function methodLabel(method: string, recurring: boolean) {
-  if (method === "BACS_DEBIT") return "Bacs";
+function methodLabel(recurring: boolean) {
   return recurring ? "Card · monthly" : "Card";
 }
 
@@ -313,9 +306,6 @@ export function AdminGiftsList() {
       if (nextFilters.status !== "ALL") params.set("status", nextFilters.status);
       if (nextFilters.destination !== "ALL") {
         params.set("destination", nextFilters.destination);
-      }
-      if (nextFilters.paymentMethod !== "ALL") {
-        params.set("paymentMethod", nextFilters.paymentMethod);
       }
       if (nextFilters.giftAid !== "ALL") {
         params.set("giftAid", nextFilters.giftAid);
@@ -641,18 +631,6 @@ export function AdminGiftsList() {
           </select>
           <select
             className={selectClass}
-            value={filters.paymentMethod}
-            onChange={(e) =>
-              applyFilter({ paymentMethod: e.target.value }, true)
-            }
-            aria-label="Payment method"
-          >
-            <option value="ALL">All methods</option>
-            <option value="CARD">Card</option>
-            <option value="BACS_DEBIT">Bacs</option>
-          </select>
-          <select
-            className={selectClass}
             value={filters.giftAid}
             onChange={(e) => applyFilter({ giftAid: e.target.value }, true)}
             aria-label="Gift Aid"
@@ -748,7 +726,7 @@ export function AdminGiftsList() {
                     </div>
                     <p className="mt-2 text-sm text-pvn-navy/75">
                       {row.pot ? row.pot.title : "/give"} ·{" "}
-                      {methodLabel(row.paymentMethod, row.isRecurring)}
+                      {methodLabel(row.isRecurring)}
                       {row.giftAid ? " · Gift Aid" : ""}
                     </p>
                     <p className="mt-1 text-sm text-pvn-navy">
@@ -793,7 +771,7 @@ export function AdminGiftsList() {
                         {formatWhenShort(row.createdAt)}
                       </p>
                       <p className="mt-0.5 text-[0.7rem] text-pvn-navy/40">
-                        {methodLabel(row.paymentMethod, row.isRecurring)}
+                        {methodLabel(row.isRecurring)}
                         {row.giftAid ? " · GA" : ""}
                       </p>
                     </div>

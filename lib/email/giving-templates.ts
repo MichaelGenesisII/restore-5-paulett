@@ -1,4 +1,3 @@
-import { PaymentMethod } from "@prisma/client";
 import { appBaseUrl } from "@/lib/email/config";
 import {
   emailShell,
@@ -14,7 +13,6 @@ export type GivingEmailContext = {
   amountPence: number;
   giftAid: boolean;
   isRecurring: boolean;
-  paymentMethod: PaymentMethod;
   potTitle: string | null;
   potSlug: string | null;
   message: string | null;
@@ -66,12 +64,6 @@ function amountBlock(ctx: GivingEmailContext, suffix = "") {
   `;
 }
 
-function methodLabel(method: PaymentMethod) {
-  return method === PaymentMethod.BACS_DEBIT
-    ? "UK bank standing order"
-    : "card";
-}
-
 function metaLine(label: string, value: string) {
   return `<span style="display:inline-block;margin:0 14px 6px 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#6a7380;"><strong style="color:#0c1b33;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:10px;">${label}</strong>&nbsp;&nbsp;${value}</span>`;
 }
@@ -79,52 +71,38 @@ function metaLine(label: string, value: string) {
 /** Receipt + thank-you after a gift clears (one-off or first monthly card payment). */
 export function giftThankYouEmail(ctx: GivingEmailContext) {
   const recurring = ctx.isRecurring;
-  const isCardMonthly =
-    recurring && ctx.paymentMethod === PaymentMethod.CARD;
-  const title = isCardMonthly
+  const title = recurring
     ? "Your monthly card gift is underway"
-    : recurring
-      ? "Your monthly gift is in motion"
-      : "Thank you — your stone is in the wall";
+    : "Thank you — your stone is in the wall";
 
   const body = [
     p(`Dear ${greet(ctx.donorName)},`),
     p(
-      isCardMonthly
+      recurring
         ? `Your first monthly card gift has cleared. Every month from here, that same amount joins ${destination(ctx)} — one fund, one house rising. We will email a short receipt each time a payment lands.`
-        : recurring
-          ? `Your first monthly gift has cleared. Every month from here, that same amount joins ${destination(ctx)} — one fund, one house rising.`
-          : `Your gift has landed. It joins ${destination(ctx)}. One pot, one fund, one house coming back to life.`,
+        : `Your gift has landed. It joins ${destination(ctx)}. One pot, one fund, one house coming back to life.`,
     ),
     ctx.message?.trim()
       ? `${p("We received your word with the gift:")}${quoteBlock(ctx.message.trim())}`
       : "",
-    `<p style="margin:0 0 8px;">${metaLine("Paid by", methodLabel(ctx.paymentMethod))}${metaLine("Keep", "this email as your receipt")}</p>`,
+    `<p style="margin:0 0 8px;">${metaLine("Paid by", "card")}${metaLine("Keep", "this email as your receipt")}</p>`,
   ]
     .filter(Boolean)
     .join("");
 
   return {
-    subject: isCardMonthly
+    subject: recurring
       ? `Monthly card gift confirmed — ${formatTidyGbp(ctx.amountPence)}`
-      : recurring
-        ? `Monthly gift confirmed — ${formatTidyGbp(ctx.amountPence)}`
-        : `Thank you for your gift of ${formatTidyGbp(ctx.amountPence)}`,
+      : `Thank you for your gift of ${formatTidyGbp(ctx.amountPence)}`,
     html: emailShell({
       tone: "success",
-      preheader: isCardMonthly
+      preheader: recurring
         ? `Your first monthly card gift of ${formatTidyGbp(ctx.amountPence)} is in. Receipts will follow each month.`
-        : recurring
-          ? `Your monthly gift of ${formatTidyGbp(ctx.amountPence)} is underway.`
-          : `Your gift of ${formatTidyGbp(ctx.amountPence)} is in the stonework.`,
-      eyebrow: isCardMonthly
-        ? "Monthly card gift confirmed"
-        : recurring
-          ? "Monthly gift confirmed"
-          : "Gift received",
+        : `Your gift of ${formatTidyGbp(ctx.amountPence)} is in the stonework.`,
+      eyebrow: recurring ? "Monthly card gift confirmed" : "Gift received",
       title,
       bodyHtml: body,
-      highlightHtml: amountBlock(ctx, isCardMonthly ? " · monthly" : undefined),
+      highlightHtml: amountBlock(ctx, recurring ? " · monthly" : undefined),
       cta: ctx.potSlug
         ? {
             label: "View this pot",
@@ -148,91 +126,29 @@ export function giftThankYouEmail(ctx: GivingEmailContext) {
             label: "See the wall rising",
             href: `${appBaseUrl()}/the-wall`,
           },
-      footnote: isCardMonthly
+      footnote: recurring
         ? "This confirms the first payment of your monthly card gift to Place of Victory for All Nations Belfast. To change or stop it, reply to this email or manage the payment with your card issuer. If you did not make this gift, reply and we will help."
         : "This is a receipt for your gift to Place of Victory for All Nations Belfast. If you did not make this gift, reply to this email and we will help.",
     }),
   };
 }
 
-/** Bacs mandate set up — money not cleared yet. */
-export function standingOrderSetupEmail(ctx: GivingEmailContext) {
-  return {
-    subject: "Your standing order is set up — awaiting the first payment",
-    html: emailShell({
-      tone: "pending",
-      preheader:
-        "Your Direct Debit mandate is in place. The first payment takes a few working days.",
-      eyebrow: "Standing order · awaiting bank",
-      title: "The mandate is ready",
-      bodyHtml: [
-        p(`Dear ${greet(ctx.donorName)},`),
-        p(
-          `Your UK bank standing order for ${destination(ctx)} is set up. The first Direct Debit usually takes a few working days to clear — we will write again when it lands.`,
-        ),
-        p(
-          "Until then, nothing is counted on the wall. A redirect alone is never proof; the bank’s confirmation is.",
-        ),
-      ].join(""),
-      highlightHtml: amountBlock(ctx, " · monthly"),
-      cta: ctx.potSlug
-        ? {
-            label: "View this pot",
-            href: destHref(ctx),
-          }
-        : {
-            label: "Start a pot",
-            href: `${appBaseUrl()}/fundraisers/create`,
-          },
-      secondaryCta: ctx.potSlug
-        ? ctx.isSeedGift
-          ? {
-              label: "Manage this pot",
-              href: `${appBaseUrl()}/host/pots/${ctx.potSlug}`,
-            }
-          : {
-              label: "Browse pots",
-              href: `${appBaseUrl()}/fundraisers`,
-            }
-        : {
-            label: "See the wall rising",
-            href: `${appBaseUrl()}/the-wall`,
-          },
-      footnote:
-        "You can cancel a standing order through your bank in the usual way. Questions? Just reply.",
-    }),
-  };
-}
-
-/** Monthly renewal receipt (card subscription or Bacs standing order). */
+/** Monthly card renewal receipt. */
 export function monthlyRenewalEmail(ctx: GivingEmailContext) {
-  const byCard = ctx.paymentMethod === PaymentMethod.CARD;
-
   return {
-    subject: byCard
-      ? `This month’s card gift of ${formatTidyGbp(ctx.amountPence)} is in`
-      : `This month’s gift of ${formatTidyGbp(ctx.amountPence)} is in`,
+    subject: `This month’s card gift of ${formatTidyGbp(ctx.amountPence)} is in`,
     html: emailShell({
       tone: "success",
-      preheader: byCard
-        ? `Your monthly card gift of ${formatTidyGbp(ctx.amountPence)} has cleared for 5 Paulett.`
-        : `Another stone for 5 Paulett — ${formatTidyGbp(ctx.amountPence)} this month.`,
-      eyebrow: byCard ? "Monthly card renewal" : "Monthly renewal",
+      preheader: `Your monthly card gift of ${formatTidyGbp(ctx.amountPence)} has cleared for 5 Paulett.`,
+      eyebrow: "Monthly card renewal",
       title: "Another month, another stone",
       bodyHtml: [
         p(`Dear ${greet(ctx.donorName)},`),
         p(
-          byCard
-            ? `This month’s card gift has cleared and joined ${destination(ctx)}. Keep this note as your receipt for the payment just taken.`
-            : `This month’s gift has cleared and joined ${destination(ctx)}. Faithfulness like yours is how ruins rise.`,
+          `This month’s card gift has cleared and joined ${destination(ctx)}. Keep this note as your receipt for the payment just taken.`,
         ),
-        byCard
-          ? ""
-          : p("Keep this note as your receipt for the payment just taken."),
-        `<p style="margin:0 0 8px;">${metaLine("Paid by", methodLabel(ctx.paymentMethod))}</p>`,
-      ]
-        .filter(Boolean)
-        .join(""),
+        `<p style="margin:0 0 8px;">${metaLine("Paid by", "card")}</p>`,
+      ].join(""),
       highlightHtml: amountBlock(ctx, " · this month"),
       cta: ctx.potSlug
         ? {
@@ -252,9 +168,8 @@ export function monthlyRenewalEmail(ctx: GivingEmailContext) {
             label: "Give again",
             href: `${appBaseUrl()}/give`,
           },
-      footnote: byCard
-        ? "This receipt is for your monthly card gift. To change or stop it, reply to this email or manage the payment with your card issuer."
-        : "This receipt is for a recurring gift. To change or stop it, manage the mandate with your bank, or reply to this email.",
+      footnote:
+        "This receipt is for your monthly card gift. To change or stop it, reply to this email or manage the payment with your card issuer.",
     }),
   };
 }
@@ -265,31 +180,23 @@ export function paymentFailedEmail(
   options?: { renewal?: boolean },
 ) {
   const renewal = options?.renewal === true;
-  const byCard = ctx.paymentMethod === PaymentMethod.CARD;
 
   if (renewal) {
     return {
-      subject: byCard
-        ? "We could not take this month’s card gift"
-        : "We could not take this month’s gift",
+      subject: "We could not take this month’s card gift",
       html: emailShell({
         tone: "alert",
-        preheader: byCard
-          ? "Your monthly card payment did not go through. Nothing was taken for this month."
-          : "This month’s Direct Debit did not clear. Nothing was taken for this attempt.",
-        eyebrow: byCard ? "Monthly card payment unsuccessful" : "Monthly payment unsuccessful",
+        preheader:
+          "Your monthly card payment did not go through. Nothing was taken for this month.",
+        eyebrow: "Monthly card payment unsuccessful",
         title: "This month’s gift did not go through",
         bodyHtml: [
           p(`Dear ${greet(ctx.donorName)},`),
           p(
-            byCard
-              ? `We could not take this month’s card gift of <strong>${escapeHtml(formatTidyGbp(ctx.amountPence))}</strong> toward ${destination(ctx)}. Nothing was taken for this month.`
-              : `We could not take this month’s gift of <strong>${escapeHtml(formatTidyGbp(ctx.amountPence))}</strong> toward ${destination(ctx)}. Nothing was taken for this attempt.`,
+            `We could not take this month’s card gift of <strong>${escapeHtml(formatTidyGbp(ctx.amountPence))}</strong> toward ${destination(ctx)}. Nothing was taken for this month.`,
           ),
           p(
-            byCard
-              ? "Expired cards, bank checks, and insufficient funds are the usual culprits. Update your card with your issuer if needed, or reply to this email and we will help."
-              : "Bank checks and interrupted mandates are the usual culprits. When you are ready, reply to this email and we will help.",
+            "Expired cards, bank checks, and insufficient funds are the usual culprits. Update your card with your issuer if needed, or reply to this email and we will help.",
           ),
         ].join(""),
         highlightHtml: `
@@ -409,7 +316,6 @@ export function checkoutCouldNotStartEmail(ctx: {
     ...ctx,
     giftAid: false,
     isRecurring: false,
-    paymentMethod: PaymentMethod.CARD,
     message: null,
   };
 
@@ -567,81 +473,4 @@ export function orgDirectGiftReceivedEmail(input: {
         "This notice goes to addresses in ADMIN_EMAILS. The giver also received their own receipt.",
     }),
   };
-}
-
-/** All templates for the local HTML preview page. */
-export function allGivingEmailPreviews(sample: GivingEmailContext) {
-  return [
-    {
-      id: "thank-you",
-      label: "Thank you / receipt",
-      ...giftThankYouEmail(sample),
-    },
-    {
-      id: "thank-you-monthly-card",
-      label: "Thank you (monthly card start)",
-      ...giftThankYouEmail({
-        ...sample,
-        isRecurring: true,
-        paymentMethod: PaymentMethod.CARD,
-      }),
-    },
-    {
-      id: "standing-order",
-      label: "Standing order setup",
-      ...standingOrderSetupEmail({
-        ...sample,
-        isRecurring: true,
-        paymentMethod: PaymentMethod.BACS_DEBIT,
-      }),
-    },
-    {
-      id: "monthly-renewal-card",
-      label: "Monthly renewal (card)",
-      ...monthlyRenewalEmail({
-        ...sample,
-        isRecurring: true,
-        paymentMethod: PaymentMethod.CARD,
-        message: null,
-      }),
-    },
-    {
-      id: "monthly-renewal",
-      label: "Monthly renewal (Bacs)",
-      ...monthlyRenewalEmail({
-        ...sample,
-        isRecurring: true,
-        paymentMethod: PaymentMethod.BACS_DEBIT,
-        message: null,
-      }),
-    },
-    {
-      id: "payment-failed",
-      label: "Payment failed (first)",
-      ...paymentFailedEmail(sample),
-    },
-    {
-      id: "payment-failed-renewal",
-      label: "Payment failed (monthly renewal)",
-      ...paymentFailedEmail(
-        { ...sample, isRecurring: true, paymentMethod: PaymentMethod.CARD },
-        { renewal: true },
-      ),
-    },
-    {
-      id: "refunded",
-      label: "Refund",
-      ...giftRefundedEmail(sample),
-    },
-    {
-      id: "checkout-failed",
-      label: "Checkout could not start",
-      ...checkoutCouldNotStartEmail(sample),
-    },
-    {
-      id: "checkout-cancelled",
-      label: "Checkout cancelled",
-      ...checkoutCancelledEmail(sample),
-    },
-  ] as const;
 }

@@ -10,7 +10,6 @@ import { formatTidyGbp, formatWholeGbp } from "@/lib/money";
 type StatusResponse = {
   status?: string;
   amount?: number;
-  paymentMethod?: string;
   potSlug?: string | null;
   potTotalRaised?: number | null;
   buildingFundTotalRaised?: number;
@@ -80,7 +79,6 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
     clearAllGiveDrafts(data.potSlug);
   }, [data?.status, data?.potSlug]);
 
-  const isBacs = data?.paymentMethod === "BACS_DEBIT";
   const status = data?.status;
   const potSlug = data?.potSlug ?? null;
   const isSeedGift = data?.isSeedGift === true;
@@ -143,7 +141,7 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
       <ResultModal
         open={!announced}
         variant="success"
-        title={isBacs ? "Your first payment cleared" : "Your gift is in"}
+        title="Your gift is in"
         body={
           typeof data?.amount === "number"
             ? potPath && typeof data.potTotalRaised === "number"
@@ -191,7 +189,7 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
         open
         variant="confirm"
         title="This is taking longer than usual"
-        body="Your payment is with Stripe and is not lost. Confirmation sometimes lags, especially with bank payments."
+        body="Your payment is with Stripe and is not lost. Confirmation sometimes lags a little."
         confirmLabel="Refresh page"
         actionLabel="Got it"
         onConfirm={() => window.location.reload()}
@@ -215,12 +213,8 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
     <ResultModal
       open
       variant="waiting"
-      title={isBacs ? "Your standing order is set up" : "Confirming your gift"}
-      body={
-        isBacs
-          ? "The first Direct Debit takes a few working days to clear. This will update as soon as the bank confirms it."
-          : "Stripe has your payment. We are waiting for confirmation before we count it — a redirect alone is never proof."
-      }
+      title="Confirming your gift"
+      body="Stripe has your payment. We are waiting for confirmation before we count it — a redirect alone is never proof."
       onClose={() => {}}
     />
   );

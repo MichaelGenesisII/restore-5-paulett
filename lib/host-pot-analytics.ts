@@ -26,7 +26,6 @@ async function loadHostPotAnalytics(potId: string) {
           createdAt: true,
           donorEmail: true,
           giftAid: true,
-          paymentMethod: true,
           isRecurring: true,
           message: true,
           commentHidden: true,

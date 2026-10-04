@@ -28,7 +28,7 @@ type Analytics = {
   returningDonorCount: number;
   giftAidCount: number;
   giftAidEstimatePence: number;
-  methodSplit: { card: number; bacs: number };
+  oneOffCount: number;
   recurringCount: number;
   messagesTotal: number;
   messagesUnreplied: number;
@@ -330,8 +330,8 @@ export function HostPotAnalytics({ slug }: { slug: string }) {
             />
           </div>
           <p className="text-xs text-pvn-navy/45">
-            Method mix: {data.methodSplit.card} card · {data.methodSplit.bacs}{" "}
-            Bacs · {data.recurringCount} recurring · {data.newDonorCount} first-time
+            Gift mix: {data.oneOffCount} one-off ·{" "}
+            {data.recurringCount} monthly · {data.newDonorCount} first-time
             emails · {data.returningDonorCount} returning gifts
           </p>
         </div>

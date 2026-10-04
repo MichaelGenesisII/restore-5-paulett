@@ -32,7 +32,7 @@ type AnalyticsPayload = {
     averagePence: number;
     direct: { pence: number; count: number };
     pot: { pence: number; count: number };
-    methods: { cardOneOff: number; cardMonthly: number; bacs: number };
+    methods: { cardOneOff: number; cardMonthly: number };
     giftAid: { count: number; pence: number; reclaimPence: number };
     funnel: {
       attempts: number;
@@ -725,7 +725,7 @@ export function AdminAnalytics() {
 
             <section className="border border-pvn-navy/10 bg-white px-4 py-5 sm:px-5">
               <h2 className="font-nav text-[0.65rem] font-bold tracking-[0.16em] text-pvn-gold uppercase">
-                Payment methods
+                One-off vs monthly
               </h2>
               <p className="mt-1 text-[0.75rem] text-pvn-navy/50">
                 Succeeded gifts only
@@ -741,10 +741,6 @@ export function AdminAnalytics() {
                     {
                       label: "Card · monthly",
                       value: data.totals.methods.cardMonthly,
-                    },
-                    {
-                      label: "Bacs",
-                      value: data.totals.methods.bacs,
                     },
                   ].filter((i) => i.value > 0)}
                 />

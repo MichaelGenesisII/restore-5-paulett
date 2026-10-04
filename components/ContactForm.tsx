@@ -13,7 +13,7 @@ const topicGroups: { group: string; items: Topic[] }[] = [
       {
         value: "GIVING",
         label: "Giving & Gift Aid",
-        hint: "A gift, a standing order, a receipt, or claiming Gift Aid.",
+        hint: "A gift, a monthly gift, a receipt, or claiming Gift Aid.",
       },
       {
         value: "POT",

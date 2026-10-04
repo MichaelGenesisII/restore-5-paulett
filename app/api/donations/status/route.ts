@@ -11,9 +11,7 @@ export const runtime = "nodejs";
  * session is already paid. Covers local dev without `stripe listen`, production
  * when the webhook is late, and card retries after an earlier FAILED mark.
  * Idempotent with the webhook — creditSucceededDonation no-ops safely.
- *
- * Bacs standing orders stay PENDING until the bank clears (payment_status
- * is not "paid" at redirect time); we never treat the redirect alone as proof.
+ * We never treat the redirect alone as proof of payment.
  */
 async function reconcileFromStripe(sessionId: string, donationId: string) {
   const session = await getStripe().checkout.sessions.retrieve(sessionId);
@@ -127,7 +125,6 @@ export async function GET(request: Request) {
   return NextResponse.json({
     status: donation.status,
     amount: donation.amount,
-    paymentMethod: donation.paymentMethod,
     potSlug: donation.pot?.slug ?? null,
     potTotalRaised: donation.pot?.totalRaised ?? null,
     buildingFundTotalRaised: fund?.totalRaised ?? 0,

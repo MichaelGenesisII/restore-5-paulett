@@ -1,9 +1,5 @@
 import { unstable_cache, revalidateTag } from "next/cache";
-import {
-  DonationStatus,
-  PaymentMethod,
-  type Prisma,
-} from "@prisma/client";
+import { DonationStatus, type Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export const ADMIN_GIFTS_CACHE_TAG = "admin-gifts";
@@ -14,7 +10,6 @@ const PAGE_SIZE_MAX = 100;
 export type AdminGiftsQuery = {
   status: DonationStatus | "ALL";
   destination: "DIRECT" | "POT" | "ALL";
-  paymentMethod: PaymentMethod | "ALL";
   giftAid: boolean | "ALL";
   recurring: boolean | "ALL";
   q: string;
@@ -63,10 +58,6 @@ export function parseAdminGiftsQuery(url: URL): AdminGiftsQuery {
       "DIRECT",
       "POT",
     ] as const),
-    paymentMethod: parseEnum(url.searchParams.get("paymentMethod"), [
-      PaymentMethod.CARD,
-      PaymentMethod.BACS_DEBIT,
-    ] as const),
     giftAid: parseBoolFilter(url.searchParams.get("giftAid")),
     recurring: parseBoolFilter(url.searchParams.get("recurring")),
     q: (url.searchParams.get("q") ?? "").trim(),
@@ -83,7 +74,6 @@ function buildWhere(query: AdminGiftsQuery): Prisma.DonationWhereInput {
   if (query.status !== "ALL") where.status = query.status;
   if (query.destination === "DIRECT") where.potId = null;
   if (query.destination === "POT") where.potId = { not: null };
-  if (query.paymentMethod !== "ALL") where.paymentMethod = query.paymentMethod;
   if (query.giftAid !== "ALL") where.giftAid = query.giftAid;
   if (query.recurring !== "ALL") where.isRecurring = query.recurring;
 
@@ -145,7 +135,6 @@ async function loadAdminGifts(query: AdminGiftsQuery) {
         message: true,
         isRecurring: true,
         giftAid: true,
-        paymentMethod: true,
         createdAt: true,
         pot: {
           select: {
@@ -190,7 +179,6 @@ async function loadAdminGifts(query: AdminGiftsQuery) {
       message: g.message,
       isRecurring: g.isRecurring,
       giftAid: g.giftAid,
-      paymentMethod: g.paymentMethod,
       createdAt: g.createdAt.toISOString(),
       destination: g.potId ? ("POT" as const) : ("DIRECT" as const),
       pot: g.pot ? { slug: g.pot.slug, title: g.pot.title } : null,
@@ -200,10 +188,9 @@ async function loadAdminGifts(query: AdminGiftsQuery) {
 
 function cacheKey(query: AdminGiftsQuery): string[] {
   return [
-    "admin-gifts-v1",
+    "admin-gifts-v2",
     query.status,
     query.destination,
-    query.paymentMethod,
     String(query.giftAid),
     String(query.recurring),
     query.q,

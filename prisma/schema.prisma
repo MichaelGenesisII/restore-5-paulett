@@ -204,5 +204,4 @@ enum DonationStatus {
 
 enum PaymentMethod {
   CARD
-  BACS_DEBIT
 }

@@ -54,7 +54,6 @@ async function loadAdminOverview(range: AdminOverviewRange) {
     unhandledContacts,
     buildingFund,
     stuckPending,
-    bacsPending,
     pendingPots,
     recentSucceeded,
     recentFailed,
@@ -105,7 +104,6 @@ async function loadAdminOverview(range: AdminOverviewRange) {
     prisma.donation.findMany({
       where: {
         status: DonationStatus.PENDING,
-        paymentMethod: "CARD",
         createdAt: { lte: stuckBefore },
       },
       orderBy: { createdAt: "asc" },
@@ -114,23 +112,6 @@ async function loadAdminOverview(range: AdminOverviewRange) {
         id: true,
         amount: true,
         donorEmail: true,
-        paymentMethod: true,
-        createdAt: true,
-        pot: { select: { slug: true, title: true } },
-      },
-    }),
-    prisma.donation.findMany({
-      where: {
-        status: DonationStatus.PENDING,
-        paymentMethod: "BACS_DEBIT",
-      },
-      orderBy: { createdAt: "asc" },
-      take: 8,
-      select: {
-        id: true,
-        amount: true,
-        donorEmail: true,
-        paymentMethod: true,
         createdAt: true,
         pot: { select: { slug: true, title: true } },
       },
@@ -275,7 +256,6 @@ async function loadAdminOverview(range: AdminOverviewRange) {
     },
     attention: {
       stuckPending: mapGiftBrief(stuckPending),
-      bacsPending: mapGiftBrief(bacsPending),
       unseededPots: pendingPots.map((p) => ({
         slug: p.slug,
         title: p.title,
