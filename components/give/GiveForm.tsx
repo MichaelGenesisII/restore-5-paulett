@@ -18,7 +18,6 @@ import {
   clearGiveDraft,
   readGiveDraft,
   writeGiveDraft,
-  type GiveDraft,
 } from "@/lib/give-draft";
 import { visitorSafeApiError, visitorSafeMessage } from "@/lib/visitor-safe";
 import { GiftAidAddressFields } from "@/components/give/GiftAidAddressFields";
@@ -122,6 +121,9 @@ export function GiveForm({
     const saved = readGiveDraft(potSlug);
     if (!saved) return;
 
+    // sessionStorage only exists after hydration, so this one-time restore has
+    // to happen here; a layout effect applies it before the first paint.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setGiftMode(saved.giftMode as GiftMode);
     setPreset(saved.preset);
     setCustom(saved.custom);
@@ -139,13 +141,18 @@ export function GiveForm({
     setFurthest(Math.max(saved.furthest, nextStep));
   }, [resume, potSlug]);
 
-  useEffect(() => {
-    if (!resume) return;
-    setNotice(resume);
-    setStep(LAST);
-    setFurthest((seen) => Math.max(seen, LAST));
-    setError(null);
-  }, [resume]);
+  // Initial state already reflects `resume`; a later change (cancelled →
+  // failed without a remount) is applied during render.
+  const [syncedResume, setSyncedResume] = useState(resume);
+  if (resume !== syncedResume) {
+    setSyncedResume(resume);
+    if (resume) {
+      setNotice(resume);
+      setStep(LAST);
+      setFurthest((seen) => Math.max(seen, LAST));
+      setError(null);
+    }
+  }
 
   const recurring = giftMode !== "card_once";
   const standingOrder = giftMode === "bacs_standing_order";

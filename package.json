@@ -12,8 +12,7 @@
     "db:push": "prisma db push",
     "db:security": "prisma db execute --file prisma/sql/supabase-security.sql --schema prisma/schema.prisma",
     "db:seed": "prisma db seed",
-    "db:studio": "prisma studio",
-    "email:preview": "tsx scripts/render-email-preview.ts"
+    "db:studio": "prisma studio"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

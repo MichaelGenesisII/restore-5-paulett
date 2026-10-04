@@ -71,12 +71,7 @@ export function HostProfileModalTrigger({
   className = "",
 }: Props) {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const titleId = useId();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -98,10 +93,11 @@ export function HostProfileModalTrigger({
       : host.bio;
 
   const dialog =
-    open && mounted
+    // open only flips true from a click, so we're always client-side here.
+    open
       ? createPortal(
           <div
-            className="fixed inset-0 z-50 flex items-end justify-center bg-pvn-navy/45 p-4 sm:items-center"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-pvn-navy/45 p-4"
             role="presentation"
             onClick={() => setOpen(false)}
           >
@@ -109,7 +105,7 @@ export function HostProfileModalTrigger({
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
-              className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-sm bg-pvn-cream p-5 shadow-[0_24px_60px_-28px_rgba(12,27,51,0.55)] sm:p-6"
+              className="max-h-[85dvh] w-full max-w-md overflow-y-auto rounded-sm bg-pvn-cream p-5 shadow-[0_24px_60px_-28px_rgba(12,27,51,0.55)] sm:p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="font-nav text-[0.6rem] font-bold tracking-[0.18em] text-pvn-gold uppercase">

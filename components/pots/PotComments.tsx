@@ -49,9 +49,12 @@ export function PotComments({
   const [confirmBusy, setConfirmBusy] = useState(false);
   const creatorInitial = creatorName.charAt(0).toUpperCase() || "C";
 
-  useEffect(() => {
+  // Take fresh server comments (after router.refresh) during render.
+  const [syncedComments, setSyncedComments] = useState(initialComments);
+  if (initialComments !== syncedComments) {
+    setSyncedComments(initialComments);
     setComments(initialComments);
-  }, [initialComments]);
+  }
 
   const checkManage = useCallback(async () => {
     try {
@@ -77,6 +80,8 @@ export function PotComments({
   }, [potSlug]);
 
   useEffect(() => {
+    // checkManage() awaits the session before any setState.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void checkManage();
   }, [checkManage]);
 

@@ -217,6 +217,9 @@ export function AdminHostsList() {
         HOSTS_CACHE_TTL_MS,
       ),
     );
+    // load() paints the sessionStorage cache before revalidating; that first
+    // render from an external store is intentional.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load(1, alumni, q, pageSize, soft).catch((err) => {
       if (cancelled) return;
       toast.error(

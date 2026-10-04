@@ -185,16 +185,6 @@ function IconGiftEmpty({ className }: { className?: string }) {
   );
 }
 
-function formatWhen(iso: string) {
-  return new Date(iso).toLocaleString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
 function formatWhenShort(iso: string) {
   return new Date(iso).toLocaleString("en-GB", {
     day: "numeric",
@@ -363,13 +353,21 @@ export function AdminGiftsList() {
     [applyPayload],
   );
 
+  // Mirror URL filters into form state during render (not in the effect).
+  const paramsKey = searchParams.toString();
+  const [syncedParams, setSyncedParams] = useState<string | null>(null);
+  if (paramsKey !== syncedParams) {
+    setSyncedParams(paramsKey);
+    const next = filtersFromParams(new URLSearchParams(paramsKey));
+    setFilters(next);
+    setDraftQ(next.q);
+    if (secondaryFiltersActive(next)) setFiltersOpen(true);
+  }
+
   useEffect(() => {
     const next = filtersFromParams(
       new URLSearchParams(searchParams.toString()),
     );
-    setFilters(next);
-    setDraftQ(next.q);
-    if (secondaryFiltersActive(next)) setFiltersOpen(true);
     let cancelled = false;
     const soft = Boolean(
       readHostClientCache(
@@ -377,6 +375,9 @@ export function AdminGiftsList() {
         GIFTS_CACHE_TTL_MS,
       ),
     );
+    // load() paints the sessionStorage cache before revalidating; that first
+    // render from an external store is intentional.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load(1, next, pageSize, soft).catch((err) => {
       if (cancelled) return;
       toast.error(

@@ -1,49 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import { IconHeart } from "@/components/icons";
-
-/**
- * Distance from left/right edge.
- * `0` = flush; positive = inset; negative = past edge.
- */
-const CROSS_EDGE_INSET = {
-  mobile: "0px",
-  desktop: "60px",
-} as const;
 
 export function HomeClosing() {
   return (
     <section
       id="closing"
       className="relative overflow-hidden border-t border-pvn-navy/5 bg-pvn-cream py-10 sm:py-12"
-      style={
-        {
-          "--cross-inset-mobile": CROSS_EDGE_INSET.mobile,
-          "--cross-inset-desktop": CROSS_EDGE_INSET.desktop,
-        } as CSSProperties
-      }
     >
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-pvn-gold/50 to-transparent"
         aria-hidden
-      />
-
-      <Image
-        src="/cross.png"
-        alt=""
-        aria-hidden
-        width={500}
-        height={500}
-        className="pointer-events-none absolute top-1/2 left-[var(--cross-inset-mobile)] w-32 -translate-y-1/2 opacity-[0.12] sm:left-[var(--cross-inset-desktop)] sm:w-40 lg:w-48 lg:opacity-[0.16]"
-      />
-      <Image
-        src="/cross.png"
-        alt=""
-        aria-hidden
-        width={500}
-        height={500}
-        className="pointer-events-none absolute top-1/2 right-[var(--cross-inset-mobile)] w-32 -translate-y-1/2 scale-x-[-1] opacity-[0.12] sm:right-[var(--cross-inset-desktop)] sm:w-40 lg:w-48 lg:opacity-[0.16]"
       />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">

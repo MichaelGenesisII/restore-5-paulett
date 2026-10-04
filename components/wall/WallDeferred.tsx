@@ -121,14 +121,6 @@ export async function WallStonesSection({ page }: { page: number }) {
 
         {stones.length === 0 ? (
           <div className="relative mt-12 overflow-hidden border border-dashed border-pvn-navy/20 bg-white/40 px-6 py-16 text-center sm:mt-14 sm:px-10">
-            <div
-              className="pointer-events-none absolute inset-0 opacity-[0.06]"
-              aria-hidden
-              style={{
-                backgroundImage: "url(/brick2.png)",
-                backgroundSize: "120px",
-              }}
-            />
             <p className="font-display relative text-2xl font-semibold text-pvn-navy italic sm:text-3xl">
               No words yet — only bare stone.
             </p>

@@ -68,7 +68,7 @@ export function HomeAlumni() {
               finally come.
             </p>
 
-            <div>
+            <div className="hidden md:block">
               <p className="font-nav flex items-center gap-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-pvn-navy/45">
                 <IconGlobe className="h-4 w-4 shrink-0 text-pvn-gold" />
                 Wherever you are now
@@ -131,7 +131,7 @@ export function HomeAlumni() {
           </figure>
         </div>
 
-        <div className="mt-12 border-t border-pvn-navy/10 pt-8">
+        <div className="mt-12 hidden border-t border-pvn-navy/10 pt-8 md:block">
           <p className="font-nav text-xs font-semibold uppercase tracking-[0.28em] text-pvn-gold">
             The way back
           </p>

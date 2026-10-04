@@ -49,6 +49,9 @@ export default function GlobalError({
             >
               Try again
             </button>
+            {/* A full page load rebuilds the root layout this error replaced;
+                client-side <Link> navigation would reuse the broken tree. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
               href="/"
               className="rounded-full border border-pvn-navy/15 px-5 py-2.5 text-sm font-medium text-pvn-navy transition hover:border-pvn-navy/30 hover:bg-pvn-navy/5"

@@ -14,9 +14,12 @@ function isActive(pathname: string, href: string) {
 
 export function Header() {
   const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
+  // Opening records the route, so any navigation (incl. back) closes the menu.
+  const [menuOpenedOn, setMenuOpenedOn] = useState<string | null>(null);
+  const menuOpen = menuOpenedOn === pathname;
   const [scrolled, setScrolled] = useState(false);
   const onPotDetails = /^\/pots\/[^/]+$/.test(pathname);
+  const onHostProfile = /^\/hosts\/[^/]+$/.test(pathname);
   const heroBlendPaths = new Set([
     "/",
     "/the-wall",
@@ -27,9 +30,14 @@ export function Header() {
     "/alumni",
     "/our-new-home",
     "/our-story",
+    "/accessibility",
+    "/cookies",
+    "/terms",
+    "/privacy",
   ]);
   const overHero =
-    (heroBlendPaths.has(pathname) || onPotDetails) && !scrolled;
+    (heroBlendPaths.has(pathname) || onPotDetails || onHostProfile) &&
+    !scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -37,10 +45,6 @@ export function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -121,7 +125,11 @@ export function Header() {
               }`}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
-              onClick={() => setMenuOpen((open) => !open)}
+              onClick={() =>
+                setMenuOpenedOn((current) =>
+                  current === pathname ? null : pathname,
+                )
+              }
             >
               <span className="sr-only">Toggle menu</span>
               <svg
@@ -180,7 +188,7 @@ export function Header() {
             type="button"
             className="h-[100dvh] w-full bg-pvn-navy/50 backdrop-blur-[2px]"
             aria-label="Close menu"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => setMenuOpenedOn(null)}
           />
         </div>
       ) : null}

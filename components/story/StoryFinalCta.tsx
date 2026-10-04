@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const messages = [
@@ -70,23 +69,6 @@ export function StoryFinalCta() {
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-pvn-gold/50 to-transparent"
         aria-hidden
-      />
-
-      <Image
-        src="/dove-left.png"
-        alt=""
-        aria-hidden
-        width={500}
-        height={500}
-        className="pvn-dove pvn-dove-left pointer-events-none absolute -left-10 bottom-2 w-40 opacity-[0.07] sm:left-2 sm:w-56 lg:w-72 lg:opacity-[0.09]"
-      />
-      <Image
-        src="/dove-right.png"
-        alt=""
-        aria-hidden
-        width={499}
-        height={499}
-        className="pvn-dove pvn-dove-right pointer-events-none absolute -right-10 top-2 w-40 opacity-[0.07] sm:right-2 sm:w-56 lg:w-72 lg:opacity-[0.09]"
       />
 
       <div className="relative mx-auto max-w-2xl px-4 pt-14 text-center sm:px-6 sm:pt-16">

@@ -6,5 +6,6 @@ type PageProps = {
 
 export default async function AdminGiftDetailPage({ params }: PageProps) {
   const { id } = await params;
-  return <AdminGiftDetail id={id} />;
+  // Keyed so moving between gifts starts from fresh loading state.
+  return <AdminGiftDetail key={id} id={id} />;
 }

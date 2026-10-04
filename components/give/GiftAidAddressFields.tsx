@@ -39,6 +39,7 @@ export function GiftAidAddressFields({
   const [configured, setConfigured] = useState<boolean | null>(null);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const [lookingUp, setLookingUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const sessionRef = useRef(newSessionToken());
@@ -67,10 +68,8 @@ export function GiftAidAddressFields({
   useEffect(() => {
     if (!placesMode) return;
     const q = query.trim();
-    if (q.length < 3) {
-      setSuggestions([]);
-      return;
-    }
+    // Short queries are hidden at render time (see visibleSuggestions).
+    if (q.length < 3) return;
 
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
     debounceRef.current = window.setTimeout(() => {
@@ -105,6 +104,7 @@ export function GiftAidAddressFields({
             return;
           }
           setSuggestions(data.suggestions ?? []);
+          setActiveIndex(-1);
         } catch {
           setError("Address lookup failed. Switch to manual entry below.");
           setSuggestions([]);
@@ -159,6 +159,28 @@ export function GiftAidAddressFields({
   }
 
   const showFields = manual || configured === false || Boolean(value.line1);
+  const visibleSuggestions = query.trim().length >= 3 ? suggestions : [];
+  const listOpen = visibleSuggestions.length > 0;
+  const optionId = (index: number) => `${listId}-option-${index}`;
+
+  function onLookupKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (!listOpen) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveIndex((i) => (i + 1) % visibleSuggestions.length);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveIndex((i) =>
+        i <= 0 ? visibleSuggestions.length - 1 : i - 1,
+      );
+    } else if (event.key === "Enter" && activeIndex >= 0) {
+      event.preventDefault();
+      void chooseSuggestion(visibleSuggestions[activeIndex]);
+    } else if (event.key === "Escape") {
+      setSuggestions([]);
+      setActiveIndex(-1);
+    }
+  }
 
   return (
     <div className="grid gap-4 pt-1 sm:grid-cols-2">
@@ -191,33 +213,45 @@ export function GiftAidAddressFields({
           </label>
           <input
             id="give-address-lookup"
+            role="combobox"
             className={fieldClass}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={onLookupKeyDown}
             autoComplete="off"
             placeholder="Start typing street and town…"
             aria-autocomplete="list"
             aria-controls={listId}
-            aria-expanded={suggestions.length > 0}
+            aria-expanded={listOpen}
+            aria-activedescendant={
+              listOpen && activeIndex >= 0 ? optionId(activeIndex) : undefined
+            }
           />
           {lookingUp ? (
             <p className="text-xs text-pvn-navy/55">Looking up…</p>
           ) : null}
-          {suggestions.length > 0 ? (
+          {listOpen ? (
             <ul
               id={listId}
               role="listbox"
+              aria-label="Address suggestions"
               className="absolute top-full z-10 mt-1 max-h-56 w-full overflow-auto rounded-sm border border-pvn-navy/15 bg-white shadow-[0_16px_40px_-24px_rgba(12,27,51,0.45)]"
             >
-              {suggestions.map((item) => (
-                <li key={item.placeId} role="option">
-                  <button
-                    type="button"
-                    className="w-full px-3.5 py-2.5 text-left text-sm text-pvn-navy transition hover:bg-pvn-gold/15"
-                    onClick={() => void chooseSuggestion(item)}
-                  >
-                    {item.label}
-                  </button>
+              {visibleSuggestions.map((item, index) => (
+                <li
+                  key={item.placeId}
+                  id={optionId(index)}
+                  role="option"
+                  aria-selected={index === activeIndex}
+                  // Keep focus in the input so typing can continue.
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => void chooseSuggestion(item)}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  className={`cursor-pointer px-3.5 py-2.5 text-left text-sm text-pvn-navy transition ${
+                    index === activeIndex ? "bg-pvn-gold/15" : ""
+                  }`}
+                >
+                  {item.label}
                 </li>
               ))}
             </ul>

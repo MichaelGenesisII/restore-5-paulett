@@ -1,6 +1,5 @@
 import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
-import { ArcEdge, ARC_SPACE } from "@/components/ArcEdge";
 import { IconWall } from "@/components/icons";
 import {
   PotRollMeter,
@@ -15,11 +14,7 @@ function SectionShell({ children }: { children: ReactNode }) {
   return (
     <section
       id="pots"
-      className="relative overflow-hidden bg-pvn-navy text-pvn-cream"
-      style={{
-        paddingTop: `${ARC_SPACE}px`,
-        paddingBottom: `${ARC_SPACE}px`,
-      }}
+      className="relative overflow-hidden bg-pvn-navy py-14 text-pvn-cream sm:py-16"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -34,7 +29,7 @@ function SectionShell({ children }: { children: ReactNode }) {
         }}
       />
 
-      {/* Light falling through the top arc, so the navy has depth behind the heading */}
+      {/* Light falling from the top edge, so the navy has depth behind the heading */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[26rem]"
         aria-hidden
@@ -43,9 +38,6 @@ function SectionShell({ children }: { children: ReactNode }) {
             "radial-gradient(120% 100% at 50% 0%, rgba(201,168,76,0.15), transparent 68%)",
         }}
       />
-
-      <ArcEdge side="top" />
-      <ArcEdge side="bottom" />
 
       {children}
     </section>

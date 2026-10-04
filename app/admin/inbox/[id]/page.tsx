@@ -6,5 +6,6 @@ type PageProps = {
 
 export default async function AdminInboxDetailPage({ params }: PageProps) {
   const { id } = await params;
-  return <AdminInboxDetail id={id} />;
+  // Keyed so moving between messages starts from fresh loading state.
+  return <AdminInboxDetail key={id} id={id} />;
 }

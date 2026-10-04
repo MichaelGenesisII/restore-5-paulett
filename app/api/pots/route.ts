@@ -73,7 +73,7 @@ export async function GET(request: Request) {
   const [pots, total] = await Promise.all([
     prisma.pot.findMany({
       where,
-      orderBy: { updatedAt: "desc" },
+      orderBy: [{ createdAt: "desc" }, { id: "asc" }],
       skip,
       take: limit,
       select: {

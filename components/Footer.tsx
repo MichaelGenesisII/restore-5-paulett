@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArcEdge, ARC_SPACE } from "@/components/ArcEdge";
 import { CookiePreferencesButton } from "@/components/CookiePreferencesButton";
 import { Logo } from "@/components/Logo";
 import { exploreNav, giveNav, legalNav, loginNav } from "@/lib/navigation";
@@ -82,8 +81,8 @@ export function Footer() {
 
   return (
     <footer
-      className="relative mt-auto overflow-hidden bg-pvn-navy text-pvn-cream"
-      style={{ paddingTop: `${ARC_SPACE}px` }}
+      id="site-footer"
+      className="relative mt-auto overflow-hidden bg-pvn-navy pt-12 text-pvn-cream sm:pt-14"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.07]"
@@ -100,7 +99,7 @@ export function Footer() {
         }}
       />
 
-      {/* Light falling through the arc, so the navy has depth behind the logo */}
+      {/* Light falling from the top edge, so the navy has depth behind the logo */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[22rem]"
         aria-hidden
@@ -109,8 +108,6 @@ export function Footer() {
             "radial-gradient(120% 100% at 50% 0%, rgba(201,168,76,0.15), transparent 68%)",
         }}
       />
-
-      <ArcEdge side="top" />
 
       <div className="relative">
         <div className="mx-auto max-w-6xl px-4 pb-8 sm:px-6 sm:pb-10">

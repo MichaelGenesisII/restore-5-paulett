@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CookieConsent } from "@/components/CookieConsent";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { MobileTabBar } from "@/components/MobileTabBar";
 import { ToastProvider } from "@/components/toast/ToastProvider";
 import { absoluteUrl, SITE_NAME, SITE_TAGLINE, siteOrigin } from "@/lib/seo";
 import { display, geistMono, geistSans, nav } from "./fonts";
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </div>
           <Footer />
+          <MobileTabBar />
           <CookieConsent />
         </ToastProvider>
       </body>

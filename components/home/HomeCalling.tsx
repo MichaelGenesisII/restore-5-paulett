@@ -37,7 +37,7 @@ export function HomeCalling() {
           </Link>
         </div>
 
-        <figure className="relative w-full">
+        <figure className="relative order-first w-full lg:order-none">
           {/* Outer frame */}
           <div className="relative border border-pvn-navy/20 bg-pvn-cream p-2.5 sm:p-3">
             {/* Gold double-line mat */}

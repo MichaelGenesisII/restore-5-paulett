@@ -426,6 +426,9 @@ export function AdminAnalytics() {
     const soft = Boolean(
       readHostClientCache(analyticsCacheKey(range), ANALYTICS_CACHE_TTL_MS),
     );
+    // load() paints the sessionStorage cache before revalidating; that first
+    // render from an external store is intentional.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load(range, soft).catch((err) => {
       if (cancelled) return;
       toast.error(

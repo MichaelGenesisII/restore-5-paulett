@@ -1,15 +1,10 @@
-import { ArcEdge, ARC_SPACE } from "@/components/ArcEdge";
 import { HomePots } from "@/components/home/HomePots";
 import { getHomePotsCached } from "@/lib/home-pots";
 
 /** Streams below the fold — Suspense fallback only flashes on a cold cache. */
 export async function HomePotsSection() {
-  try {
-    const pots = await getHomePotsCached();
-    return <HomePots pots={pots} />;
-  } catch {
-    return <HomePots pots={[]} />;
-  }
+  const pots = await getHomePotsCached().catch(() => []);
+  return <HomePots pots={pots} />;
 }
 
 /** Lightweight navy shell + horizontal pulse tiles — matches the live section. */
@@ -17,17 +12,10 @@ export function HomePotsFallback() {
   return (
     <section
       id="pots"
-      className="relative overflow-hidden bg-pvn-navy text-pvn-cream"
-      style={{
-        paddingTop: `${ARC_SPACE}px`,
-        paddingBottom: `${ARC_SPACE}px`,
-      }}
+      className="relative overflow-hidden bg-pvn-navy py-14 text-pvn-cream sm:py-16"
       aria-busy="true"
       aria-label="Loading pots"
     >
-      <ArcEdge side="top" />
-      <ArcEdge side="bottom" />
-
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="max-w-xl">
           <div className="h-3 w-40 animate-pulse rounded-sm bg-pvn-cream/15" />

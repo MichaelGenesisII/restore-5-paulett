@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { useAdminDashboard } from "@/components/admin/AdminDashboardShell";
 import { useToast } from "@/components/toast/ToastProvider";
 import { adminFetch } from "@/lib/admin-client";
 import { visitorSafeApiError, visitorSafeMessage } from "@/lib/visitor-safe";
@@ -41,6 +42,7 @@ function replyMailto(m: InboxMessage) {
 export function AdminInboxDetail({ id }: { id: string }) {
   const toast = useToast();
   const router = useRouter();
+  const { adjustUnhandled } = useAdminDashboard();
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<InboxMessage | null>(null);
   const [notFound, setNotFound] = useState(false);
@@ -74,8 +76,8 @@ export function AdminInboxDetail({ id }: { id: string }) {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setNotFound(false);
+    // load() awaits the request before any setState.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load().catch((err) => {
       if (cancelled) return;
       toast.error(
@@ -117,6 +119,7 @@ export function AdminInboxDetail({ id }: { id: string }) {
         );
       }
       toast.success(handled ? "Marked done" : "Reopened");
+      if (message.handled !== handled) adjustUnhandled(handled ? -1 : 1);
       if (json.message) {
         setMessage(json.message);
       } else {

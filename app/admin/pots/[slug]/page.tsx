@@ -6,5 +6,6 @@ type PageProps = {
 
 export default async function AdminPotPage({ params }: PageProps) {
   const { slug } = await params;
-  return <AdminPotDetail slug={slug} />;
+  // Keyed so moving between pots starts from fresh loading state.
+  return <AdminPotDetail key={slug} slug={slug} />;
 }

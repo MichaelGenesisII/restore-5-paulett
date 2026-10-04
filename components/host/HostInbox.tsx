@@ -158,6 +158,9 @@ export function HostInbox() {
   useEffect(() => {
     if (!meReady) return;
     let cancelled = false;
+    // load() paints the sessionStorage cache (or a known-empty inbox) before
+    // revalidating; that first render from an external store is intentional.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load().catch((err) => {
       if (cancelled) return;
       toast.error(

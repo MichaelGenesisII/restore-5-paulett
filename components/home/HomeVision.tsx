@@ -23,7 +23,7 @@ export function HomeVision() {
   return (
     <section
       id="vision"
-      className="bg-pvn-cream px-3 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10"
+      className="hidden bg-pvn-cream px-3 py-6 sm:px-6 sm:py-8 md:block lg:px-8 lg:py-10"
       aria-label="What we have inherited and what we see"
     >
       <div className="relative mx-auto grid max-w-7xl overflow-hidden border border-pvn-navy/10 lg:grid-cols-2">

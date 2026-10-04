@@ -12,6 +12,7 @@ import {
 } from "react";
 import { ResultModal } from "@/components/ResultModal";
 import { HostGate } from "@/components/host/HostGate";
+import { HostTabBar } from "@/components/host/HostTabBar";
 import { hostFetch } from "@/lib/host-client";
 import { getSupabaseBrowser } from "@/lib/supabase-browser";
 import { visitorSafeMessage } from "@/lib/visitor-safe";
@@ -154,40 +155,8 @@ function DesktopNav({ unrepliedTotal }: { unrepliedTotal: number }) {
   );
 }
 
-function MobileTabs({ unrepliedTotal }: { unrepliedTotal: number }) {
-  const pathname = usePathname();
-
-  return (
-    <nav
-      className="flex gap-1 overflow-x-auto border-b border-pvn-navy/10 pb-px [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      aria-label="Host"
-    >
-      {nav.map((item) => {
-        const active = item.match(pathname);
-        const showBadge = item.href === "/host/inbox" && unrepliedTotal > 0;
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`font-nav shrink-0 border-b-2 px-3 py-2.5 text-[0.65rem] font-bold tracking-[0.12em] uppercase transition ${
-              active
-                ? "border-pvn-gold text-pvn-navy"
-                : "border-transparent text-pvn-navy/45 hover:text-pvn-navy"
-            }`}
-          >
-            {item.label}
-            {showBadge ? (
-              <span className="ml-1.5 text-pvn-gold">{unrepliedTotal}</span>
-            ) : null}
-          </Link>
-        );
-      })}
-    </nav>
-  );
-}
-
 /**
- * Host dashboard chrome: rail on desktop, tabs on mobile. No off-canvas.
+ * Host dashboard chrome: rail on desktop, bottom tab bar + left menu on mobile.
  */
 export function HostDashboardShell({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -273,6 +242,9 @@ export function HostDashboardShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
+    // refresh() awaits the Supabase session before any setState, so nothing
+    // updates synchronously inside this effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh().catch((err) => {
       if (cancelled) return;
       setError(
@@ -299,7 +271,9 @@ export function HostDashboardShell({ children }: { children: ReactNode }) {
       const email = data?.user.email;
       if (email) clearHostMeCache(email);
       await getSupabaseBrowser().auth.signOut();
-      window.location.href = "/host";
+      // Full reload (not router.push) so no signed-in data survives in memory;
+      // replace() also keeps the dashboard out of the back-button history.
+      window.location.replace("/host");
     } catch {
       setSigningOut(false);
     }
@@ -369,29 +343,14 @@ export function HostDashboardShell({ children }: { children: ReactNode }) {
 
   return (
     <HostDashboardContext.Provider value={value}>
-      {/* Mobile: identity + tabs (always visible, never off-canvas) */}
+      {/* Mobile: navigation and sign out live in the bottom bar's menu */}
       <div className="mb-6 lg:hidden">
-        <div className="flex items-end justify-between gap-3">
-          <div className="min-w-0">
-            <p className="font-nav text-[0.6rem] font-bold tracking-[0.2em] text-pvn-gold uppercase">
-              Host
-            </p>
-            <p className="mt-1 truncate font-display text-xl font-semibold text-pvn-navy">
-              {firstName ? `Hello, ${firstName}` : "Your dashboard"}
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => requestSignOut()}
-            disabled={signingOut}
-            className="font-nav inline-flex shrink-0 items-center gap-1.5 rounded-md border border-pvn-navy/20 bg-white/80 px-2.5 py-1.5 text-[0.65rem] font-bold tracking-[0.12em] text-pvn-navy uppercase transition hover:border-pvn-gold hover:text-pvn-gold disabled:opacity-50"
-          >
-            {signingOut ? "…" : "Sign out"}
-          </button>
-        </div>
-        <div className="mt-4">
-          <MobileTabs unrepliedTotal={unrepliedTotal} />
-        </div>
+        <p className="font-nav text-[0.6rem] font-bold tracking-[0.2em] text-pvn-gold uppercase">
+          Host
+        </p>
+        <p className="mt-1 truncate font-display text-xl font-semibold text-pvn-navy">
+          {firstName ? `Hello, ${firstName}` : "Your dashboard"}
+        </p>
       </div>
 
       <div className="lg:grid lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:gap-0 xl:grid-cols-[15rem_minmax(0,1fr)]">
@@ -449,18 +408,18 @@ export function HostDashboardShell({ children }: { children: ReactNode }) {
           </div>
         </aside>
 
-        <div className="min-w-0 lg:pl-10 xl:pl-12">{children}</div>
+        {/* Mobile bottom padding clears the fixed tab bar */}
+        <div className="min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom))] lg:pb-0 lg:pl-10 xl:pl-12">
+          {children}
+        </div>
       </div>
 
-      {/* Mobile start-a-pot — quiet, under content */}
-      <p className="mt-10 lg:hidden">
-        <Link
-          href="/host/pots/new"
-          className="font-nav text-[0.65rem] font-bold tracking-[0.14em] text-pvn-gold uppercase"
-        >
-          Start a pot →
-        </Link>
-      </p>
+      <HostTabBar
+        user={data.user}
+        unrepliedTotal={unrepliedTotal}
+        onSignOut={requestSignOut}
+        signingOut={signingOut}
+      />
 
       <ResultModal
         open={signOutConfirm}

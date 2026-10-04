@@ -131,6 +131,8 @@ export function AdminGiftDetail({ id }: { id: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [gift, setGift] = useState<GiftDetail | null>(null);
+  /** When the gift was fetched — the "pending for Nh" age is measured from it. */
+  const [loadedAt, setLoadedAt] = useState(0);
   const [notFound, setNotFound] = useState(false);
   const [tab, setTab] = useState<Tab>("details");
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -159,13 +161,14 @@ export function AdminGiftDetail({ id }: { id: string }) {
       );
     }
     setGift(json.gift ?? null);
+    setLoadedAt(Date.now());
     setLoading(false);
   }, [id]);
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setNotFound(false);
+    // load() awaits the request before any setState.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load().catch((err) => {
       if (cancelled) return;
       toast.error(
@@ -274,7 +277,7 @@ export function AdminGiftDetail({ id }: { id: string }) {
   }
 
   const ageHours =
-    (Date.now() - new Date(gift.createdAt).getTime()) / (1000 * 60 * 60);
+    (loadedAt - new Date(gift.createdAt).getTime()) / (1000 * 60 * 60);
 
   return (
     <div className="w-full">

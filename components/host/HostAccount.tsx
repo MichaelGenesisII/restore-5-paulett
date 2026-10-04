@@ -106,7 +106,9 @@ export function HostAccount() {
   const [uploading, setUploading] = useState(false);
   const [removePhotoConfirm, setRemovePhotoConfirm] = useState(false);
   const [removingPhoto, setRemovingPhoto] = useState(false);
-  const [photoFailed, setPhotoFailed] = useState(false);
+  // Remembers which URL failed, so a new photo is retried automatically.
+  const [failedPhotoUrl, setFailedPhotoUrl] = useState<string | null>(null);
+  const photoFailed = failedPhotoUrl !== null && failedPhotoUrl === photoUrl;
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -114,21 +116,20 @@ export function HostAccount() {
   const [passwordPending, setPasswordPending] = useState(false);
   const [passwordDirty, setPasswordDirty] = useState(false);
 
-  useEffect(() => {
-    if (!data || !meReady) return;
-    // Don't clobber in-progress edits when shell refreshes in the background.
-    if (profileDirty) return;
-    setName(data.user.name ?? "");
-    setBio(data.user.bio ?? "");
-    setPhotoUrl(data.user.photoUrl);
-    setProfileSlug(data.user.profileSlug ?? "");
-    setProfilePublic(Boolean(data.user.profilePublic));
-    setPhotoFailed(false);
-  }, [data, meReady, profileDirty]);
-
-  useEffect(() => {
-    setPhotoFailed(false);
-  }, [photoUrl]);
+  // Mirror the saved profile into the form during render (not in an effect).
+  // Skipped while editing, so a background refresh can't clobber edits.
+  const syncSource = data && meReady && !profileDirty ? data.user : null;
+  const [syncedFrom, setSyncedFrom] = useState<typeof syncSource>(null);
+  if (syncSource !== syncedFrom) {
+    setSyncedFrom(syncSource);
+    if (syncSource) {
+      setName(syncSource.name ?? "");
+      setBio(syncSource.bio ?? "");
+      setPhotoUrl(syncSource.photoUrl);
+      setProfileSlug(syncSource.profileSlug ?? "");
+      setProfilePublic(Boolean(syncSource.profilePublic));
+    }
+  }
 
   useEffect(() => {
     setFormDirty(
@@ -148,7 +149,7 @@ export function HostAccount() {
     setProfileSlug(user.profileSlug ?? "");
     setProfilePublic(Boolean(user.profilePublic));
     setProfileDirty(false);
-    setPhotoFailed(false);
+    setFailedPhotoUrl(null);
   }
 
   async function saveProfile(event: FormEvent) {
@@ -240,7 +241,7 @@ export function HostAccount() {
         }));
       } else {
         setPhotoUrl(json.url);
-        setPhotoFailed(false);
+        setFailedPhotoUrl(null);
         applyMe((prev) => ({
           ...prev,
           user: { ...prev.user, photoUrl: json.url ?? null },
@@ -410,7 +411,7 @@ export function HostAccount() {
                 src={photoUrl!}
                 alt=""
                 className="h-full w-full object-cover"
-                onError={() => setPhotoFailed(true)}
+                onError={() => setFailedPhotoUrl(photoUrl)}
               />
             ) : (
               <AccountPhotoPlaceholder tone="dark" />
@@ -491,7 +492,7 @@ export function HostAccount() {
                   src={photoUrl!}
                   alt=""
                   className="h-full w-full object-cover"
-                  onError={() => setPhotoFailed(true)}
+                  onError={() => setFailedPhotoUrl(photoUrl)}
                 />
               ) : (
                 <AccountPhotoPlaceholder />

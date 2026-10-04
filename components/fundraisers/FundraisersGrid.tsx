@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Pagination } from "@/components/Pagination";
 import { PotCard } from "@/components/PotCard";
 import { IconPeople } from "@/components/icons";
 import {
@@ -73,44 +74,18 @@ export async function FundraisersGrid({ type, search, page }: Props) {
         ))}
       </div>
 
-      {totalPages > 1 ? (
-        <nav
-          className="mt-10 flex items-center justify-between gap-3 border-t border-pvn-navy/10 pt-6 sm:mt-12"
-          aria-label="Fundraisers pagination"
-        >
-          {currentPage > 1 ? (
-            <Link
-              href={`${fundraisersHref({
-                page: currentPage - 1,
-                type: type || undefined,
-                search: search || undefined,
-              })}#pots`}
-              className="font-nav inline-flex min-h-11 items-center gap-2 border border-pvn-navy/15 px-3.5 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:border-pvn-gold hover:text-pvn-gold"
-            >
-              <span aria-hidden>←</span> Previous
-            </Link>
-          ) : (
-            <span className="min-w-0 flex-1 sm:flex-none" />
-          )}
-          <span className="font-nav shrink-0 text-center text-[0.7rem] font-bold tracking-[0.14em] text-pvn-navy/45 uppercase">
-            Page {currentPage} of {totalPages}
-          </span>
-          {currentPage < totalPages ? (
-            <Link
-              href={`${fundraisersHref({
-                page: currentPage + 1,
-                type: type || undefined,
-                search: search || undefined,
-              })}#pots`}
-              className="font-nav inline-flex min-h-11 items-center gap-2 border border-pvn-navy/15 px-3.5 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:border-pvn-gold hover:text-pvn-gold"
-            >
-              Next <span aria-hidden>→</span>
-            </Link>
-          ) : (
-            <span className="min-w-0 flex-1 sm:flex-none" />
-          )}
-        </nav>
-      ) : null}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        label="Fundraisers pagination"
+        hrefFor={(p) =>
+          `${fundraisersHref({
+            page: p,
+            type: type || undefined,
+            search: search || undefined,
+          })}#pots`
+        }
+      />
     </>
   );
 }

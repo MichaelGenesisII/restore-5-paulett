@@ -225,6 +225,70 @@ body {
   animation: none;
 }
 
+/* Mobile tab bar: every tap leaves a ripple, and the tab that becomes current
+   springs once so the change of place is felt, not just seen. */
+@keyframes pvn-tab-ripple {
+  from {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.pvn-tab-ripple {
+  position: absolute;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 9999px;
+  background: currentColor;
+  pointer-events: none;
+  animation: pvn-tab-ripple 600ms ease-out forwards;
+}
+
+@keyframes pvn-tab-pop {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-3px) scale(1.2);
+  }
+  70% {
+    transform: translateY(0) scale(0.94);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pvn-tab-pop {
+  animation: pvn-tab-pop 480ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pvn-tab-dot {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pvn-tab-dot {
+  animation: pvn-tab-dot 320ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Signed-in host/admin pages end at their tab bar on mobile (below lg). */
+@media (width < 64rem) {
+  body[data-dashboard-tabbar] #site-footer {
+    display: none;
+  }
+}
+
 @keyframes pvn-modal-in {
   from {
     opacity: 0;
@@ -262,26 +326,6 @@ body {
 
 .pvn-consent {
   animation: pvn-consent-in 420ms 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* Doves drift on opposite phases, so the pair never moves in lockstep. */
-@keyframes pvn-dove-drift {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-14px) rotate(-1.5deg);
-  }
-}
-
-.pvn-dove {
-  animation: pvn-dove-drift 11s ease-in-out infinite;
-}
-
-.pvn-dove-right {
-  animation-duration: 13s;
-  animation-delay: -4s;
 }
 
 /* Steps slide in from the side you came from, so the flow has a direction. */
@@ -488,74 +532,6 @@ body {
   animation: pvn-alumni-memory-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Rebuild action cards: cream at rest, navy on hover, with micro motion. */
-.pvn-rebuild-card {
-  transition:
-    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 420ms ease,
-    color 420ms ease,
-    box-shadow 420ms ease;
-}
-
-.pvn-rebuild-card-bar,
-.pvn-rebuild-card-icon,
-.pvn-rebuild-card-title,
-.pvn-rebuild-card-body,
-.pvn-rebuild-card-cta,
-.pvn-rebuild-card-arrow {
-  transition:
-    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
-    color 420ms ease,
-    background-color 420ms ease,
-    opacity 420ms ease,
-    gap 420ms ease;
-}
-
-.pvn-rebuild-card:hover,
-.pvn-rebuild-card:focus-visible {
-  transform: translateY(-6px);
-  background-color: var(--pvn-navy);
-  color: var(--pvn-cream);
-  box-shadow: 0 22px 44px -28px rgba(12, 27, 51, 0.55);
-  outline: none;
-}
-
-.pvn-rebuild-card:hover .pvn-rebuild-card-bar,
-.pvn-rebuild-card:focus-visible .pvn-rebuild-card-bar {
-  transform: scaleX(1);
-}
-
-.pvn-rebuild-card:hover .pvn-rebuild-card-icon,
-.pvn-rebuild-card:focus-visible .pvn-rebuild-card-icon {
-  background-color: rgba(201, 168, 76, 0.18);
-  transform: scale(1.06);
-}
-
-.pvn-rebuild-card:hover .pvn-rebuild-card-title,
-.pvn-rebuild-card:focus-visible .pvn-rebuild-card-title {
-  color: var(--pvn-cream);
-}
-
-.pvn-rebuild-card:hover .pvn-rebuild-card-body,
-.pvn-rebuild-card:focus-visible .pvn-rebuild-card-body {
-  color: rgba(247, 244, 239, 0.7);
-}
-
-.pvn-rebuild-card:hover .pvn-rebuild-card-cta,
-.pvn-rebuild-card:focus-visible .pvn-rebuild-card-cta {
-  gap: 0.75rem;
-}
-
-.pvn-rebuild-card:hover .pvn-rebuild-card-arrow,
-.pvn-rebuild-card:focus-visible .pvn-rebuild-card-arrow {
-  transform: translateX(3px);
-}
-
-.pvn-rebuild-card:active {
-  transform: translateY(-2px) scale(0.99);
-  transition-duration: 100ms;
-}
-
 /* Our Story chapter card: the rail freezes in place rather than resetting, so
    a paused card still shows how much of the six seconds is left. */
 @keyframes pvn-story-fill {
@@ -598,7 +574,6 @@ body {
     opacity: 1;
   }
 
-  .pvn-dove,
   .pvn-amount-active,
   .pvn-step,
   .pvn-figure {
@@ -638,22 +613,6 @@ body {
     transform: none !important;
   }
 
-  .pvn-rebuild-card,
-  .pvn-rebuild-card-bar,
-  .pvn-rebuild-card-icon,
-  .pvn-rebuild-card-title,
-  .pvn-rebuild-card-body,
-  .pvn-rebuild-card-cta,
-  .pvn-rebuild-card-arrow {
-    transition: none !important;
-    transform: none !important;
-  }
-
-  .pvn-rebuild-card:hover,
-  .pvn-rebuild-card:focus-visible {
-    transform: none !important;
-  }
-
   .pvn-gallery-tile:hover .pvn-gallery-cue,
   .pvn-gallery-tile:focus-visible .pvn-gallery-cue,
   .pvn-gallery-tile:hover .pvn-gallery-veil,
@@ -676,6 +635,15 @@ body {
 
   .pvn-give-glint {
     display: none;
+  }
+
+  .pvn-tab-ripple {
+    display: none;
+  }
+
+  .pvn-tab-pop,
+  .pvn-tab-dot {
+    animation: none !important;
   }
 
   .creator-copy-link--idle {

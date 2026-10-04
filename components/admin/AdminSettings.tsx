@@ -258,6 +258,9 @@ export function AdminSettings() {
       readHostClientCache(ADMINS_CACHE_KEY, ADMINS_CACHE_TTL_MS),
     );
     void Promise.all([
+      // Both loaders paint the sessionStorage cache before revalidating; that
+      // first render from an external store is intentional.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       loadSettings(softSettings),
       loadAdmins(softAdmins),
     ]).catch((err) => {

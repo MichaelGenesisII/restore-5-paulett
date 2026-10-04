@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArcEdge, ARC_SPACE } from "@/components/ArcEdge";
 import { organisation } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -71,10 +70,7 @@ function TickMark() {
 export default function AccessibilityPage() {
   return (
     <main className="w-full">
-      <section
-        className="relative overflow-hidden bg-pvn-navy text-pvn-cream"
-        style={{ paddingTop: "3.5rem", paddingBottom: `${ARC_SPACE}px` }}
-      >
+      <section className="relative -mt-[4.75rem] overflow-hidden bg-pvn-navy pt-[8.25rem] pb-12 text-pvn-cream sm:pb-14">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
           aria-hidden
@@ -95,8 +91,6 @@ export default function AccessibilityPage() {
               "radial-gradient(120% 100% at 50% 0%, rgba(201,168,76,0.16), transparent 70%)",
           }}
         />
-
-        <ArcEdge side="bottom" />
 
         <div className="relative mx-auto max-w-6xl px-4 pb-4 sm:px-6">
           <p className="font-nav flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.28em] text-pvn-gold-light">

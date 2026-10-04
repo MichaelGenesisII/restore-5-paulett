@@ -28,7 +28,7 @@ export async function AlumniHeroAside() {
   }
 
   return (
-    <aside className="rounded-sm border border-pvn-cream/12 bg-pvn-navy/60 backdrop-blur-sm">
+    <aside className="rounded-sm border border-pvn-gold/60 bg-pvn-navy/60 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] backdrop-blur-sm transition duration-300 ease-out hover:border-pvn-gold hover:shadow-[0_26px_50px_-18px_rgba(201,168,76,0.35)] motion-safe:hover:-translate-y-1">
       <div className="flex items-center justify-between gap-3 px-4 py-3.5 sm:hidden">
         <div className="min-w-0">
           <p className="font-nav text-[0.6rem] font-bold tracking-[0.18em] text-pvn-gold uppercase">
@@ -82,7 +82,7 @@ export async function AlumniHeroAside() {
 export function AlumniHeroAsideFallback() {
   return (
     <aside
-      className="rounded-sm border border-pvn-cream/12 bg-pvn-navy/60 backdrop-blur-sm"
+      className="rounded-sm border border-pvn-gold/60 bg-pvn-navy/60 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)] backdrop-blur-sm"
       aria-busy="true"
     >
       <div className="flex items-center justify-between gap-3 px-4 py-3.5 sm:hidden">
@@ -128,7 +128,7 @@ export async function AlumniReconnect({ city, ministry, search }: ReconnectProps
   return (
     <section
       id="reconnect"
-      className="border-t border-pvn-navy/5 bg-pvn-cream pt-14 pb-8 sm:pt-20 sm:pb-10"
+      className="border-t border-pvn-navy/5 bg-pvn-cream pt-14 pb-14 sm:pt-20 sm:pb-20"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="max-w-2xl">
@@ -189,7 +189,7 @@ export function AlumniReconnectFallback() {
   return (
     <section
       id="reconnect"
-      className="border-t border-pvn-navy/5 bg-pvn-cream pt-14 pb-8 sm:pt-20 sm:pb-10"
+      className="border-t border-pvn-navy/5 bg-pvn-cream pt-14 pb-14 sm:pt-20 sm:pb-20"
       aria-busy="true"
       aria-label="Searching alumni pots"
     >

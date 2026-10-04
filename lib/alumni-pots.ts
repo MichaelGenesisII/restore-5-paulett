@@ -145,7 +145,7 @@ async function loadAlumniPots(
 ): Promise<AlumniPotCardData[]> {
   return prisma.pot.findMany({
     where: buildAlumniWhere(city, ministry, search),
-    orderBy: { updatedAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { id: "asc" }],
     select: {
       slug: true,
       title: true,
@@ -177,7 +177,7 @@ export function getAlumniPotsCached(opts: {
 
   return unstable_cache(
     () => loadAlumniPots(city, ministry, search),
-    ["alumni-pots-v1", city, ministry, search],
+    ["alumni-pots-v2", city, ministry, search],
     { revalidate: 60, tags: [ALUMNI_POTS_CACHE_TAG] },
   )();
 }

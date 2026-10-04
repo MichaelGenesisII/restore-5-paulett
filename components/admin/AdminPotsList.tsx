@@ -226,13 +226,18 @@ function AdminPotsListInner() {
     [applyPayload],
   );
 
+  // Adopt ?q= only when the URL itself changes (e.g. a link from elsewhere in
+  // admin). Comparing against the current search instead would undo every
+  // search typed into the box, since that doesn't touch the URL.
+  const urlQ = searchParams.get("q")?.trim() ?? "";
+  const [syncedUrlQ, setSyncedUrlQ] = useState(urlQ);
+  if (urlQ !== syncedUrlQ) {
+    setSyncedUrlQ(urlQ);
+    setDraftQ(urlQ);
+    setQ(urlQ);
+  }
+
   useEffect(() => {
-    const urlQ = searchParams.get("q")?.trim() ?? "";
-    if (urlQ !== q) {
-      setDraftQ(urlQ);
-      setQ(urlQ);
-      return;
-    }
     let cancelled = false;
     const soft = Boolean(
       readHostClientCache(
@@ -240,6 +245,9 @@ function AdminPotsListInner() {
         POTS_CACHE_TTL_MS,
       ),
     );
+    // load() paints the sessionStorage cache before revalidating; that first
+    // render from an external store is intentional.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load(1, status, type, q, pageSize, soft).catch((err) => {
       if (cancelled) return;
       toast.error(
@@ -256,7 +264,7 @@ function AdminPotsListInner() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- pageSize via changePageSize
-  }, [load, status, type, q, searchParams, toast]);
+  }, [load, status, type, q, toast]);
 
   function onSearch(event: FormEvent) {
     event.preventDefault();

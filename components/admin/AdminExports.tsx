@@ -214,6 +214,9 @@ export function AdminExports() {
   useEffect(() => {
     let cancelled = false;
     void Promise.all([
+      // Both loaders paint the sessionStorage cache before revalidating; that
+      // first render from an external store is intentional.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       refreshCounts(from, to),
       refreshPurgePreview(),
     ])
@@ -244,6 +247,8 @@ export function AdminExports() {
   useEffect(() => {
     if (!ready) return;
     let cancelled = false;
+    // refreshCounts() paints the sessionStorage cache before revalidating.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void refreshCounts(from, to).catch((err) => {
       if (cancelled) return;
       toast.error(

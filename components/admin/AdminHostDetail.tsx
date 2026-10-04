@@ -127,8 +127,8 @@ export function AdminHostDetail({ id }: { id: string }) {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setNotFound(false);
+    // load() awaits the request before any setState.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load().catch((err) => {
       if (cancelled) return;
       toast.error(

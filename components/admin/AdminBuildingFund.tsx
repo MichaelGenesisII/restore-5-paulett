@@ -172,6 +172,9 @@ export function AdminBuildingFund() {
     const soft = Boolean(
       readHostClientCache(FUND_CACHE_KEY, FUND_CACHE_TTL_MS),
     );
+    // load() paints the sessionStorage cache before revalidating; that first
+    // render from an external store is intentional.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load(soft).catch((err) => {
       if (cancelled) return;
       toast.error(

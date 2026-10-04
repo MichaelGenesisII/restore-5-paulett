@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { ArcEdge, ARC_SPACE } from "@/components/ArcEdge";
 
 /**
  * Shared frame for the policy pages, so Privacy, Terms and Cookies read as one
@@ -20,10 +19,7 @@ export function LegalPage({
 }) {
   return (
     <main className="w-full">
-      <section
-        className="relative overflow-hidden bg-pvn-navy text-pvn-cream"
-        style={{ paddingTop: "3.5rem", paddingBottom: `${ARC_SPACE}px` }}
-      >
+      <section className="relative -mt-[4.75rem] overflow-hidden bg-pvn-navy pt-[8.25rem] pb-12 text-pvn-cream sm:pb-14">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
           aria-hidden
@@ -44,8 +40,6 @@ export function LegalPage({
               "radial-gradient(120% 100% at 50% 0%, rgba(201,168,76,0.16), transparent 70%)",
           }}
         />
-
-        <ArcEdge side="bottom" />
 
         <div className="relative mx-auto max-w-6xl px-4 pb-4 sm:px-6">
           <p className="font-nav flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.28em] text-pvn-gold-light">

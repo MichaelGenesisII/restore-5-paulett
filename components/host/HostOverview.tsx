@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { HostEmptyState } from "@/components/host/HostEmptyState";
 import { HostPotProgress } from "@/components/host/HostPotProgress";
 import { HostPotStatusChip } from "@/components/host/HostPotStatusChip";
@@ -40,11 +40,9 @@ function HostOverviewAvatar({
   email?: string;
 }) {
   const trimmedUrl = photoUrl?.trim() || null;
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    setFailed(false);
-  }, [trimmedUrl]);
+  // Remembers which URL failed, so a new photo is retried automatically.
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const failed = failedUrl !== null && failedUrl === trimmedUrl;
 
   const showPhoto = Boolean(trimmedUrl) && !failed;
 
@@ -60,7 +58,7 @@ function HostOverviewAvatar({
           src={trimmedUrl!}
           alt=""
           className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-          onError={() => setFailed(true)}
+          onError={() => setFailedUrl(trimmedUrl)}
         />
       ) : (
         <HostAvatarPlaceholder />

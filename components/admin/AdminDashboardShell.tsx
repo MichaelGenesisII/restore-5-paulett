@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { AdminGate } from "@/components/admin/AdminGate";
+import { AdminTabBar } from "@/components/admin/AdminTabBar";
 import {
   clearHostClientCache,
   readHostClientCache,
@@ -23,6 +24,8 @@ export type AdminMe = {
   user: {
     email: string;
   };
+  /** Absent until /api/admin/me answers (session-only placeholder). */
+  unhandledContacts?: number;
 };
 
 const ADMIN_ME_CACHE_TTL_MS = 5 * 60_000;
@@ -81,6 +84,8 @@ type AdminDashboardContextValue = {
   error: string | null;
   refresh: () => Promise<void>;
   signOut: () => void;
+  /** Keep the Inbox badge in step when a message is marked done/reopened. */
+  adjustUnhandled: (delta: number) => void;
 };
 
 const AdminDashboardContext =
@@ -119,36 +124,8 @@ function DesktopNav() {
   );
 }
 
-function MobileTabs() {
-  const pathname = usePathname();
-
-  return (
-    <nav
-      className="flex gap-1 overflow-x-auto border-b border-pvn-navy/10 pb-px [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      aria-label="Admin"
-    >
-      {nav.map((item) => {
-        const active = item.match(pathname);
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`font-nav shrink-0 border-b-2 px-3 py-2.5 text-[0.65rem] font-bold tracking-[0.12em] uppercase transition ${
-              active
-                ? "border-pvn-gold text-pvn-navy"
-                : "border-transparent text-pvn-navy/45 hover:text-pvn-navy"
-            }`}
-          >
-            {item.label}
-          </Link>
-        );
-      })}
-    </nav>
-  );
-}
-
 /**
- * Admin dashboard chrome: rail on desktop, tabs on mobile.
+ * Admin dashboard chrome: rail on desktop, bottom tab bar + left menu on mobile.
  * Access = Supabase session + ADMIN_EMAILS allowlist via /api/admin/me.
  */
 export function AdminDashboardShell({ children }: { children: ReactNode }) {
@@ -249,6 +226,9 @@ export function AdminDashboardShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
+    // refresh() awaits the Supabase session before any setState, so nothing
+    // updates synchronously inside this effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh().catch((err) => {
       if (cancelled) return;
       setError(
@@ -272,11 +252,25 @@ export function AdminDashboardShell({ children }: { children: ReactNode }) {
       const email = data?.user.email;
       if (email) clearHostClientCache(adminMeCacheKey(email));
       await getSupabaseBrowser().auth.signOut();
-      window.location.href = "/admin";
+      // Full reload (not router.push) so no signed-in data survives in memory;
+      // replace() also keeps the dashboard out of the back-button history.
+      window.location.replace("/admin");
     } catch {
       setSigningOut(false);
     }
   }
+
+  const adjustUnhandled = useCallback((delta: number) => {
+    setData((current) => {
+      if (!current || current.unhandledContacts === undefined) return current;
+      const next = {
+        ...current,
+        unhandledContacts: Math.max(0, current.unhandledContacts + delta),
+      };
+      writeHostClientCache(adminMeCacheKey(current.user.email), next);
+      return next;
+    });
+  }, []);
 
   const value: AdminDashboardContextValue = {
     data,
@@ -284,6 +278,7 @@ export function AdminDashboardShell({ children }: { children: ReactNode }) {
     error,
     refresh,
     signOut: () => void performSignOut(),
+    adjustUnhandled,
   };
 
   if (loading && !data && !forbidden) {
@@ -356,28 +351,14 @@ export function AdminDashboardShell({ children }: { children: ReactNode }) {
 
   return (
     <AdminDashboardContext.Provider value={value}>
+      {/* Mobile: navigation and sign out live in the bottom bar's menu */}
       <div className="mb-6 lg:hidden">
-        <div className="flex items-end justify-between gap-3">
-          <div className="min-w-0">
-            <p className="font-nav text-[0.6rem] font-bold tracking-[0.2em] text-pvn-gold uppercase">
-              Admin
-            </p>
-            <p className="mt-1 truncate font-display text-xl font-semibold text-pvn-navy">
-              Operations
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => void performSignOut()}
-            disabled={signingOut}
-            className="font-nav inline-flex shrink-0 items-center gap-1.5 rounded-md border border-pvn-navy/20 bg-white/80 px-2.5 py-1.5 text-[0.65rem] font-bold tracking-[0.12em] text-pvn-navy uppercase transition hover:border-pvn-gold hover:text-pvn-gold disabled:opacity-50"
-          >
-            {signingOut ? "…" : "Sign out"}
-          </button>
-        </div>
-        <div className="mt-4">
-          <MobileTabs />
-        </div>
+        <p className="font-nav text-[0.6rem] font-bold tracking-[0.2em] text-pvn-gold uppercase">
+          Admin
+        </p>
+        <p className="mt-1 truncate font-display text-xl font-semibold text-pvn-navy">
+          Operations
+        </p>
       </div>
 
       <div className="lg:grid lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:gap-0 xl:grid-cols-[15rem_minmax(0,1fr)]">
@@ -414,8 +395,18 @@ export function AdminDashboardShell({ children }: { children: ReactNode }) {
           </div>
         </aside>
 
-        <div className="min-w-0 lg:pl-10 xl:pl-12">{children}</div>
+        {/* Mobile bottom padding clears the fixed tab bar */}
+        <div className="min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom))] lg:pb-0 lg:pl-10 xl:pl-12">
+          {children}
+        </div>
       </div>
+
+      <AdminTabBar
+        email={data.user.email}
+        unhandledContacts={data.unhandledContacts ?? 0}
+        onSignOut={() => void performSignOut()}
+        signingOut={signingOut}
+      />
     </AdminDashboardContext.Provider>
   );
 }

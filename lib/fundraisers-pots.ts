@@ -67,7 +67,9 @@ async function loadFundraisersPage(
 
   const pots = await prisma.pot.findMany({
     where,
-    orderBy: { updatedAt: "desc" },
+    // Newest first. createdAt never changes, so gifts and edits can't reshuffle
+    // pages mid-browse; the id tie-break covers matching timestamps.
+    orderBy: [{ createdAt: "desc" }, { id: "asc" }],
     skip: (currentPage - 1) * POTS_PER_PAGE,
     take: POTS_PER_PAGE,
     select: {
@@ -108,7 +110,7 @@ export function getFundraisersPageCached(opts: {
 
   return unstable_cache(
     () => loadFundraisersPage(typeKey, search, page),
-    ["fundraisers-pots-v1", typeKey, search, String(page)],
+    ["fundraisers-pots-v2", typeKey, search, String(page)],
     { revalidate: 60, tags: [FUNDRAISERS_POTS_CACHE_TAG] },
   )();
 }

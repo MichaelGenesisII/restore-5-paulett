@@ -15,6 +15,7 @@ export function HomeShareButton({ className = "" }: { className?: string }) {
       title={SHARE_TITLE}
       text={SHARE_TEXT}
       label="Share this campaign"
+      size="compact"
       className={`border-pvn-gold hover:border-pvn-gold-light hover:bg-pvn-navy/50 ${className}`}
       getUrl={() =>
         typeof window !== "undefined"

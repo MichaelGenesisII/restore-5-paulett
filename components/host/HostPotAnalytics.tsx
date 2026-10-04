@@ -191,6 +191,9 @@ export function HostPotAnalytics({ slug }: { slug: string }) {
 
   useEffect(() => {
     let cancelled = false;
+    // load() paints the sessionStorage cache before revalidating; that first
+    // render from an external store is intentional.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load().catch((err) => {
       if (cancelled) return;
       toast.error(

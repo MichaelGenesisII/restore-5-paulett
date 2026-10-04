@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import type { CSSProperties } from "react";
-import { ArcEdge, ARC_SPACE } from "@/components/ArcEdge";
 import { ContactForm } from "@/components/ContactForm";
-import { IconHeart } from "@/components/icons";
 import { organisation, socialLinks } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -14,21 +9,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
-/**
- * Distance from left/right edge.
- * `0` = flush; positive = inset; negative = past edge.
- */
-const FLOWER_EDGE_INSET = {
-  mobile: "0px",
-  desktop: "60px",
-} as const;
-
 export default function ContactPage() {
   return (
     <main className="w-full">
       <section
-        className="relative isolate -mt-[4.75rem] overflow-hidden bg-pvn-navy pt-[calc(4.75rem+3.5rem)] text-pvn-cream"
-        style={{ paddingBottom: `${ARC_SPACE}px` }}
+        className="relative isolate -mt-[4.75rem] overflow-hidden bg-pvn-navy pt-[calc(4.75rem+3.5rem)] pb-12 text-pvn-cream sm:pb-14"
       >
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.06]"
@@ -50,8 +35,6 @@ export default function ContactPage() {
               "radial-gradient(120% 100% at 50% 0%, rgba(201,168,76,0.16), transparent 70%)",
           }}
         />
-
-        <ArcEdge side="bottom" />
 
         <div className="relative mx-auto max-w-6xl px-4 pb-4 sm:px-6">
           <p className="font-nav flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.28em] text-pvn-gold">
@@ -166,63 +149,6 @@ export default function ContactPage() {
                 </div>
               ) : null}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        className="relative overflow-hidden border-t border-pvn-navy/5 bg-pvn-cream py-14 sm:py-20"
-        style={
-          {
-            "--flower-inset-mobile": FLOWER_EDGE_INSET.mobile,
-            "--flower-inset-desktop": FLOWER_EDGE_INSET.desktop,
-          } as CSSProperties
-        }
-      >
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-pvn-gold/50 to-transparent"
-          aria-hidden
-        />
-
-        <Image
-          src="/flower.png"
-          alt=""
-          aria-hidden
-          width={497}
-          height={373}
-          className="pointer-events-none absolute top-1/2 left-[var(--flower-inset-mobile)] w-44 -translate-y-1/2 opacity-[0.12] sm:left-[var(--flower-inset-desktop)] sm:w-56 lg:w-72 lg:opacity-[0.16]"
-        />
-        <Image
-          src="/flower.png"
-          alt=""
-          aria-hidden
-          width={497}
-          height={373}
-          className="pointer-events-none absolute top-1/2 right-[var(--flower-inset-mobile)] w-44 -translate-y-1/2 scale-x-[-1] opacity-[0.12] sm:right-[var(--flower-inset-desktop)] sm:w-56 lg:w-72 lg:opacity-[0.16]"
-        />
-
-        <div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
-          <h2 className="font-nav text-2xl font-bold uppercase tracking-[0.08em] text-pvn-navy sm:text-3xl">
-            Rather build than write?
-          </h2>
-          <p className="mt-4 text-base leading-relaxed text-pvn-navy/75">
-            You do not need permission, and you do not need to ask first. Take
-            your part of the wall.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link
-              href="/give"
-              className="font-nav inline-flex items-center gap-2 rounded-md bg-pvn-navy px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-pvn-cream transition hover:bg-pvn-navy-light sm:text-sm"
-            >
-              <IconHeart className="h-4 w-4 text-pvn-gold" />
-              Give now
-            </Link>
-            <Link
-              href="/fundraisers/create"
-              className="font-nav inline-flex rounded-md border border-pvn-navy/25 px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-pvn-navy transition hover:border-pvn-gold hover:text-pvn-gold sm:text-sm"
-            >
-              Start a pot
-            </Link>
           </div>
         </div>
       </section>

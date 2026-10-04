@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type Variant = "cover" | "avatar";
 type Size = "sm" | "md";
@@ -81,11 +81,9 @@ export function AdminImageFrame({
   /** Accessible / visible label when empty (e.g. “No cover”). */
   label?: string;
 }) {
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    setFailed(false);
-  }, [src]);
+  // Remembers which URL failed, so a new src is retried automatically.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const failed = failedSrc !== null && failedSrc === src;
 
   const showImage = Boolean(src?.trim()) && !failed;
   const emptyLabel =
@@ -103,7 +101,7 @@ export function AdminImageFrame({
           src={src!}
           alt={alt}
           className={`${aspectClass[variant][size]} object-cover`}
-          onError={() => setFailed(true)}
+          onError={() => setFailedSrc(src ?? null)}
         />
       ) : (
         <div

@@ -135,6 +135,43 @@ export function IconHouse({ className }: IconProps) {
   );
 }
 
+export function IconBook({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M12 6.5C10.2 5 7.6 4.5 4 4.5v13c3.6 0 6.2.5 8 2 1.8-1.5 4.4-2 8-2v-13c-3.6 0-6.2.5-8 2Z" />
+      <path d="M12 6.5v13" />
+    </svg>
+  );
+}
+
+export function IconGraduation({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M2.5 9.5 12 5l9.5 4.5L12 14 2.5 9.5Z" />
+      <path d="M6.5 11.5v4.2c1.4 1.5 3.3 2.3 5.5 2.3s4.1-.8 5.5-2.3v-4.2" />
+      <path d="M21.5 9.5v5" />
+    </svg>
+  );
+}
+
 /** Share nodes — used on the home hero Share CTA. */
 export function IconShare({ className }: IconProps) {
   return (

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 type Place = {
@@ -126,7 +125,7 @@ function PlaceItem({ place }: { place: Place }) {
 
 export function HomePlaces() {
   const [visible, setVisible] = useState(1);
-  const [index, setIndex] = useState(0);
+  const [rawIndex, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
@@ -140,10 +139,8 @@ export function HomePlaces() {
 
   // How many start positions when advancing 1 item at a time
   const maxIndex = Math.max(0, places.length - visible);
-
-  useEffect(() => {
-    setIndex((current) => Math.min(current, maxIndex));
-  }, [maxIndex]);
+  // Clamped at render, so going 1 → 4 visible never strands the carousel.
+  const index = Math.min(rawIndex, maxIndex);
 
   useEffect(() => {
     if (paused || maxIndex < 1) return;
@@ -157,7 +154,7 @@ export function HomePlaces() {
 
   const go = (direction: -1 | 1) => {
     setIndex((current) => {
-      const next = current + direction;
+      const next = Math.min(current, maxIndex) + direction;
       if (next < 0) return maxIndex;
       if (next > maxIndex) return 0;
       return next;
@@ -170,41 +167,12 @@ export function HomePlaces() {
   return (
     <section
       id="places"
-      className="relative overflow-hidden border-t border-pvn-navy/5 bg-pvn-cream py-14 sm:py-20"
+      className="relative hidden overflow-hidden border-t border-pvn-navy/5 bg-pvn-cream py-14 sm:py-20 md:block"
     >
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-pvn-gold/50 to-transparent"
         aria-hidden
       />
-
-      {/* Desktop-only dove ornaments
-          Vertical: change top-N (e.g. top-0, top-4, top-8) to move up/down
-          Horizontal: change left-N / right-N
-          Size: w-[20%] / max-w-[260px] · Fade: opacity-[0.45] */}
-      <div
-        className="pointer-events-none absolute top-5 left-8 hidden h-[55%] max-h-[280px] w-[20%] max-w-[260px] lg:block xl:left-12"
-        aria-hidden
-      >
-        <Image
-          src="/left.jpg"
-          alt=""
-          fill
-          sizes="260px"
-          className="object-contain object-left-top opacity-[0.45] invert mix-blend-multiply"
-        />
-      </div>
-      <div
-        className="pointer-events-none absolute top-5 right-8 hidden h-[55%] max-h-[280px] w-[20%] max-w-[260px] lg:block xl:right-12"
-        aria-hidden
-      >
-        <Image
-          src="/right.jpg"
-          alt=""
-          fill
-          sizes="260px"
-          className="object-contain object-right-top opacity-[0.45] invert mix-blend-multiply"
-        />
-      </div>
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
