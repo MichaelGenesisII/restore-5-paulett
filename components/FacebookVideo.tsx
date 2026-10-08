@@ -1,7 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
+import {
+  useEffect,
+  useEffectEvent,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+} from "react";
 import {
   openCookiePreferences,
   parseConsent,
@@ -9,10 +18,18 @@ import {
   subscribeToConsent,
 } from "@/lib/consent";
 
+type FbPlayerEvent = "startedPlaying" | "paused" | "finishedPlaying";
+
 type FbPlayer = {
   play: () => void;
   pause: () => void;
+  seek: (seconds: number) => void;
   mute: () => void;
+  unmute: () => void;
+  subscribe: (
+    event: FbPlayerEvent,
+    handler: () => void,
+  ) => { release: (event: FbPlayerEvent) => void };
 };
 
 type FbSdk = {
@@ -35,6 +52,17 @@ declare global {
 
 const SDK_SRC = "https://connect.facebook.net/en_GB/sdk.js";
 const SDK_VERSION = "v21.0";
+
+/** Length of the branded ident before the film starts. */
+const INTRO_MS = 2000;
+/** How long a play with sound gets to start before it falls back to muted. */
+const SOUND_START_GRACE_MS = 2500;
+
+/**
+ * idle: loaded, not started yet · intro: branded ident · playing ·
+ * paused: by the visitor, or by scrolling away · ended: film finished.
+ */
+type Stage = "idle" | "intro" | "playing" | "paused" | "ended";
 
 let sdkPromise: Promise<FbSdk> | null = null;
 
@@ -59,19 +87,52 @@ function loadSdk(): Promise<FbSdk> {
   return sdkPromise;
 }
 
-function PlayIcon() {
+function PlayIcon({ className = "ml-1 h-7 w-7" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7" fill="currentColor" aria-hidden>
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
       <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" />
     </svg>
   );
 }
 
+function ReplayIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M3 12a9 9 0 1 0 3-6.7" />
+      <path d="M3 4v5h5" />
+    </svg>
+  );
+}
+
+/** The PVN mark, painted gold through the logo's own shape. */
+const logoMask: CSSProperties = {
+  maskImage: "url(/pvnlogo.png)",
+  WebkitMaskImage: "url(/pvnlogo.png)",
+  maskSize: "contain",
+  WebkitMaskSize: "contain",
+  maskRepeat: "no-repeat",
+  WebkitMaskRepeat: "no-repeat",
+  maskPosition: "center",
+  WebkitMaskPosition: "center",
+};
+
 /**
  * Facebook's player sets Facebook cookies, so it only loads by itself for
  * visitors who allowed "Sharing the story"; everyone else gets a cover they
- * can tap. Once loaded it plays (muted, as browsers require) while it is on
- * screen and pauses when it scrolls away.
+ * can tap. Each start opens on a short PVN ident, and whenever the film is
+ * paused or finished a branded card covers the player — which also hides
+ * Facebook's "more videos" suggestions. It plays while on screen and pauses
+ * when scrolled away. Autoplay starts muted (browsers refuse it with sound)
+ * and is muted only that once, so sound someone turns on survives scrolling.
  */
 export function FacebookVideo({
   href,
@@ -92,6 +153,10 @@ export function FacebookVideo({
   const visibleRef = useRef(false);
   const autoplayRef = useRef(true);
   const tappedRef = useRef(false);
+  const stageRef = useRef<Stage>("idle");
+  const scrollPausedRef = useRef(false);
+  const introTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const soundFallbackRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const consentRaw = useSyncExternalStore(subscribeToConsent, rawConsent, () => null);
   const allowed = parseConsent(consentRaw)?.marketing === true;
@@ -102,8 +167,115 @@ export function FacebookVideo({
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [width, setWidth] = useState(0);
+  const [stage, setStageState] = useState<Stage>("idle");
+  const [introRun, setIntroRun] = useState(0);
 
   const load = (allowed || tapped) && near;
+
+  function setStage(next: Stage) {
+    stageRef.current = next;
+    setStageState(next);
+  }
+
+  function clearTimers() {
+    if (introTimerRef.current) clearTimeout(introTimerRef.current);
+    if (soundFallbackRef.current) clearTimeout(soundFallbackRef.current);
+    introTimerRef.current = null;
+    soundFallbackRef.current = null;
+  }
+
+  /** Plays, and if the browser refuses sound, starts again muted. */
+  function playSafely(player: FbPlayer) {
+    let started = false;
+    let watching = true;
+    const watch = player.subscribe("startedPlaying", () => {
+      started = true;
+      if (watching) watch.release("startedPlaying");
+      watching = false;
+    });
+    scrollPausedRef.current = false;
+    setStage("playing");
+    player.play();
+    soundFallbackRef.current = setTimeout(() => {
+      if (watching) watch.release("startedPlaying");
+      watching = false;
+      if (started) return;
+      player.mute();
+      player.play();
+    }, SOUND_START_GRACE_MS);
+  }
+
+  /**
+   * Shows the ident, then plays. A start nobody asked for (autoplay) is
+   * dropped if the film has scrolled away by the time the ident ends.
+   */
+  function startWithIntro({ fromStart, requested }: { fromStart: boolean; requested: boolean }) {
+    const player = playerRef.current;
+    if (!player) return;
+    clearTimers();
+    if (fromStart) player.seek(0);
+    setStage("intro");
+    setIntroRun((n) => n + 1);
+    introTimerRef.current = setTimeout(() => {
+      introTimerRef.current = null;
+      if (!requested && !visibleRef.current) {
+        setStage("idle");
+        return;
+      }
+      playSafely(player);
+    }, INTRO_MS);
+  }
+
+  const onVisibility = useEffectEvent((visible: boolean) => {
+    visibleRef.current = visible;
+    const player = playerRef.current;
+    if (!player) return;
+    const current = stageRef.current;
+
+    if (!visible) {
+      if (current === "playing") {
+        scrollPausedRef.current = true;
+        player.pause();
+      } else if (current === "intro") {
+        clearTimers();
+        setStage("idle");
+      }
+      return;
+    }
+
+    if (!autoplayRef.current) return;
+    if (current === "idle") {
+      startWithIntro({ fromStart: false, requested: false });
+    } else if (current === "paused" && scrollPausedRef.current) {
+      playSafely(player);
+    }
+  });
+
+  const onPlayerReady = useEffectEvent((player: FbPlayer) => {
+    playerRef.current = player;
+    player.subscribe("startedPlaying", () => {
+      scrollPausedRef.current = false;
+      if (stageRef.current !== "intro") setStage("playing");
+    });
+    player.subscribe("paused", () => {
+      if (stageRef.current === "playing") setStage("paused");
+    });
+    player.subscribe("finishedPlaying", () => {
+      clearTimers();
+      setStage("ended");
+    });
+    setReady(true);
+
+    if (tappedRef.current) {
+      player.unmute();
+      startWithIntro({ fromStart: false, requested: true });
+      return;
+    }
+    player.mute();
+    if (visibleRef.current && autoplayRef.current) {
+      startWithIntro({ fromStart: false, requested: false });
+    }
+  });
 
   useEffect(() => {
     autoplayRef.current = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -127,18 +299,7 @@ export function FacebookVideo({
     nearby.observe(frame);
 
     const inView = new IntersectionObserver(
-      ([entry]) => {
-        const visible = Boolean(entry && entry.intersectionRatio >= 0.6);
-        visibleRef.current = visible;
-        const player = playerRef.current;
-        if (!player) return;
-        if (visible && autoplayRef.current) {
-          player.mute();
-          player.play();
-        } else if (!visible) {
-          player.pause();
-        }
-      },
+      ([entry]) => onVisibility(Boolean(entry && entry.intersectionRatio >= 0.6)),
       { threshold: [0, 0.6] },
     );
     inView.observe(frame);
@@ -161,13 +322,8 @@ export function FacebookVideo({
       .then((FB) => {
         if (cancelled || !frameRef.current) return;
         FB.Event.subscribe("xfbml.ready", (message) => {
-          if (message.type !== "video" || message.id !== id) return;
-          playerRef.current = message.instance;
-          setReady(true);
-          if (visibleRef.current && (autoplayRef.current || tappedRef.current)) {
-            message.instance.mute();
-            message.instance.play();
-          }
+          if (cancelled || message.type !== "video" || message.id !== id) return;
+          onPlayerReady(message.instance);
         });
         FB.XFBML.parse(frameRef.current);
       })
@@ -177,8 +333,26 @@ export function FacebookVideo({
 
     return () => {
       cancelled = true;
+      if (introTimerRef.current) clearTimeout(introTimerRef.current);
+      if (soundFallbackRef.current) clearTimeout(soundFallbackRef.current);
     };
   }, [build, id, attempt]);
+
+  const covered = stage !== "playing";
+
+  const resume = () => {
+    const player = playerRef.current;
+    if (!player) return;
+    clearTimers();
+    playSafely(player);
+  };
+
+  const replay = () => startWithIntro({ fromStart: true, requested: true });
+
+  const playFirst = () => {
+    playerRef.current?.unmute();
+    startWithIntro({ fromStart: false, requested: true });
+  };
 
   return (
     <div className="mx-auto w-full max-w-[420px]">
@@ -197,7 +371,97 @@ export function FacebookVideo({
           />
         ) : null}
 
-        {!ready ? (
+        {ready ? (
+          <div
+            className={`absolute inset-0 z-10 flex flex-col items-center justify-center overflow-hidden bg-pvn-navy p-6 text-center transition-opacity duration-300 ${
+              covered ? "opacity-100" : "pointer-events-none opacity-0"
+            }`}
+            inert={!covered}
+          >
+            <div
+              className="pointer-events-none absolute inset-0"
+              aria-hidden
+              style={{
+                background:
+                  "radial-gradient(90% 60% at 50% 38%, rgba(201,168,76,0.16), transparent 70%)",
+              }}
+            />
+
+            <div key={stage === "intro" ? `intro-${introRun}` : stage} className="relative flex flex-col items-center">
+              <span
+                className={`block bg-pvn-gold ${
+                  stage === "intro" ? "pvn-reel-logo h-24 w-24 sm:h-28 sm:w-28" : "h-14 w-14"
+                }`}
+                style={logoMask}
+                aria-hidden
+              />
+              <p className="font-nav mt-5 text-[0.65rem] font-bold tracking-[0.28em] text-pvn-gold-light uppercase">
+                PVN Belfast
+              </p>
+              <p className="font-display mt-1.5 text-2xl leading-tight font-semibold text-pvn-cream sm:text-3xl">
+                Restore 5 Paulett
+              </p>
+
+              {stage === "intro" ? (
+                <>
+                  <span className="sr-only">Starting: {title}</span>
+                  <span className="mt-6 block h-px w-28 overflow-hidden bg-pvn-cream/15" aria-hidden>
+                    <span className="pvn-reel-line block h-full w-full bg-pvn-gold" />
+                  </span>
+                </>
+              ) : (
+                <>
+                  <p className="mt-3 max-w-[17rem] text-xs leading-relaxed text-pvn-cream/70">
+                    {stage === "ended" ? "Thank you for watching." : title}
+                  </p>
+                  <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+                    {stage === "paused" ? (
+                      <button
+                        type="button"
+                        onClick={resume}
+                        className="font-nav inline-flex items-center gap-2 rounded-md bg-pvn-gold px-4 py-2.5 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
+                      >
+                        <PlayIcon className="h-4 w-4" />
+                        Continue
+                      </button>
+                    ) : null}
+                    {stage === "idle" ? (
+                      <button
+                        type="button"
+                        onClick={playFirst}
+                        className="font-nav inline-flex items-center gap-2 rounded-md bg-pvn-gold px-4 py-2.5 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
+                      >
+                        <PlayIcon className="h-4 w-4" />
+                        Play
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={replay}
+                        className={`font-nav inline-flex items-center gap-2 rounded-md px-4 py-2.5 text-xs font-bold tracking-[0.14em] uppercase transition ${
+                          stage === "ended"
+                            ? "bg-pvn-gold text-pvn-navy hover:bg-pvn-gold-light"
+                            : "border border-pvn-cream/30 text-pvn-cream hover:border-pvn-gold hover:text-pvn-gold"
+                        }`}
+                      >
+                        <ReplayIcon />
+                        Replay
+                      </button>
+                    )}
+                    {stage === "ended" ? (
+                      <Link
+                        href="/give"
+                        className="font-nav inline-flex items-center gap-2 rounded-md border border-pvn-cream/30 px-4 py-2.5 text-xs font-bold tracking-[0.14em] text-pvn-cream uppercase transition hover:border-pvn-gold hover:text-pvn-gold"
+                      >
+                        Give to the house
+                      </Link>
+                    ) : null}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        ) : (
           <div className="absolute inset-0">
             <Image
               src={poster}
@@ -245,7 +509,7 @@ export function FacebookVideo({
               )}
             </div>
           </div>
-        ) : null}
+        )}
       </div>
 
       <a

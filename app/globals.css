@@ -65,6 +65,44 @@ body {
   }
 }
 
+/* Branded ident shown over the film before it plays. */
+@keyframes pvn-reel-logo {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  45%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pvn-reel-line {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.pvn-reel-logo {
+  animation: pvn-reel-logo 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pvn-reel-line {
+  transform-origin: left center;
+  animation: pvn-reel-line var(--pvn-reel-ms, 2000ms) linear both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pvn-reel-logo,
+  .pvn-reel-line {
+    animation: none;
+  }
+}
+
 @keyframes pvn-toast-in {
   from {
     opacity: 0;
