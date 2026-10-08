@@ -2,7 +2,7 @@
  * Shared SEO helpers — titles, descriptions, absolute URLs for metadata/OG.
  */
 
-export const SITE_NAME = "Restore 5 Paulett";
+export const SITE_NAME = "Restore 5 Paulett Av";
 export const SITE_TAGLINE =
   "Help Place of Victory for All Nations Belfast restore 5 Paulett Avenue — YOUR FUNDRAISER → OUR HOUSE.";
 

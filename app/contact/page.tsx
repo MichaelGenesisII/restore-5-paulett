@@ -5,7 +5,7 @@ import { organisation, socialLinks } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Talk to the team behind Restore 5 Paulett — giving and Gift Aid, fundraisers, alumni, heritage and community, or press.",
+    "Talk to the team behind Restore 5 Paulett Av — giving and Gift Aid, fundraisers, alumni, heritage and community, or press.",
   alternates: { canonical: "/contact" },
 };
 

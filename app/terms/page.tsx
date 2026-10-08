@@ -6,7 +6,7 @@ import { organisation } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Terms",
   description:
-    "The terms for using the Restore 5 Paulett website, giving to the restoration, and taking your part of the wall.",
+    "The terms for using the Restore 5 Paulett Av website, giving to the restoration, and taking your part of the wall.",
 };
 
 export default function TermsPage() {
@@ -19,7 +19,7 @@ export default function TermsPage() {
     >
       <LegalSection title="Who you are dealing with">
         <p>
-          Restore 5 Paulett is the campaign to bring 5 Paulett Avenue in
+          Restore 5 Paulett Av is the campaign to bring 5 Paulett Avenue in
           Ballymacarrett, East Belfast, back to life. It is run by{" "}
           {organisation.legalName}, who purchased the building and will occupy
           it.
@@ -183,7 +183,7 @@ export default function TermsPage() {
 
       <LegalSection title="What belongs to whom">
         <p>
-          The name Place of Victory for All Nations, the Restore 5 Paulett
+          The name Place of Victory for All Nations, the Restore 5 Paulett Av
           campaign identity, and the text, photographs and design of this site
           belong to us or to those who licensed them to us. Read them, print
           them, share them to tell people about the restoration. Do not

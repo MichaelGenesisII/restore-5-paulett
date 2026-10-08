@@ -132,7 +132,7 @@ export function HomeHero({
 
             <h1 className="font-nav text-5xl font-bold uppercase leading-[0.92] tracking-[-0.005em] text-pvn-cream sm:text-6xl lg:text-7xl">
               <span className="block">Restore</span>
-              <span className="block text-pvn-gold">5 Paulett</span>
+              <span className="block text-pvn-gold">5 Paulett Av</span>
             </h1>
 
             {/* The 20-second answer: what the building is, and what happened to it. */}

@@ -13,7 +13,7 @@ export function Logo({ variant = "dark", showTagline = true }: LogoProps) {
     <Link
       href="/"
       className="group flex items-center gap-3 no-underline"
-      aria-label="Restore 5 Paulett — home"
+      aria-label="Restore 5 Paulett Av — home"
     >
       <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-pvn-gold p-1.5 transition group-hover:bg-pvn-gold-light">
         <Image
@@ -31,7 +31,7 @@ export function Logo({ variant = "dark", showTagline = true }: LogoProps) {
             isLight ? "text-pvn-cream" : "text-pvn-navy"
           }`}
         >
-          Restore 5 Paulett
+          Restore 5 Paulett Av
         </span>
         {showTagline ? (
           <span

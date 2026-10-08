@@ -114,7 +114,7 @@ export default async function AlumniPage({
             “Wherever God has planted you today, come back and build with us.”
           </blockquote>
           <cite className="font-nav mt-4 block text-[0.7rem] font-bold tracking-[0.2em] text-pvn-navy/50 not-italic uppercase">
-            Restore 5 Paulett · Alumni
+            Restore 5 Paulett Av · Alumni
           </cite>
           <div className="mt-8 flex justify-center">
             <Link

@@ -137,7 +137,7 @@ export function emailShell(input: EmailShellInput): string {
                     <span style="display:inline-block;width:7px;height:7px;background:${C.gold};transform:rotate(45deg);"></span>
                   </td>
                   <td style="font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:${C.navy};">
-                    Restore 5 Paulett
+                    Restore 5 Paulett Av
                   </td>
                   <td style="padding:0 10px;font-size:0;line-height:0;">
                     <span style="display:inline-block;width:7px;height:7px;background:${C.gold};transform:rotate(45deg);"></span>
