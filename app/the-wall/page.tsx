@@ -61,7 +61,7 @@ export default async function TheWallPage({
               className="h-1.5 w-1.5 shrink-0 rotate-45 bg-pvn-gold"
               aria-hidden
             />
-            Restore 5 Paulett Av
+            Restore 5 Paulett Ave
           </p>
           <h1 className="font-display mt-2.5 text-[2.5rem] leading-[1.02] font-semibold tracking-tight text-pvn-cream sm:mt-3 sm:text-5xl sm:leading-[1.05] lg:text-6xl xl:text-7xl">
             The Wall

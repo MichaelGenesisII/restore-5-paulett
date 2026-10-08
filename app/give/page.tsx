@@ -170,7 +170,7 @@ export default async function GivePage({
               <p className="mt-2 text-xs leading-snug text-pvn-navy/55 sm:text-sm">
                 {started
                   ? "Already given — one fund, seven areas of the fabric."
-                  : "Nothing given yet. The first gift starts the thermometer."}
+                  : "Phase one opens the hall — one fund, seven areas of the fabric."}
                 <span className="hidden sm:inline">
                   {" "}
                   Gift Aid can add 25%.

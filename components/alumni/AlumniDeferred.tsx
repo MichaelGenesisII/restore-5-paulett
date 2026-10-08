@@ -37,7 +37,7 @@ export async function AlumniHeroAside() {
           <p className="mt-1 truncate text-xs leading-snug text-pvn-cream/85">
             {alumniPotCount > 0
               ? `${alumniPotCount} alumni ${alumniPotCount === 1 ? "fundraiser" : "fundraisers"} rising`
-              : "No alumni fundraiser open yet"}
+              : "Open a section for your year"}
           </p>
         </div>
         <Link
@@ -60,7 +60,7 @@ export async function AlumniHeroAside() {
         <p className="mt-2 text-sm leading-relaxed text-pvn-cream/70">
           {alumniPotCount > 0
             ? "Already rising — by year, city and ministry. Find your people, or name a section of your own."
-            : "No alumni fundraiser has opened yet. Be the first to name a section for your year, city or ministry."}
+            : "Name a section for your year, city or ministry, and invite the people who know you."}
         </p>
         <p className="font-nav mt-3 text-[0.65rem] font-semibold tracking-[0.12em] text-pvn-cream/40 uppercase">
           {scatteredTo.slice(0, 5).join(" · ")}
@@ -158,13 +158,13 @@ export async function AlumniReconnect({ city, ministry, search }: ReconnectProps
           <div className="mt-10 rounded-sm border border-dashed border-pvn-navy/20 bg-white/40 px-6 py-12 text-center">
             <p className="font-display text-2xl font-semibold text-pvn-navy">
               {filtered
-                ? "Nobody matches that yet"
-                : "The alumni wall is still quiet"}
+                ? "Nobody matches that"
+                : "Name your section of the alumni wall"}
             </p>
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-pvn-navy/70">
               {filtered
-                ? "Clear the filters, or be the first to open a fundraiser for that city or ministry."
-                : "Be the first to name a section for your year, your city, or your ministry. The people who already know you will follow."}
+                ? "Clear the filters, or open a fundraiser for that city or ministry."
+                : "Open a fundraiser for your year, your city, or your ministry. The people who already know you will follow."}
             </p>
             <Link
               href="/fundraisers/create"

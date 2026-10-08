@@ -21,7 +21,7 @@ export default function GlobalError({
       className={`${geistSans.variable} ${display.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-pvn-cream text-pvn-navy">
-        <title>Something went wrong | Restore 5 Paulett Av</title>
+        <title>Something went wrong | Restore 5 Paulett Ave</title>
         <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-6 py-20 text-center">
           <p
             className="font-display text-[6.5rem] leading-none font-semibold text-pvn-gold/25 sm:text-[8rem]"

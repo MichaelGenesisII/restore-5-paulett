@@ -103,7 +103,7 @@ export async function WallStonesSection({ page }: { page: number }) {
           </p>
           <h2 className="font-display mt-2 text-3xl font-semibold text-pvn-navy sm:text-4xl">
             {totalCount === 0
-              ? "The first stone is waiting"
+              ? "Words in the wall"
               : `${totalCount} ${totalCount === 1 ? "stone" : "stones"} in the wall`}
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-pvn-navy/60 sm:text-base">
@@ -122,17 +122,17 @@ export async function WallStonesSection({ page }: { page: number }) {
         {stones.length === 0 ? (
           <div className="relative mt-12 overflow-hidden border border-dashed border-pvn-navy/20 bg-white/40 px-6 py-16 text-center sm:mt-14 sm:px-10">
             <p className="font-display relative text-2xl font-semibold text-pvn-navy italic sm:text-3xl">
-              No words yet — only bare stone.
+              Leave a word with your gift.
             </p>
             <p className="relative mx-auto mt-3 max-w-md text-sm leading-relaxed text-pvn-navy/60">
-              When someone gives to the house — or through a fundraiser — and
-              leaves a sentence, a verse, or a memory, it will be set here.
+              Every gift to the house — or through a fundraiser — can carry a
+              sentence, a verse, or a memory. It is set here, in the wall.
             </p>
             <Link
               href="/give"
               className="font-nav relative mt-8 inline-flex min-h-12 items-center justify-center rounded-md bg-pvn-gold px-6 text-xs font-bold tracking-[0.16em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light"
             >
-              Be the first stone
+              Leave a word
             </Link>
           </div>
         ) : (

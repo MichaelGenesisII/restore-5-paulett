@@ -5,7 +5,7 @@ import { organisation } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Accessibility",
   description:
-    "How accessible the Restore 5 Paulett Av website is, what we know is not right yet, and how to tell us about a barrier.",
+    "How accessible the Restore 5 Paulett Ave website is, what we know is not right yet, and how to tell us about a barrier.",
 };
 
 /**

@@ -2,7 +2,7 @@
 
 import { ShareCta } from "@/components/ShareCta";
 
-const SHARE_TITLE = "Restore 5 Paulett Av";
+const SHARE_TITLE = "Restore 5 Paulett Ave";
 const SHARE_TEXT =
   "Help rebuild Place of Victory's home at 5 Paulett Avenue in East Belfast.";
 

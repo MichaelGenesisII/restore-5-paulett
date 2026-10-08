@@ -399,7 +399,7 @@ export function FacebookVideo({
                 PVN Belfast
               </p>
               <p className="font-display mt-1.5 text-2xl leading-tight font-semibold text-pvn-cream sm:text-3xl">
-                Restore 5 Paulett Av
+                Restore 5 Paulett Ave
               </p>
 
               {stage === "intro" ? (

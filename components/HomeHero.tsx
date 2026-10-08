@@ -67,8 +67,7 @@ export function HomeHero({
   const pctLabel = started && pct === 0 ? "<1%" : `${pct}%`;
   const railPct = started ? Math.max(exactPct, 1.2) : 0;
 
-  // Before the first gifts land, an empty figure is worse than no figure —
-  // the card leads with the goal and invites the first builder instead.
+  // A stat with nothing to count is left out rather than shown as zero.
   const stats = [
     {
       key: "people",
@@ -132,7 +131,7 @@ export function HomeHero({
 
             <h1 className="font-nav text-5xl font-bold uppercase leading-[0.92] tracking-[-0.005em] text-pvn-cream sm:text-6xl lg:text-7xl">
               <span className="block">Restore</span>
-              <span className="block text-pvn-gold">5 Paulett Av</span>
+              <span className="block text-pvn-gold">5 Paulett Ave</span>
             </h1>
 
             {/* The 20-second answer: what the building is, and what happened to it. */}
@@ -189,9 +188,9 @@ export function HomeHero({
               <div className="mt-3">
                 <ProgressRail pct={railPct} label={pctLabel} />
               </div>
-              <p className="font-nav mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[0.65rem] uppercase tracking-[0.14em] text-pvn-cream/70">
-                {stats.length > 0 ? (
-                  stats.map((stat, i) => (
+              {stats.length > 0 ? (
+                <p className="font-nav mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[0.65rem] uppercase tracking-[0.14em] text-pvn-cream/70">
+                  {stats.map((stat, i) => (
                     <span key={stat.key} className="flex items-center gap-2.5">
                       {i > 0 && (
                         <span
@@ -201,11 +200,9 @@ export function HomeHero({
                       )}
                       {stat.short}
                     </span>
-                  ))
-                ) : (
-                  <span>Be the first to take your part of the wall</span>
-                )}
-              </p>
+                  ))}
+                </p>
+              ) : null}
             </div>
           </div>
 
@@ -232,7 +229,7 @@ export function HomeHero({
                   <>
                     <p>Phase one goal</p>
                     <p className="mt-0.5 text-lg font-semibold tracking-normal text-pvn-gold-light">
-                      Not one brick yet
+                      To open the hall
                     </p>
                   </>
                 )}
@@ -264,8 +261,7 @@ export function HomeHero({
               </ul>
             ) : (
               <p className="mt-6 border-t border-pvn-cream/10 pt-5 text-center text-sm leading-relaxed text-pvn-cream/75">
-                No one has given yet. Be the first to take your part of the
-                wall.
+                Every gift goes straight into the fabric of the house.
               </p>
             )}
 

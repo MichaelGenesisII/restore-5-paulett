@@ -49,12 +49,12 @@ export async function FundraisersGrid({ type, search, page }: Props) {
       <div className="mt-10 border border-dashed border-pvn-navy/20 bg-white/45 px-6 py-14 text-center">
         <IconPeople className="mx-auto h-8 w-8 text-pvn-gold" />
         <h2 className="font-display mt-4 text-2xl font-semibold text-pvn-navy">
-          {filtered ? "No fundraiser matches that yet" : "No fundraiser found yet"}
+          {filtered ? "No fundraiser matches that" : "Open a fundraiser"}
         </h2>
         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-pvn-navy/65">
           {filtered
-            ? "Clear the search, or be the first to open a fundraiser for that story."
-            : "Be the first to name a section for your family, ministry, year or friends."}
+            ? "Clear the search, or open a fundraiser for that story."
+            : "Name a section for your family, ministry, year or friends."}
         </p>
         <Link
           href="/fundraisers/create"

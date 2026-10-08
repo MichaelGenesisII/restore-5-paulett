@@ -53,12 +53,11 @@ function EmptyPots() {
           Take your part of the wall
         </p>
         <h2 className="font-display mt-3 text-3xl font-semibold text-balance text-pvn-cream sm:text-4xl">
-          Be the first to start a fundraiser
+          Start a fundraiser
         </h2>
         <p className="mt-3 text-pvn-cream/70">
-          No fundraisers are rising yet. Take your section of the wall — for your
-          family, alumni year, ministry, or friends — and invite others to
-          build with you.
+          Take your section of the wall — for your family, alumni year,
+          ministry, or friends — and invite others to build with you.
         </p>
 
         <div
@@ -76,7 +75,7 @@ function EmptyPots() {
             className="font-nav inline-flex items-center justify-center gap-2 rounded-md bg-pvn-gold px-5 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-pvn-navy transition hover:bg-pvn-gold-light"
           >
             <IconWall className="h-4 w-4 shrink-0 text-pvn-navy" />
-            Start the first fundraiser
+            Start a fundraiser
           </Link>
           <Link
             href="/give"
