@@ -87,7 +87,7 @@ export function HomeWhy() {
             id="why-heading"
             className="font-display mt-3 text-[1.85rem] leading-[1.1] font-semibold text-balance text-pvn-cream sm:text-4xl sm:leading-tight lg:text-5xl"
           >
-            Not only a church for ourselves —{" "}
+            Not only a church —{" "}
             <span className="text-pvn-gold">a home for East Belfast.</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-pretty text-pvn-cream/80 sm:mt-5 sm:text-lg">
