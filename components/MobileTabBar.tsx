@@ -18,18 +18,32 @@ import {
 
 const GIVE_HREF = "/give";
 
+function scrollToPotForm() {
+  document
+    .getElementById("give")
+    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 /** Dashboards have their own navigation; the bar is for visitors only. */
 const EXCLUDED_PREFIXES = ["/host", "/admin", "/creator"];
 
-export function MobileTabBar() {
-  const pathname = usePathname();
-  const excluded = EXCLUDED_PREFIXES.some(
+export function hasMobileTabBar(pathname: string) {
+  return !EXCLUDED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
+}
+
+export function MobileTabBar() {
+  const pathname = usePathname();
+  const excluded = !hasMobileTabBar(pathname);
   const footerInView = useFooterInView(!excluded, pathname);
   const onNavigate = useTabNavigation(pathname);
 
   if (excluded) return null;
+
+  // On a fundraiser page, Give means this fundraiser — not the general fund.
+  const onPot = /^\/pots\/[^/]+$/.test(pathname);
+  const giveHref = onPot ? `${pathname}#give` : GIVE_HREF;
 
   return (
     <TabBarShell label="Quick links" hidden={footerInView} className="md:hidden">
@@ -57,12 +71,12 @@ export function MobileTabBar() {
         </li>
         <li>
           <TabBarCenterItem
-            href={GIVE_HREF}
+            href={giveHref}
             label="Give"
             Icon={IconHeart}
             iconClassName="pvn-give-heart"
             active={pathname === GIVE_HREF}
-            onNavigate={onNavigate}
+            onNavigate={onPot ? scrollToPotForm : onNavigate}
           />
         </li>
         <li>

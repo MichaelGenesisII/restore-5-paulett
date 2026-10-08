@@ -14,6 +14,7 @@ export type HostMePayload = {
     photoUrl: string | null;
     profileSlug: string | null;
     profilePublic: boolean;
+    mustSetPassword: boolean;
   };
   pots: Array<{
     slug: string;
@@ -36,6 +37,7 @@ type FundraiserUser = {
   photoUrl: string | null;
   profileSlug: string | null;
   profilePublic: boolean;
+  mustSetPassword: boolean;
 };
 
 async function loadHostMe(fundraiser: FundraiserUser): Promise<HostMePayload> {
@@ -85,6 +87,7 @@ async function loadHostMe(fundraiser: FundraiserUser): Promise<HostMePayload> {
       photoUrl: fundraiser.photoUrl,
       profileSlug: fundraiser.profileSlug,
       profilePublic: fundraiser.profilePublic,
+      mustSetPassword: fundraiser.mustSetPassword,
     },
     pots: pots.map(({ id, createdAt, ...pot }) => ({
       ...pot,
@@ -101,7 +104,7 @@ async function loadHostMe(fundraiser: FundraiserUser): Promise<HostMePayload> {
 export function getHostMeCached(fundraiser: FundraiserUser) {
   return unstable_cache(
     () => loadHostMe(fundraiser),
-    ["host-me-v1", fundraiser.id],
+    ["host-me-v2", fundraiser.id],
     {
       revalidate: 30,
       tags: [HOST_ME_CACHE_TAG, `host-me:${fundraiser.id}`],

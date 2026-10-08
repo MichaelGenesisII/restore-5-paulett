@@ -32,6 +32,13 @@ const inUse = [
       "Protects your card payment against fraud while you are completing it.",
     life: "Set only when you are giving, and only on Stripe's checkout pages.",
   },
+  {
+    name: "Facebook video player",
+    kind: "Set by Facebook — only if you allow Sharing the story, or tap play",
+    purpose:
+      "Plays the film of 5 Paulett Avenue on Our New Home. Facebook's player may set its own cookies, governed by Facebook's policy.",
+    life: "Set only when the player loads.",
+  },
 ];
 
 export default function CookiesPage() {
@@ -40,7 +47,7 @@ export default function CookiesPage() {
       eyebrow="Cookies"
       title="What we keep, and what we do not"
       intro="Most cookie notices are written to be skimmed past. This one is written to be read, because it is short — this site currently sets almost nothing."
-      updated="26 September 2026"
+      updated="8 October 2026"
     >
       <LegalSection title="The short version">
         <p>We do not sell your attention, and we do not follow you around the web.</p>
@@ -132,9 +139,10 @@ export default function CookiesPage() {
               <strong className="font-semibold text-pvn-navy">
                 Sharing the story.
               </strong>{" "}
-              Seeing whether a post or an advert brought you here, so money
-              spent telling people about 5 Paulett is not wasted. Not in use
-              today. Off unless you turn it on.
+              Letting the Facebook film on Our New Home play by itself as you
+              scroll to it, and seeing whether a post or an advert brought you
+              here. Off unless you turn it on — you can still tap to play the
+              film without it.
             </>,
           ]}
         />

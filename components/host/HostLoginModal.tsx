@@ -14,6 +14,7 @@ type HostLoginModalProps = {
   workingLabel?: string;
   /** When true, clears `#manage` from the URL on close (pot details). */
   clearManageHash?: boolean;
+  initialEmail?: string;
 };
 
 /**
@@ -27,6 +28,7 @@ export function HostLoginModal({
   lead = "Use the email and password from when you created your fundraiser.",
   workingLabel,
   clearManageHash = false,
+  initialEmail,
 }: HostLoginModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const suppressClose = useRef(false);
@@ -88,6 +90,8 @@ export function HostLoginModal({
         </div>
 
         <HostLoginForm
+          key={initialEmail ?? ""}
+          initialEmail={initialEmail}
           tone="cream"
           workingLabel={workingLabel}
           skipSuccessToast

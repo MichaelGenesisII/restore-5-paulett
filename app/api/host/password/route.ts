@@ -3,13 +3,17 @@ import {
   isAuthFailure,
   requireHost,
 } from "@/lib/auth/require-host";
+import { passwordSignIn } from "@/lib/auth/password-session";
+import { revalidateHostMe } from "@/lib/host-me";
+import { prisma } from "@/lib/prisma";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 export const runtime = "nodejs";
 
 /**
  * Signed-in creator changes their password.
- * Verifies the current password, then updates via Auth admin.
+ * Verifies the current password (skipped for a host who has never chosen
+ * one), then updates via Auth admin.
  */
 export async function POST(request: Request) {
   const session = await requireHost(request);
@@ -35,9 +39,15 @@ export async function POST(request: Request) {
       ? (body as { newPassword: string }).newPassword
       : "";
 
-  if (!currentPassword || !newPassword) {
+  const firstPassword = session.fundraiser?.mustSetPassword === true;
+
+  if (!newPassword || (!firstPassword && !currentPassword)) {
     return NextResponse.json(
-      { error: "Enter your current password and a new one." },
+      {
+        error: firstPassword
+          ? "Enter a password."
+          : "Enter your current password and a new one.",
+      },
       { status: 400 },
     );
   }
@@ -56,38 +66,21 @@ export async function POST(request: Request) {
     );
   }
 
-  if (currentPassword === newPassword) {
-    return NextResponse.json(
-      { error: "Choose a new password that is different from the current one." },
-      { status: 400 },
-    );
-  }
+  if (!firstPassword) {
+    if (currentPassword === newPassword) {
+      return NextResponse.json(
+        { error: "Choose a new password that is different from the current one." },
+        { status: 400 },
+      );
+    }
 
-  // Verify current password with a one-off sign-in (anon client, no persist).
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anon) {
-    return NextResponse.json(
-      { error: "We could not update your password right now. Please try again." },
-      { status: 500 },
-    );
-  }
-
-  const { createClient } = await import("@supabase/supabase-js");
-  const verifier = createClient(url, anon, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-
-  const { error: signInError } = await verifier.auth.signInWithPassword({
-    email: session.email,
-    password: currentPassword,
-  });
-
-  if (signInError) {
-    return NextResponse.json(
-      { error: "That current password is not correct." },
-      { status: 400 },
-    );
+    const verified = await passwordSignIn(session.email, currentPassword);
+    if (!verified) {
+      return NextResponse.json(
+        { error: "That current password is not correct." },
+        { status: 400 },
+      );
+    }
   }
 
   const admin = getSupabaseAdmin();
@@ -101,6 +94,14 @@ export async function POST(request: Request) {
       { error: "We could not update your password. Please try again." },
       { status: 500 },
     );
+  }
+
+  if (firstPassword && session.fundraiser) {
+    await prisma.fundraiser.update({
+      where: { id: session.fundraiser.id },
+      data: { mustSetPassword: false },
+    });
+    revalidateHostMe();
   }
 
   return NextResponse.json({ ok: true });

@@ -97,8 +97,9 @@ export function assertPotTargetPence(value: unknown): number {
 }
 
 /** Building fund campaign target — higher ceiling than a single gift. */
-export const MIN_BUILDING_FUND_TARGET_PENCE = 10_000_00; // £10,000
-export const MAX_BUILDING_FUND_TARGET_PENCE = 100_000_000_00; // £100m
+export const MIN_BUILDING_FUND_TARGET_PENCE = 1_00; // £1
+/** BuildingFund.targetAmount is a 32-bit int column — keep well under 2^31 pence. */
+export const MAX_BUILDING_FUND_TARGET_PENCE = 20_000_000_00; // £20m
 
 export function assertBuildingFundTargetPence(value: unknown): number {
   if (!isPositivePence(value)) {
@@ -108,7 +109,7 @@ export function assertBuildingFundTargetPence(value: unknown): number {
     value < MIN_BUILDING_FUND_TARGET_PENCE ||
     value > MAX_BUILDING_FUND_TARGET_PENCE
   ) {
-    throw new Error("Choose a target between £10,000 and £100,000,000.");
+    throw new Error("Choose a target between £1 and £20,000,000.");
   }
   return value;
 }

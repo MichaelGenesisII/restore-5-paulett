@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import {
   WallMetricsFallback,
@@ -33,47 +32,45 @@ export default async function TheWallPage({
   return (
     <main className="w-full">
       <section
-        className="relative isolate -mt-[4.75rem] overflow-hidden pt-[4.75rem] text-pvn-cream"
+        className="relative isolate -mt-[4.75rem] overflow-hidden bg-pvn-navy pt-[calc(4.75rem+3.5rem)] pb-12 text-pvn-cream sm:pb-14"
       >
-        <div className="absolute inset-0">
-          <Image
-            src="/hero.avif"
-            alt=""
-            fill
-            priority
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-          <div
-            className="absolute inset-0 bg-gradient-to-b from-pvn-navy/55 via-pvn-navy/72 to-pvn-navy/92"
-            aria-hidden
-          />
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[0.12]"
-            aria-hidden
-            style={{
-              backgroundImage: `
-                linear-gradient(335deg, #c9a84c 18px, transparent 18px),
-                linear-gradient(155deg, #c9a84c 18px, transparent 18px)
-              `,
-              backgroundSize: "48px 48px",
-              backgroundPosition: "0 0, 24px 0",
-            }}
-          />
-        </div>
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          aria-hidden
+          style={{
+            backgroundImage: `
+              linear-gradient(335deg, #c9a84c 20px, transparent 20px),
+              linear-gradient(155deg, #c9a84c 20px, transparent 20px)
+            `,
+            backgroundSize: "52px 52px",
+            backgroundPosition: "0 0, 26px 0",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-[22rem]"
+          aria-hidden
+          style={{
+            background:
+              "radial-gradient(120% 100% at 50% 0%, rgba(201,168,76,0.18), transparent 70%)",
+          }}
+        />
 
-        <div className="relative mx-auto flex min-h-[min(78svh,36rem)] max-w-6xl flex-col justify-end px-4 pt-28 pb-10 sm:px-6 sm:pb-12 lg:pb-14">
-          <p className="font-nav text-[0.7rem] font-bold tracking-[0.28em] text-pvn-gold uppercase sm:text-xs">
+        <div className="relative mx-auto max-w-3xl px-4 pb-2 text-center sm:px-6 sm:pb-4 lg:pb-6">
+          <p className="font-nav inline-flex items-center justify-center gap-2 text-[0.65rem] font-semibold tracking-[0.2em] text-pvn-gold-light uppercase sm:gap-2.5 sm:text-xs sm:tracking-[0.28em]">
+            <span
+              className="h-1.5 w-1.5 shrink-0 rotate-45 bg-pvn-gold"
+              aria-hidden
+            />
             Restore 5 Paulett
           </p>
-          <h1 className="font-display mt-3 max-w-xl text-5xl leading-[0.95] font-semibold tracking-tight text-balance sm:text-6xl lg:text-7xl">
+          <h1 className="font-display mt-2.5 text-[2.5rem] leading-[1.02] font-semibold tracking-tight text-pvn-cream sm:mt-3 sm:text-5xl sm:leading-[1.05] lg:text-6xl xl:text-7xl">
             The Wall
           </h1>
-          <p className="mt-4 max-w-md text-base leading-relaxed text-pvn-cream/80 text-pretty sm:text-lg">
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-pretty text-pvn-cream/85 sm:mt-5 sm:max-w-xl sm:text-base lg:text-lg">
             Words left with gifts — first from those who gave to the house,
             then recent voices from the fundraisers. Each message is a stone.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-8">
             <Link
               href="/give"
               className="font-nav inline-flex items-center justify-center rounded-md bg-pvn-gold px-5 py-3 text-xs font-bold tracking-[0.14em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light sm:text-sm"

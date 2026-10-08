@@ -8,6 +8,8 @@ import {
   useSyncExternalStore,
 } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { hasMobileTabBar } from "@/components/MobileTabBar";
 import {
   ALL_ACCEPTED,
   ALL_DECLINED,
@@ -52,8 +54,8 @@ const categories: CategoryRow[] = [
   {
     key: "marketing",
     name: "Sharing the story",
-    body: "Lets us see whether a post or an advert brought you here, so the money spent telling people about 5 Paulett is not wasted.",
-    inUse: "Not in use yet. This switch decides what happens when it is.",
+    body: "Lets Facebook videos play on this site by themselves (Facebook may set its own cookies), and lets us see whether a post or an advert brought you here.",
+    inUse: "In use for the film on Our New Home. Off by default — you can still tap to play it.",
   },
 ];
 
@@ -107,6 +109,7 @@ export function CookieConsent() {
 
   const decided = stored === UNKNOWN || parseConsent(stored) !== null;
   const bannerOpen = !decided && !dismissed;
+  const withTabBar = hasMobileTabBar(usePathname());
 
   const openPreferences = useCallback(() => {
     const existing = readConsent();
@@ -136,7 +139,11 @@ export function CookieConsent() {
         <div
           role="region"
           aria-label="Cookie choices"
-          className="pvn-consent fixed inset-x-0 bottom-0 z-50 px-3 pb-3 sm:px-4 sm:pb-4"
+          className={`pvn-consent fixed inset-x-0 z-50 px-3 sm:px-4 md:bottom-0 md:pb-4 ${
+            withTabBar
+              ? "bottom-[calc(6.5rem+env(safe-area-inset-bottom))]"
+              : "bottom-0 pb-3"
+          }`}
         >
           <div className="relative mx-auto max-w-4xl overflow-hidden rounded-sm bg-pvn-navy text-pvn-cream shadow-[0_-18px_60px_-20px_rgba(12,27,51,0.75)]">
             <div className="h-1 w-full bg-pvn-gold" aria-hidden />
@@ -153,19 +160,25 @@ export function CookieConsent() {
               }}
             />
 
-            <div className="relative flex flex-col gap-3.5 p-4 sm:p-5 lg:flex-row lg:items-center lg:gap-8">
+            <div className="relative flex flex-col gap-2.5 p-3.5 sm:gap-3.5 sm:p-5 lg:flex-row lg:items-center lg:gap-8">
               <div className="min-w-0 flex-1">
-                <p className="font-nav flex items-center gap-2.5 text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-pvn-gold-light">
+                <p className="font-nav flex items-center gap-2 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-pvn-gold-light sm:gap-2.5 sm:text-[0.7rem] sm:tracking-[0.22em]">
                   <span
                     className="h-1.5 w-1.5 rotate-45 bg-pvn-gold"
                     aria-hidden
                   />
                   Before you come in
                 </p>
-                <p className="mt-1.5 text-sm leading-snug text-pvn-cream/85 text-pretty">
-                  We keep only what the site needs to work, including this
-                  choice itself. Anything beyond that is yours to allow or
-                  refuse.{" "}
+                <p className="mt-1 text-[0.8rem] leading-snug text-pvn-cream/85 text-pretty sm:mt-1.5 sm:text-sm">
+                  <span className="sm:hidden">
+                    We keep only what the site needs. Anything more is your
+                    choice.
+                  </span>
+                  <span className="hidden sm:inline">
+                    We keep only what the site needs to work, including this
+                    choice itself. Anything beyond that is yours to allow or
+                    refuse.
+                  </span>{" "}
                   <Link
                     href="/cookies"
                     className="text-pvn-gold-light underline decoration-pvn-gold/60 underline-offset-4 transition hover:decoration-pvn-gold"
@@ -184,18 +197,18 @@ export function CookieConsent() {
                 </p>
               </div>
 
-              <div className="flex shrink-0 items-center gap-2.5">
+              <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
                 <button
                   type="button"
                   onClick={() => decide(ALL_DECLINED)}
-                  className="font-nav inline-flex min-h-10 flex-1 items-center justify-center rounded-md border border-pvn-cream/35 px-4 text-xs font-bold uppercase tracking-[0.14em] text-pvn-cream transition duration-300 ease-out hover:border-pvn-cream hover:bg-pvn-cream/10 sm:flex-none sm:px-5"
+                  className="font-nav inline-flex min-h-9 flex-1 items-center justify-center rounded-md border border-pvn-cream/35 px-3 text-[0.65rem] font-bold uppercase tracking-[0.12em] whitespace-nowrap text-pvn-cream transition duration-300 ease-out hover:border-pvn-cream hover:bg-pvn-cream/10 sm:min-h-10 sm:flex-none sm:px-5 sm:text-xs sm:tracking-[0.14em]"
                 >
                   Only what is needed
                 </button>
                 <button
                   type="button"
                   onClick={() => decide(ALL_ACCEPTED)}
-                  className="font-nav inline-flex min-h-10 flex-1 items-center justify-center rounded-md bg-pvn-gold px-4 text-xs font-bold uppercase tracking-[0.14em] text-pvn-navy transition duration-300 ease-out hover:bg-pvn-gold-light sm:flex-none sm:px-6"
+                  className="font-nav inline-flex min-h-9 flex-1 items-center justify-center rounded-md bg-pvn-gold px-3 text-[0.65rem] font-bold uppercase tracking-[0.12em] whitespace-nowrap text-pvn-navy transition duration-300 ease-out hover:bg-pvn-gold-light sm:min-h-10 sm:flex-none sm:px-6 sm:text-xs sm:tracking-[0.14em]"
                 >
                   Allow all
                 </button>
@@ -215,7 +228,7 @@ export function CookieConsent() {
       >
         <div className="h-1 w-full bg-pvn-gold" aria-hidden />
 
-        <div className="max-h-[80vh] overflow-y-auto p-6 sm:p-8">
+        <div className="max-h-[calc(100dvh-3rem)] overflow-y-auto p-5 sm:max-h-[80vh] sm:p-8">
           <h2
             id="pvn-consent-title"
             className="font-display text-2xl font-semibold sm:text-3xl"

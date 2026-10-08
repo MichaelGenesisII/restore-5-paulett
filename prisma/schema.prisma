@@ -25,6 +25,8 @@ model Fundraiser {
   alumniMinistry  String?
   alumniCity      String?
   alumniCountry   String?
+  /** Signed in straight after creating a fundraiser and has never chosen a password. */
+  mustSetPassword Boolean  @default(false)
   createdAt       DateTime @default(now())
   pots            Pot[]
 }
@@ -45,6 +47,8 @@ model Pot {
   donorCount          Int                 @default(0)
   restorationCategory RestorationCategory @default(GENERAL)
   fundraiserId        String
+  /** One nudge email for a fundraiser still waiting on its seed gift. */
+  seedReminderSentAt  DateTime?
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   donations           Donation[]

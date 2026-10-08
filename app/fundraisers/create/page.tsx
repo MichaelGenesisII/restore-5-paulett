@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CreatePotWizard } from "@/components/pots/CreatePotWizard";
+import { QuickCreateFundraiser } from "@/components/pots/QuickCreateFundraiser";
 
 export const metadata: Metadata = {
   title: "Start a fundraiser",
@@ -17,8 +17,8 @@ const nehemiah = [
   },
   {
     step: "02",
-    title: "Describe it",
-    body: "Words for the fundraiser page when you are ready — the wall cards lead with the title.",
+    title: "Aim it",
+    body: "Set a target. Words, story and cover can come later, when you are ready.",
   },
   {
     step: "03",
@@ -79,9 +79,9 @@ export default function CreatePotPage() {
               </span>
             </p>
             <p className="mt-4 hidden max-w-xl text-sm leading-relaxed text-pvn-cream/60 sm:block">
-              The short story of a fundraiser is below. The form itself is six steps,
-              then your seed gift — and you can watch the finished card change
-              as you write.
+              It takes about a minute: a name, a target, who you are and your
+              first stone. One button saves it and opens checkout — the rest
+              can wait.
             </p>
           </div>
 
@@ -133,7 +133,7 @@ export default function CreatePotPage() {
         className="scroll-mt-20 border-t border-pvn-navy/5 bg-pvn-cream py-14 sm:py-20"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <CreatePotWizard />
+          <QuickCreateFundraiser mode="public" />
         </div>
       </section>
 

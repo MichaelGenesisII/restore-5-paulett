@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
+import { SlowCarousel } from "@/components/SlowCarousel";
 
 type Place = {
   title: string;
@@ -124,50 +122,10 @@ function PlaceItem({ place }: { place: Place }) {
 }
 
 export function HomePlaces() {
-  const [visible, setVisible] = useState(1);
-  const [rawIndex, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const touchStartX = useRef<number | null>(null);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const sync = () => setVisible(mq.matches ? 4 : 1);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  // How many start positions when advancing 1 item at a time
-  const maxIndex = Math.max(0, places.length - visible);
-  // Clamped at render, so going 1 → 4 visible never strands the carousel.
-  const index = Math.min(rawIndex, maxIndex);
-
-  useEffect(() => {
-    if (paused || maxIndex < 1) return;
-    // Desktop (4 visible): 6s · Mobile (1 visible): 3s
-    const ms = visible >= 4 ? 6000 : 3000;
-    const id = window.setInterval(() => {
-      setIndex((current) => (current >= maxIndex ? 0 : current + 1));
-    }, ms);
-    return () => window.clearInterval(id);
-  }, [paused, maxIndex, visible]);
-
-  const go = (direction: -1 | 1) => {
-    setIndex((current) => {
-      const next = Math.min(current, maxIndex) + direction;
-      if (next < 0) return maxIndex;
-      if (next > maxIndex) return 0;
-      return next;
-    });
-  };
-
-  const stepPercent = 100 / visible;
-  const dotCount = maxIndex + 1;
-
   return (
     <section
       id="places"
-      className="relative hidden overflow-hidden border-t border-pvn-navy/5 bg-pvn-cream py-14 sm:py-20 md:block"
+      className="relative overflow-hidden border-t border-pvn-navy/5 bg-pvn-cream py-14 sm:py-20"
     >
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-pvn-gold/50 to-transparent"
@@ -192,62 +150,22 @@ export function HomePlaces() {
           </div>
         </div>
 
-        <div
-          className="relative mt-10 md:mt-12"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onTouchStart={(event) => {
-            touchStartX.current = event.touches[0]?.clientX ?? null;
-            setPaused(true);
-          }}
-          onTouchEnd={(event) => {
-            const start = touchStartX.current;
-            const end = event.changedTouches[0]?.clientX;
-            touchStartX.current = null;
-            setPaused(false);
-            if (start == null || end == null) return;
-            const delta = end - start;
-            if (Math.abs(delta) < 40) return;
-            go(delta < 0 ? 1 : -1);
-          }}
-        >
-          <div className="overflow-hidden">
-            <div
-              className="flex w-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-              style={{ transform: `translateX(-${index * stepPercent}%)` }}
-            >
-              {places.map((place) => (
-                <div
-                  key={place.title}
-                  className="shrink-0"
-                  style={{ flex: `0 0 ${stepPercent}%` }}
-                >
-                  <div className="h-full px-1 md:px-2">
-                    <div className="mx-auto h-full max-w-sm rounded-sm border border-pvn-navy/8 bg-white/50 px-2 py-8 shadow-[0_18px_40px_-28px_rgba(12,27,51,0.35)] md:max-w-none">
-                      <PlaceItem place={place} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-8 flex items-center justify-center gap-2">
-            {Array.from({ length: dotCount }).map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label={`Show place ${i + 1}`}
-                aria-current={i === index}
-                onClick={() => setIndex(i)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  i === index
-                    ? "w-7 bg-pvn-gold"
-                    : "w-1.5 bg-pvn-navy/20 hover:bg-pvn-navy/35"
-                }`}
-              />
+        <div className="relative mt-10 md:mt-12">
+          <SlowCarousel
+            label="What this house will hold"
+            intervalMs={10_000}
+            slideClassName="w-[82%] px-1.5 sm:w-1/2 md:w-1/3 md:px-2 lg:w-1/4"
+            slideLabels={places.map((place) => place.title)}
+          >
+            {places.map((place) => (
+              <div
+                key={place.title}
+                className="h-full rounded-sm border border-pvn-navy/8 bg-white/50 px-2 py-8 shadow-[0_18px_40px_-28px_rgba(12,27,51,0.35)]"
+              >
+                <PlaceItem place={place} />
+              </div>
             ))}
-          </div>
+          </SlowCarousel>
         </div>
       </div>
     </section>

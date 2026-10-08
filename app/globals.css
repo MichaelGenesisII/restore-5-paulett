@@ -517,50 +517,10 @@ body {
   transition-duration: 100ms;
 }
 
-@keyframes pvn-alumni-memory-in {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.pvn-alumni-memory {
-  animation: pvn-alumni-memory-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* Our Story chapter card: the rail freezes in place rather than resetting, so
-   a paused card still shows how much of the six seconds is left. */
-@keyframes pvn-story-fill {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-.pvn-story-fill {
-  transform-origin: left center;
-  animation: pvn-story-fill var(--pvn-story-duration, 6000ms) linear forwards;
-}
-
-.pvn-story-fill[data-paused="true"] {
-  animation-play-state: paused;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .pvn-roll-track {
     animation: none !important;
     transform: none !important;
-  }
-
-  .pvn-story-fill {
-    animation: none !important;
-    transform: scaleX(1);
   }
 
   .pvn-modal[open],
@@ -598,17 +558,6 @@ body {
   .pvn-gallery-veil,
   .pvn-gallery-frame,
   .pvn-gallery-cue {
-    transition: none !important;
-    transform: none !important;
-  }
-
-  .pvn-alumni-memory {
-    animation: none !important;
-    opacity: 1;
-    transform: none;
-  }
-
-  .pvn-alumni-memory img {
     transition: none !important;
     transform: none !important;
   }

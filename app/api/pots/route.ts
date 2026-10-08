@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import {
   PotStatus,
   PotType,
@@ -7,9 +7,11 @@ import {
 } from "@prisma/client";
 import { ensureCreatorAuthAccount } from "@/lib/auth/creator-account";
 import { isExistingCreatorEmail } from "@/lib/auth/host-account";
+import { passwordSignIn, type IssuedSession } from "@/lib/auth/password-session";
 import { bearerToken } from "@/lib/auth/require-host";
+import { createSetPasswordToken } from "@/lib/auth/set-password-token";
 import { verifyAccessToken } from "@/lib/auth/verify-access-token";
-import { notifyCreatorCredentials } from "@/lib/email/creator-notify";
+import { notifyCreatorWelcome } from "@/lib/email/creator-notify";
 import { uniquePotSlug } from "@/lib/slug";
 import { assertPotTargetPence, formatWholeGbp, MIN_POT_SEED_PENCE } from "@/lib/money";
 import {
@@ -23,6 +25,7 @@ import { isVisitorError } from "@/lib/visitor-safe";
 export const runtime = "nodejs";
 
 const POT_TYPES = new Set<string>(Object.values(PotType));
+const TITLE_MAX = 80;
 
 function optionalString(value: unknown): string | null {
   if (typeof value !== "string") return null;
@@ -102,7 +105,8 @@ export async function GET(request: Request) {
 
 /**
  * Returning hosts must prove the email with a Bearer session.
- * New emails may create an account; temporary password is emailed only (never in JSON).
+ * New emails get an account and session tokens straight away (never the
+ * password), plus a "set your password" email.
  */
 export async function POST(request: Request) {
   let body: unknown;
@@ -134,6 +138,12 @@ export async function POST(request: Request) {
   if (!title || title.length < 3) {
     return NextResponse.json(
       { error: "Title must be at least 3 characters." },
+      { status: 400 },
+    );
+  }
+  if (title.length > TITLE_MAX) {
+    return NextResponse.json(
+      { error: `Title must be ${TITLE_MAX} characters or fewer.` },
       { status: 400 },
     );
   }
@@ -243,6 +253,7 @@ export async function POST(request: Request) {
         email: fundraiserEmail,
         name: fundraiserName,
         authUserId: account.authUserId,
+        mustSetPassword: account.isNewAccount,
         isAlumni,
         alumniYearsFrom: optionalInt(data.alumniYearsFrom) ?? undefined,
         alumniYearsTo: optionalInt(data.alumniYearsTo) ?? undefined,
@@ -253,6 +264,7 @@ export async function POST(request: Request) {
       update: {
         name: fundraiserName,
         authUserId: account.authUserId,
+        ...(account.isNewAccount ? { mustSetPassword: true } : {}),
         ...(isAlumni
           ? {
               isAlumni: true,
@@ -289,16 +301,21 @@ export async function POST(request: Request) {
       select: { id: true, slug: true, status: true, title: true },
     });
 
-    let credentialsEmailed = false;
+    let session: IssuedSession | null = null;
     if (account.isNewAccount && account.temporaryPassword) {
-      credentialsEmailed = true;
-      void notifyCreatorCredentials({
-        email: fundraiserEmail,
-        name: fundraiserName,
-        temporaryPassword: account.temporaryPassword,
-        potTitle: pot.title,
-        potSlug: pot.slug,
-      });
+      session = await passwordSignIn(fundraiserEmail, account.temporaryPassword);
+      const setPasswordToken = createSetPasswordToken(account.authUserId);
+      const potTitle = pot.title;
+      const potSlug = pot.slug;
+      after(() =>
+        notifyCreatorWelcome({
+          email: fundraiserEmail,
+          name: fundraiserName,
+          potTitle,
+          potSlug,
+          setPasswordToken,
+        }),
+      );
     }
 
     return NextResponse.json(
@@ -307,11 +324,9 @@ export async function POST(request: Request) {
         account: {
           email: fundraiserEmail,
           isNewAccount: account.isNewAccount,
-          credentialsEmailed,
         },
-        message: account.isNewAccount
-          ? `Fundraiser ready. Check your inbox for your Host login, then seed with ${formatWholeGbp(MIN_POT_SEED_PENCE)} or more to open it.`
-          : `Fundraiser ready — linked to your existing login. Seed with ${formatWholeGbp(MIN_POT_SEED_PENCE)} or more to open it.`,
+        session,
+        message: `Fundraiser saved. Lay the first stone (${formatWholeGbp(MIN_POT_SEED_PENCE)} or more) to open it.`,
       },
       { status: 201 },
     );

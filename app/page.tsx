@@ -6,12 +6,14 @@ import { HomeAlumni } from "@/components/home/HomeAlumni";
 import { HomeBuild } from "@/components/home/HomeBuild";
 import { HomeCalling } from "@/components/home/HomeCalling";
 import { HomeClosing } from "@/components/home/HomeClosing";
+import { HomePhase } from "@/components/home/HomePhase";
 import { HomePlaces } from "@/components/home/HomePlaces";
 import {
   HomePotsFallback,
   HomePotsSection,
 } from "@/components/home/HomePotsSection";
 import { HomeVision } from "@/components/home/HomeVision";
+import { HomeWhy } from "@/components/home/HomeWhy";
 import { DEFAULT_BUILDING_FUND_TARGET_PENCE } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/seo";
@@ -66,7 +68,9 @@ export default async function Home() {
         potCount={potCount}
         countryCount={countryCount}
       />
+      <HomePhase raised={raised} target={target} />
       <HomePlaces />
+      <HomeWhy />
       <HomeVision />
       <HomeCalling />
       <HomeBuild />

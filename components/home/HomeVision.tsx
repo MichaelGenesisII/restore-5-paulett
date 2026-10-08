@@ -58,8 +58,8 @@ export function HomeVision() {
         {/* What we see — a house full of people */}
         <article className="relative min-h-[22rem] border-t border-white/30 sm:min-h-[26rem] lg:min-h-[32rem] lg:border-t-0 lg:border-l lg:border-white/40">
           <Image
-            src="/gallery/sect1.avif"
-            alt="A church family gathered together after a service"
+            src="/gallery/first.webp"
+            alt="A preacher speaking to a full room at PVN Belfast"
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover object-center"

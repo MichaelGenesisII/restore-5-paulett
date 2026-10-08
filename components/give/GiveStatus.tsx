@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { GiftAidAfter } from "@/components/give/GiftAidAfter";
+import { HostShareKit } from "@/components/host/HostShareKit";
 import { ResultModal } from "@/components/ResultModal";
 import { clearAllGiveDrafts } from "@/lib/give-draft";
 import { formatTidyGbp, formatWholeGbp } from "@/lib/money";
@@ -11,9 +13,13 @@ type StatusResponse = {
   status?: string;
   amount?: number;
   potSlug?: string | null;
+  potTitle?: string | null;
   potTotalRaised?: number | null;
   buildingFundTotalRaised?: number;
   isSeedGift?: boolean;
+  giftAid?: boolean;
+  isRecurring?: boolean;
+  donorName?: string | null;
 };
 
 /**
@@ -94,6 +100,18 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
   }
 
   if (status === "SUCCEEDED") {
+    const giftAidOffer =
+      data?.giftAid === false && typeof data.amount === "number" ? (
+        <div className="mb-3">
+          <GiftAidAfter
+            sessionId={sessionId}
+            amountPence={data.amount}
+            isRecurring={data.isRecurring === true}
+            initialName={data.donorName ?? null}
+          />
+        </div>
+      ) : null;
+
     if (isSeedGift && potPath && potSlug) {
       return (
         <ResultModal
@@ -102,8 +120,8 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
           title="Your fundraiser is open"
           body={
             typeof data?.amount === "number"
-              ? `${formatTidyGbp(data.amount)} opened the fundraiser. It is on the wall now.`
-              : "Your seed gift opened the fundraiser. It is on the wall now."
+              ? `${formatTidyGbp(data.amount)} opened the fundraiser. It is on the wall now — tell the people who know you.`
+              : "Your seed gift opened the fundraiser. It is on the wall now — tell the people who know you."
           }
           actionLabel={null}
           onClose={() => {
@@ -111,7 +129,18 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
             clearProcessingUrl(potPath);
           }}
         >
-          <div className="mt-2 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:justify-center">
+          {giftAidOffer}
+          <div className="mt-1 rounded-sm border border-pvn-gold/40 bg-pvn-gold/10 px-3 py-3">
+            <p className="font-nav mb-2 text-center text-[0.6rem] font-bold tracking-[0.16em] text-pvn-navy/70 uppercase">
+              Share it now
+            </p>
+            <HostShareKit
+              slug={potSlug}
+              title={data?.potTitle ?? undefined}
+              className="justify-center"
+            />
+          </div>
+          <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:justify-center">
             <Link
               href={potPath}
               onClick={() => {
@@ -155,6 +184,7 @@ export function GiveProcessing({ sessionId }: { sessionId: string }) {
           clearProcessingUrl();
         }}
       >
+        {giftAidOffer}
         {!potPath ? (
           <div className="mt-2 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:justify-center">
             <Link

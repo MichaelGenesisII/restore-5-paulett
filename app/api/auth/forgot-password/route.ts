@@ -58,6 +58,10 @@ export async function POST(request: Request) {
   try {
     const reset = await resetCreatorTemporaryPassword(email);
     if (reset) {
+      await prisma.fundraiser.updateMany({
+        where: { email, mustSetPassword: true },
+        data: { mustSetPassword: false },
+      });
       const preferAdmin =
         audienceHint === "admin" ||
         (audienceHint !== "host" && (await isAdminEmail(email)));

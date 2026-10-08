@@ -16,6 +16,7 @@ export type HostSession = {
     | "photoUrl"
     | "profileSlug"
     | "profilePublic"
+    | "mustSetPassword"
   > | null;
 };
 
@@ -60,6 +61,7 @@ export async function requireHost(
       photoUrl: true,
       profileSlug: true,
       profilePublic: true,
+      mustSetPassword: true,
     },
   });
 

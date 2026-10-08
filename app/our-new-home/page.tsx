@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { FacebookVideo } from "@/components/FacebookVideo";
 import { HomeGallery } from "@/components/home/HomeGallery";
 
 export const metadata: Metadata = {
@@ -145,7 +146,49 @@ export default function OurNewHomePage() {
       </section>
 
       <section
-        className="border-t border-pvn-navy/5 bg-pvn-cream pt-10 pb-14 sm:pt-14 sm:pb-20"
+        id="film"
+        aria-labelledby="film-heading"
+        className="scroll-mt-28 bg-pvn-cream pt-12 pb-4 sm:pt-16"
+      >
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:gap-16">
+          <div className="text-center lg:text-left">
+            <p className="font-nav text-xs font-semibold tracking-[0.28em] text-pvn-gold uppercase">
+              See it for yourself
+            </p>
+            <h2
+              id="film-heading"
+              className="font-display mt-3 text-3xl leading-tight font-semibold text-balance text-pvn-navy sm:text-4xl"
+            >
+              Step inside 5 Paulett Avenue
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-pretty text-pvn-navy/75 sm:text-lg lg:mx-0">
+              A short film of First Presbyterian Church Ballymacarrett — the
+              building that is now our home. Nearly two centuries of East
+              Belfast life, waiting for its next chapter.
+            </p>
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-pretty text-pvn-navy/60 lg:mx-0">
+              It plays without sound to begin with — tap the speaker in the
+              player to hear it.
+            </p>
+            <Link
+              href="/give"
+              className="font-nav mt-6 inline-flex min-h-12 items-center justify-center rounded-md bg-pvn-navy px-6 text-xs font-bold tracking-[0.16em] text-pvn-cream uppercase transition hover:bg-pvn-navy-light"
+            >
+              Help bring it back to life
+            </Link>
+          </div>
+
+          <FacebookVideo
+            href="https://www.facebook.com/100092743565746/videos/1692736025316067/"
+            shareUrl="https://www.facebook.com/share/r/1DBusS6HLu/"
+            title="First Presbyterian Church Ballymacarrett, East Belfast"
+            poster="/gallery/first.avif"
+          />
+        </div>
+      </section>
+
+      <section
+        className="bg-pvn-cream pt-10 pb-14 sm:pt-14 sm:pb-20"
         aria-label="Photographs of 5 Paulett Avenue"
       >
         <div className="mx-auto max-w-7xl px-3 sm:px-6">

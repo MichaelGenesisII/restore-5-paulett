@@ -30,6 +30,8 @@ type HostLoginFormProps = {
    * get the Operations Desk template instead of Host copy.
    */
   passwordResetAudience?: "admin" | "host";
+  /** Prefill (e.g. the email a visitor just typed into another form). */
+  initialEmail?: string;
 };
 
 /**
@@ -44,10 +46,11 @@ export function HostLoginForm({
   workingLabel,
   skipSuccessToast = false,
   passwordResetAudience = "host",
+  initialEmail = "",
 }: HostLoginFormProps) {
   const toast = useToast();
   const uid = useId();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [resetting, setResetting] = useState(false);

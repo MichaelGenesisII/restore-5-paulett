@@ -5,6 +5,7 @@ import { redirect, notFound } from "next/navigation";
 import { CheckoutCancelNotifier } from "@/components/give/CheckoutCancelNotifier";
 import { GiveForm } from "@/components/give/GiveForm";
 import { GiveProcessing } from "@/components/give/GiveStatus";
+import { parseAmountParam } from "@/lib/give-draft";
 import { PotLifecycleNotice } from "@/components/pots/PotLifecycleNotice";
 import {
   PotCommentsFallback,
@@ -34,8 +35,11 @@ type PotPageProps = {
     session_id?: string;
     donation_id?: string;
     page?: string;
+    amount?: string;
   }>;
 };
+
+const QUICK_AMOUNTS = [2500, 5000, 10_000];
 
 export async function generateMetadata({
   params,
@@ -235,6 +239,25 @@ export default async function PotPage({
                 )}
                 <PotShareButton slug={pot.slug} title={pot.title} />
               </div>
+              {giftsBlocked ? null : (
+                <nav
+                  aria-label="Quick gift amounts"
+                  className="mt-3 flex flex-wrap items-center gap-2"
+                >
+                  <span className="font-nav text-[0.6rem] font-bold tracking-[0.16em] text-pvn-cream/55 uppercase">
+                    Quick give
+                  </span>
+                  {QUICK_AMOUNTS.map((pence) => (
+                    <Link
+                      key={pence}
+                      href={`/pots/${pot.slug}?amount=${pence / 100}#give`}
+                      className="font-nav inline-flex min-h-9 items-center rounded-md border border-pvn-cream/30 bg-pvn-navy/40 px-3 text-xs font-bold text-pvn-cream backdrop-blur-[2px] transition hover:border-pvn-gold hover:text-pvn-gold"
+                    >
+                      {formatWholeGbp(pence)}
+                    </Link>
+                  ))}
+                </nav>
+              )}
             </div>
           </div>
         </div>
@@ -339,6 +362,7 @@ export default async function PotPage({
               <GiveForm
                 potSlug={pot.slug}
                 seedRequired={awaitingSeed}
+                initialAmountPence={parseAmountParam(query.amount)}
                 resume={
                   query.checkout === "cancelled"
                     ? "cancelled"

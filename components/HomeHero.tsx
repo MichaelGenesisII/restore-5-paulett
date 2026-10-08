@@ -97,20 +97,23 @@ export function HomeHero({
     <section className="relative isolate flex min-h-[100svh] -mt-[4.75rem] flex-col overflow-hidden pt-[4.75rem]">
       <div className="absolute inset-0">
         <Image
-          src="/hero.avif"
-          alt="Historic stone building at 5 Paulett Avenue"
+          src="/hero.webp"
+          alt="A full hall at PVN Belfast during a service"
           fill
           priority
           sizes="100vw"
-          className="object-cover"
-          style={{ objectPosition: "48% 12%" }}
+          className="object-cover saturate-[0.35]"
+          style={{ objectPosition: "50% 45%" }}
         />
+        {/* The photo is bright and busy (white walls, lit screens), so it is
+            muted and washed in navy before anything is set on top of it. */}
+        <div className="absolute inset-0 bg-pvn-navy/30" aria-hidden />
         <div
-          className="absolute inset-0 bg-[linear-gradient(100deg,rgba(12,27,51,0.82)_0%,rgba(12,27,51,0.58)_34%,rgba(12,27,51,0.22)_62%,rgba(12,27,51,0.38)_100%)]"
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,27,51,0.42)_0%,rgba(12,27,51,0.58)_45%,rgba(12,27,51,0.8)_100%)] lg:bg-[linear-gradient(100deg,rgba(12,27,51,0.85)_0%,rgba(12,27,51,0.66)_38%,rgba(12,27,51,0.28)_66%,rgba(12,27,51,0.45)_100%)]"
           aria-hidden
         />
         <div
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,27,51,0.22)_0%,transparent_22%,transparent_78%,rgba(12,27,51,0.6)_100%)]"
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,27,51,0.3)_0%,transparent_20%,transparent_75%,rgba(12,27,51,0.65)_100%)]"
           aria-hidden
         />
       </div>
@@ -118,7 +121,7 @@ export function HomeHero({
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         <div className="mx-auto grid w-full max-w-6xl flex-1 items-center gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)] lg:gap-12 lg:py-12">
           <div
-            className="flex max-w-2xl flex-col items-start gap-5 [text-shadow:0_2px_24px_rgba(12,27,51,0.55)] sm:gap-6"
+            className="flex max-w-2xl flex-col items-start gap-5 [text-shadow:0_1px_2px_rgba(12,27,51,0.6),0_2px_24px_rgba(12,27,51,0.7)] sm:gap-6"
             style={{ animation: "pvn-rise 700ms ease-out both" }}
           >
             <p className="font-nav flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.75rem] font-semibold uppercase tracking-[0.28em] text-pvn-gold-light sm:text-sm">
@@ -139,7 +142,7 @@ export function HomeHero({
               we bring it back to life.
             </p>
 
-            <p className="font-nav flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-pvn-cream/70 sm:text-xs">
+            <p className="font-nav flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-pvn-cream/85 sm:text-xs">
               {strapline.map((line, i) => (
                 <span key={line} className="flex items-center gap-3">
                   {i > 0 && (
@@ -163,7 +166,7 @@ export function HomeHero({
               </Link>
               <Link
                 href="/fundraisers/create"
-                className="font-nav inline-flex items-center justify-center gap-2 rounded-md border border-pvn-gold bg-pvn-navy/35 px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-pvn-cream backdrop-blur-sm transition hover:border-pvn-gold-light hover:bg-pvn-navy/50 hover:text-pvn-gold sm:px-5 sm:text-sm"
+                className="font-nav inline-flex items-center justify-center gap-2 rounded-md border border-pvn-gold bg-pvn-navy/70 px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-pvn-cream backdrop-blur-sm transition hover:border-pvn-gold-light hover:bg-pvn-navy/85 hover:text-pvn-gold sm:px-5 sm:text-sm"
               >
                 <IconWall className="h-4 w-4 shrink-0 text-pvn-gold" />
                 Start a fundraiser
@@ -172,13 +175,15 @@ export function HomeHero({
             </div>
 
             {/* The card is desktop-only, so small screens get the same proof here */}
-            <div className="w-full max-w-md rounded-xl border border-pvn-cream/12 bg-pvn-navy/70 p-4 backdrop-blur-md [text-shadow:none] lg:hidden">
+            <div className="w-full max-w-md rounded-xl border border-pvn-gold/25 bg-pvn-navy/90 p-4 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.6)] backdrop-blur-md [text-shadow:none] lg:hidden">
               <div className="flex items-baseline justify-between gap-3">
                 <p className="font-nav text-2xl font-bold tracking-tight text-pvn-cream">
                   {started ? formatWholeGbp(raised) : formatWholeGbp(target)}
                 </p>
                 <p className="font-nav text-[0.65rem] uppercase tracking-[0.16em] text-pvn-cream/70">
-                  {started ? `of ${formatWholeGbp(target)} goal` : "our goal"}
+                  {started
+                    ? `of ${formatWholeGbp(target)} · phase one`
+                    : "phase one goal"}
                 </p>
               </div>
               <div className="mt-3">
@@ -205,7 +210,7 @@ export function HomeHero({
           </div>
 
           <aside
-            className="hidden w-full rounded-2xl border border-pvn-cream/12 bg-pvn-navy/70 p-5 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.65)] backdrop-blur-md sm:p-6 lg:block lg:max-w-md lg:justify-self-end"
+            className="hidden w-full rounded-2xl border border-pvn-gold/25 bg-pvn-navy/90 p-5 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.65)] backdrop-blur-md sm:p-6 lg:block lg:max-w-md lg:justify-self-end"
             style={{ animation: "pvn-rise 700ms ease-out 120ms both" }}
           >
             <p className="font-nav w-full text-center text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-pvn-cream/85 sm:text-xs">
@@ -218,14 +223,14 @@ export function HomeHero({
               <div className="font-nav shrink-0 pb-1 text-right text-xs uppercase tracking-[0.14em] text-pvn-cream/70">
                 {started ? (
                   <>
-                    <p>Raised of</p>
+                    <p>Raised of phase one</p>
                     <p className="mt-0.5 text-lg font-semibold tracking-normal text-pvn-cream">
                       {formatWholeGbp(target)}
                     </p>
                   </>
                 ) : (
                   <>
-                    <p>The goal</p>
+                    <p>Phase one goal</p>
                     <p className="mt-0.5 text-lg font-semibold tracking-normal text-pvn-gold-light">
                       Not one brick yet
                     </p>

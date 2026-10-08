@@ -5,6 +5,7 @@ import { GiveForm } from "@/components/give/GiveForm";
 import { GiveProcessing } from "@/components/give/GiveStatus";
 import { IconHeart, IconHouse, IconPeople, IconWall } from "@/components/icons";
 import { DEFAULT_BUILDING_FUND_TARGET_PENCE } from "@/lib/constants";
+import { parseAmountParam } from "@/lib/give-draft";
 import { formatWholeGbp, percentOf } from "@/lib/money";
 import { prisma } from "@/lib/prisma";
 
@@ -54,6 +55,7 @@ export default async function GivePage({
     checkout?: string;
     session_id?: string;
     donation_id?: string;
+    amount?: string;
   }>;
 }) {
   const query = await searchParams;
@@ -147,7 +149,9 @@ export default async function GivePage({
                 {started ? formatWholeGbp(raised) : formatWholeGbp(target)}
               </p>
               <p className="font-nav mt-0.5 text-[0.65rem] tracking-[0.14em] text-pvn-navy/50 uppercase">
-                {started ? `of ${formatWholeGbp(target)}` : "campaign goal"}
+                {started
+                  ? `of ${formatWholeGbp(target)} · phase one`
+                  : "phase one goal"}
               </p>
             </div>
 
@@ -203,6 +207,7 @@ export default async function GivePage({
             ) : null}
 
             <GiveForm
+              initialAmountPence={parseAmountParam(query.amount)}
               resume={
                 query.checkout === "cancelled"
                   ? "cancelled"

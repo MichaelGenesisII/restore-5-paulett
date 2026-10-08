@@ -1,6 +1,7 @@
 import { NextResponse, after } from "next/server";
 import { DonationStatus } from "@prisma/client";
 import { creditSucceededDonation } from "@/app/api/webhooks/stripe/apply-totals";
+import { backfillDonorFromCheckout } from "@/lib/donor-backfill";
 import { prisma } from "@/lib/prisma";
 import { getStripe, stripeId } from "@/lib/stripe";
 
@@ -24,6 +25,8 @@ async function reconcileFromStripe(sessionId: string, donationId: string) {
   if (typeof amount !== "number") {
     return;
   }
+
+  await backfillDonorFromCheckout(donationId, session);
 
   const result = await creditSucceededDonation({
     donationId,
@@ -55,6 +58,7 @@ export async function GET(request: Request) {
       pot: {
         select: {
           slug: true,
+          title: true,
           totalRaised: true,
           donorCount: true,
           status: true,
@@ -79,6 +83,7 @@ export async function GET(request: Request) {
           pot: {
             select: {
               slug: true,
+              title: true,
               totalRaised: true,
               donorCount: true,
               status: true,
@@ -126,8 +131,12 @@ export async function GET(request: Request) {
     status: donation.status,
     amount: donation.amount,
     potSlug: donation.pot?.slug ?? null,
+    potTitle: donation.pot?.title ?? null,
     potTotalRaised: donation.pot?.totalRaised ?? null,
     buildingFundTotalRaised: fund?.totalRaised ?? 0,
     isSeedGift,
+    giftAid: donation.giftAid,
+    isRecurring: donation.isRecurring,
+    donorName: donation.donorName,
   });
 }

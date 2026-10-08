@@ -25,6 +25,8 @@ export type HostMe = {
     photoUrl: string | null;
     profileSlug: string | null;
     profilePublic: boolean;
+    /** Signed in straight after creating a fundraiser; no password chosen yet. */
+    mustSetPassword?: boolean;
   };
   pots: Array<{
     slug: string;
@@ -159,6 +161,7 @@ function DesktopNav({ unrepliedTotal }: { unrepliedTotal: number }) {
  * Host dashboard chrome: rail on desktop, bottom tab bar + left menu on mobile.
  */
 export function HostDashboardShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [meReady, setMeReady] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -410,6 +413,22 @@ export function HostDashboardShell({ children }: { children: ReactNode }) {
 
         {/* Mobile bottom padding clears the fixed tab bar */}
         <div className="min-w-0 pb-[calc(4rem+env(safe-area-inset-bottom))] lg:pb-0 lg:pl-10 xl:pl-12">
+          {data.user.mustSetPassword && !pathname.startsWith("/host/account") ? (
+            <div className="mb-6 flex flex-col gap-3 rounded-sm border border-pvn-gold/40 bg-pvn-gold/10 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm leading-relaxed text-pvn-navy/80">
+                <span className="font-semibold text-pvn-navy">
+                  Set a password
+                </span>{" "}
+                so you can sign in on other devices.
+              </p>
+              <Link
+                href="/host/account?tab=password"
+                className="font-nav inline-flex min-h-9 shrink-0 items-center justify-center rounded-md bg-pvn-navy px-4 text-[0.6rem] font-bold tracking-[0.14em] text-pvn-cream uppercase transition hover:bg-pvn-navy/90"
+              >
+                Set password
+              </Link>
+            </div>
+          ) : null}
           {children}
         </div>
       </div>

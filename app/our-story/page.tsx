@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { StoryChapters } from "@/components/story/StoryChapters";
-import { StoryFinalCta } from "@/components/story/StoryFinalCta";
-export const metadata: Metadata = {
+import { StoryFinalCta } from "@/components/story/StoryFinalCta";export const metadata: Metadata = {
   title: "Our Story",
   description:
     "We prayed for a home. God opened the door. The journey of PVN Belfast, nearly 190 years of heritage at 5 Paulett Avenue, and the call to rebuild together.",
@@ -278,10 +277,10 @@ export default function OurStoryPage() {
 
           <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16">
             <figure className="relative mx-auto w-full max-w-xl lg:mx-0 lg:max-w-none">
-              <div className="relative aspect-[1200/896] w-full overflow-hidden bg-pvn-navy">
+              <div className="relative aspect-[3/2] w-full overflow-hidden bg-pvn-navy">
                 <Image
-                  src="/gallery/test2.avif"
-                  alt="The community gathered at 5 Paulett Avenue"
+                  src="/gallery/seconds.avif"
+                  alt="The women of PVN Belfast gathered together in colourful dress"
                   fill
                   sizes="(max-width: 1024px) 100vw, 55vw"
                   className="object-contain object-center transition-transform duration-700 hover:scale-[1.03]"

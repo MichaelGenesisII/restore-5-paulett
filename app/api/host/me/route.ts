@@ -18,6 +18,7 @@ export async function GET(request: Request) {
         photoUrl: null,
         profileSlug: null,
         profilePublic: false,
+        mustSetPassword: false,
       },
       pots: [],
     });

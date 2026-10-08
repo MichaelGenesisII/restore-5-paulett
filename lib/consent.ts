@@ -7,7 +7,7 @@
  * invalidates old choices and asks again, which is what consent means.
  */
 
-export const CONSENT_VERSION = 2;
+export const CONSENT_VERSION = 3;
 export const CONSENT_KEY = "pvn-cookie-consent";
 
 /** Fired whenever a choice is saved, so listeners can react without a reload. */

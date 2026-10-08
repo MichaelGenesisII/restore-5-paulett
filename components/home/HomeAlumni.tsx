@@ -111,8 +111,8 @@ export function HomeAlumni() {
           <figure className="relative order-1 mx-auto w-full max-w-sm lg:order-2 lg:max-w-none">
             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm bg-pvn-navy">
               <Image
-                src="/gallery/sect3.avif"
-                alt="Friends of PVN Belfast smiling together"
+                src="/gallery/second.avif"
+                alt="Two friends of PVN Belfast smiling and waving"
                 fill
                 sizes="(max-width: 1024px) 24rem, 45vw"
                 className="object-cover object-center"

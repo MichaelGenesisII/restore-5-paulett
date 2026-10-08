@@ -468,8 +468,8 @@ export function AdminBuildingFund() {
               Campaign target
             </h2>
             <p className="mt-1 text-[0.75rem] text-pvn-navy/50">
-              Current target {formatWholeGbp(fund.targetAmount)}. Homepage and
-              /give read this from the database.
+              Current target {formatWholeGbp(fund.targetAmount)}. The homepage,
+              /give and every progress bar update as soon as you save.
             </p>
 
             <label className="font-nav mt-5 block text-[0.65rem] font-bold tracking-[0.14em] text-pvn-navy/45 uppercase">
@@ -498,7 +498,7 @@ export function AdminBuildingFund() {
               </button>
             </div>
             <p className="mt-2 text-[0.75rem] text-pvn-navy/45">
-              Between £10,000 and £100,000,000. You will confirm before it
+              Any amount from £1 to £20,000,000. You will confirm before it
               saves. Raised is never edited here.
             </p>
           </form>

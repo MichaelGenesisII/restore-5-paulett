@@ -12,6 +12,7 @@ import {
   notifyMonthlyRenewal,
   notifyPaymentFailed,
 } from "@/lib/email/giving-notify";
+import { backfillDonorFromCheckout } from "@/lib/donor-backfill";
 import { prisma } from "@/lib/prisma";
 import { getStripe, stripeId } from "@/lib/stripe";
 
@@ -59,6 +60,8 @@ async function creditCheckoutSession(session: Stripe.Checkout.Session) {
   if (typeof amount !== "number") {
     throw new Error("Checkout session has no amount_total");
   }
+
+  await backfillDonorFromCheckout(donation.id, session);
 
   await creditSucceededDonation({
     donationId: donation.id,

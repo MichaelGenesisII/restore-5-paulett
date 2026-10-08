@@ -94,7 +94,15 @@ export function HostAccount() {
   const { data, meReady, refresh, applyMe, setFormDirty } = useHostDashboard();
   const toast = useToast();
 
-  const [tab, setTab] = useState<Tab>("profile");
+  // The shell only renders this after the browser session loads, so reading
+  // the URL here never runs on the server.
+  const [tab, setTab] = useState<Tab>(() =>
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("tab") === "password"
+      ? "password"
+      : "profile",
+  );
+  const firstPassword = data?.user.mustSetPassword === true;
 
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
@@ -341,7 +349,10 @@ export function HostAccount() {
     try {
       const response = await hostFetch("/api/host/password", {
         method: "POST",
-        body: JSON.stringify({ currentPassword, newPassword }),
+        body: JSON.stringify({
+          currentPassword: firstPassword ? "" : currentPassword,
+          newPassword,
+        }),
       });
       const json = (await response.json()) as { error?: string };
       if (!response.ok) {
@@ -357,7 +368,13 @@ export function HostAccount() {
       setNewPassword("");
       setConfirm("");
       setPasswordDirty(false);
-      toast.success("Password updated");
+      if (firstPassword) {
+        applyMe((prev) => ({
+          ...prev,
+          user: { ...prev.user, mustSetPassword: false },
+        }));
+      }
+      toast.success(firstPassword ? "Password set" : "Password updated");
     } catch (err) {
       toast.error(
         "Password not changed",
@@ -659,30 +676,36 @@ export function HostAccount() {
         >
           <div>
             <h2 className="font-display text-xl font-semibold text-pvn-navy">
-              Change password
+              {firstPassword ? "Set your password" : "Change password"}
             </h2>
             <p className="mt-1 text-sm leading-relaxed text-pvn-navy/60">
-              Replace a temporary password with one you will remember.
+              {firstPassword
+                ? "You were signed in when you started your fundraiser. Choose a password so you can sign in on any device."
+                : "Replace a temporary password with one you will remember."}
             </p>
           </div>
 
-          <label className="block">
-            <span className={labelClass}>Current password</span>
-            <input
-              type="password"
-              autoComplete="current-password"
-              required
-              value={currentPassword}
-              onChange={(e) => {
-                setCurrentPassword(e.target.value);
-                setPasswordDirty(true);
-              }}
-              className={fieldClass}
-            />
-          </label>
+          {firstPassword ? null : (
+            <label className="block">
+              <span className={labelClass}>Current password</span>
+              <input
+                type="password"
+                autoComplete="current-password"
+                required
+                value={currentPassword}
+                onChange={(e) => {
+                  setCurrentPassword(e.target.value);
+                  setPasswordDirty(true);
+                }}
+                className={fieldClass}
+              />
+            </label>
+          )}
 
           <label className="block">
-            <span className={labelClass}>New password</span>
+            <span className={labelClass}>
+              {firstPassword ? "Password" : "New password"}
+            </span>
             <input
               type="password"
               autoComplete="new-password"
@@ -698,7 +721,9 @@ export function HostAccount() {
           </label>
 
           <label className="block">
-            <span className={labelClass}>Confirm new password</span>
+            <span className={labelClass}>
+              {firstPassword ? "Confirm password" : "Confirm new password"}
+            </span>
             <input
               type="password"
               autoComplete="new-password"
@@ -719,7 +744,11 @@ export function HostAccount() {
               disabled={passwordPending || !passwordDirty}
               className="font-nav inline-flex min-h-10 w-full items-center justify-center rounded-md bg-pvn-gold px-4 text-[0.65rem] font-bold tracking-[0.12em] text-pvn-navy uppercase transition hover:bg-pvn-gold-light disabled:opacity-50 sm:w-auto"
             >
-              {passwordPending ? "Saving…" : "Update password"}
+              {passwordPending
+                ? "Saving…"
+                : firstPassword
+                  ? "Set password"
+                  : "Update password"}
             </button>
           </div>
         </form>

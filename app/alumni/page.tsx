@@ -8,6 +8,7 @@ import {
   AlumniReconnect,
   AlumniReconnectFallback,
 } from "@/components/alumni/AlumniDeferred";
+import { SlowCarousel } from "@/components/SlowCarousel";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -17,23 +18,22 @@ export const metadata: Metadata = {
   alternates: { canonical: "/alumni" },
 };
 
-/** Memory prompts unique to the alumni Remember band — not the home anaphora. */
+/** Photos for the alumni Remember band, in the order they scroll. */
 const memoryFrames = [
-  {
-    src: "/gallery/sect1.avif",
-    alt: "PVN Belfast community gathered together",
-    caption: "The rooms that knew your laugh",
-  },
-  {
-    src: "/gallery/sect2.avif",
-    alt: "Friends and fellowship at PVN Belfast",
-    caption: "The names you still pray for",
-  },
-  {
-    src: "/gallery/first.avif",
-    alt: "5 Paulett Avenue — the house waiting to be restored",
-    caption: "The house you prayed would come",
-  },
+  { file: "1 (4).webp", alt: "Three women beside a PVN 19th anniversary cake" },
+  { file: "1 (1) (1).avif", alt: "Two young men from PVN Belfast smiling side by side" },
+  { file: "1 (10).webp", alt: "A young woman holding a smiling baby" },
+  { file: "1 (2) (1).avif", alt: "A man and a woman from PVN Belfast, in black and white" },
+  { file: "1 (3).avif", alt: "A young boy laughing towards the camera" },
+  { file: "1 (1).avif", alt: "Two women smiling together outside after a service" },
+  { file: "1 (8).webp", alt: "A man with four boys in matching outfits" },
+  { file: "1 (11).webp", alt: "Portrait of a woman in a mustard jacket" },
+  { file: "1 (12).webp", alt: "A man carrying a little girl in a party dress" },
+  { file: "1 (5).webp", alt: "Two young women with their arms around each other" },
+  { file: "1 (2).avif", alt: "A mother holding her child, with family beside her" },
+  { file: "1 (6).webp", alt: "Three men standing together, one holding a toddler" },
+  { file: "1 (7).webp", alt: "A couple standing together outside the church" },
+  { file: "1 (9).webp", alt: "A young woman smiling at a little girl in her arms" },
 ] as const;
 
 export default async function AlumniPage({
@@ -156,19 +156,24 @@ export default async function AlumniPage({
             className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-pvn-gold/45 to-transparent"
             aria-hidden
           />
-          <div className="mx-auto flex max-w-6xl snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 py-7 [scrollbar-width:none] sm:grid sm:grid-cols-3 sm:gap-6 sm:overflow-visible sm:px-6 sm:py-9 [&::-webkit-scrollbar]:hidden">
+          <div className="mx-auto max-w-6xl px-2.5 py-5 sm:px-4 sm:py-7">
+            <SlowCarousel
+              label="Memories of PVN Belfast"
+              tone="dark"
+              intervalMs={4_500}
+              resumeAfterMs={8_000}
+              slideClassName="w-[78%] px-1.5 sm:w-1/2 sm:px-2.5 lg:w-1/3 lg:px-3"
+              slideLabels={memoryFrames.map((frame) => frame.alt)}
+            >
             {memoryFrames.map((frame, i) => (
-              <figure
-                key={frame.src}
-                className="pvn-alumni-memory group w-[75%] shrink-0 snap-start sm:w-auto"
-                style={{ animationDelay: `${i * 90}ms` }}
-              >
-                <div className="relative aspect-[4/5] overflow-hidden bg-pvn-navy-light">
+              <figure key={frame.file} className="group">
+                <div className="relative aspect-[3/4] overflow-hidden bg-pvn-navy-light">
                   <Image
-                    src={frame.src}
+                    src={encodeURI(`/alumni/${frame.file}`)}
                     alt={frame.alt}
                     fill
-                    sizes="(max-width: 640px) 75vw, 30vw"
+                    draggable={false}
+                    sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 360px"
                     className="object-cover object-center transition duration-700 ease-out group-hover:scale-[1.04]"
                     priority={i === 0}
                   />
@@ -177,19 +182,9 @@ export default async function AlumniPage({
                     aria-hidden
                   />
                 </div>
-                <figcaption className="mt-3 flex items-start gap-3">
-                  <span
-                    className="font-nav mt-0.5 text-[0.65rem] font-bold tracking-[0.2em] text-pvn-gold/70"
-                    aria-hidden
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="font-nav text-[0.7rem] font-semibold tracking-[0.14em] text-pvn-cream/70 uppercase">
-                    {frame.caption}
-                  </span>
-                </figcaption>
               </figure>
             ))}
+            </SlowCarousel>
           </div>
         </div>
       </section>

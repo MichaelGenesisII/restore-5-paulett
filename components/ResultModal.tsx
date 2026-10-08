@@ -155,7 +155,7 @@ export function ResultModal({
       onCancel={(event) => {
         if (busy || variant === "waiting") event.preventDefault();
       }}
-      className="pvn-modal m-auto w-[min(28rem,calc(100vw-2rem))] overflow-hidden rounded-sm border border-pvn-navy/10 bg-pvn-cream p-0 text-pvn-navy shadow-[0_40px_90px_-30px_rgba(12,27,51,0.65)] backdrop:bg-pvn-navy/70 backdrop:backdrop-blur-sm"
+      className="pvn-modal m-auto max-h-[calc(100dvh-2rem)] w-[min(28rem,calc(100vw-2rem))] overflow-x-hidden overflow-y-auto rounded-sm border border-pvn-navy/10 bg-pvn-cream p-0 text-pvn-navy shadow-[0_40px_90px_-30px_rgba(12,27,51,0.65)] backdrop:bg-pvn-navy/70 backdrop:backdrop-blur-sm"
       aria-labelledby="pvn-modal-title"
     >
       <div className={`h-1 w-full ${accent}`} aria-hidden />
