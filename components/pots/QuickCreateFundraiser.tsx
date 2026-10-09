@@ -12,6 +12,7 @@ import {
 import type { PotType } from "@prisma/client";
 import { HostLoginModal } from "@/components/host/HostLoginModal";
 import { PotPreview } from "@/components/pots/PotPreview";
+import { ResultModal } from "@/components/ResultModal";
 import { useToast } from "@/components/toast/ToastProvider";
 import { hostFetch } from "@/lib/host-client";
 import {
@@ -53,6 +54,23 @@ const SEED_PRESETS = [MIN_POT_SEED_PENCE, 5_000, 10_000];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type Account = { email: string; name: string | null };
+
+type UnpaidPot = { slug: string; title: string };
+
+/** Most recent fundraiser the signed-in host saved but never seeded. */
+async function findUnpaidPot(): Promise<UnpaidPot | null> {
+  try {
+    const response = await hostFetch("/api/host/me");
+    if (!response.ok) return null;
+    const json = (await response.json()) as {
+      pots?: Array<{ slug: string; title: string; status: string }>;
+    };
+    const pot = json.pots?.find((p) => p.status === "PENDING");
+    return pot ? { slug: pot.slug, title: pot.title } : null;
+  } catch {
+    return null;
+  }
+}
 
 type Draft = {
   title: string;
@@ -174,6 +192,12 @@ export function QuickCreateFundraiser(props: Props) {
     title: string;
     newAccount: boolean;
   } | null>(null);
+  const [unpaid, setUnpaid] = useState<UnpaidPot | null>(null);
+  const [resumeOffer, setResumeOffer] = useState<{
+    pot: UnpaidPot;
+    payNow: boolean;
+    signedIn: Account;
+  } | null>(null);
 
   const lookups = useRef(new Map<string, boolean>());
   const pendingIntent = useRef<boolean | null>(null);
@@ -222,6 +246,17 @@ export function QuickCreateFundraiser(props: Props) {
       cancelled = true;
     };
   }, [mode]);
+
+  useEffect(() => {
+    if (!account || created) return;
+    let cancelled = false;
+    void findUnpaidPot().then((pot) => {
+      if (!cancelled) setUnpaid(pot);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [account, created]);
 
   useEffect(() => {
     if (!onDirtyChange) return;
@@ -379,8 +414,34 @@ export function QuickCreateFundraiser(props: Props) {
     }
   }
 
-  async function submit(payNow: boolean, signedIn: Account | null = account) {
+  function finishUnpaid(pot: UnpaidPot, donor: Account) {
+    const problem = seedProblem();
+    if (problem) {
+      toast.error("First stone", problem);
+      return;
+    }
+    setResumeOffer(null);
+    void startCheckout(pot.slug, donor);
+  }
+
+  async function submit(
+    payNow: boolean,
+    signedIn: Account | null = account,
+    allowDuplicate = false,
+  ) {
     if (busy) return;
+
+    // Visitors who back out of checkout tend to come back and start over,
+    // leaving the first fundraiser unseeded. Offer to finish that one instead.
+    if (signedIn && !allowDuplicate) {
+      const waiting =
+        signedIn === account ? unpaid : await findUnpaidPot();
+      if (waiting) {
+        setUnpaid(waiting);
+        setResumeOffer({ pot: waiting, payNow, signedIn });
+        return;
+      }
+    }
 
     const title = draft.title.trim();
     if (title.length < 3) {
@@ -702,6 +763,24 @@ export function QuickCreateFundraiser(props: Props) {
             className="font-nav font-bold tracking-[0.1em] text-pvn-navy/60 uppercase underline decoration-pvn-gold/40 underline-offset-4 hover:text-pvn-navy"
           >
             Start over
+          </button>
+        </div>
+      ) : null}
+
+      {account && unpaid ? (
+        <div className="mb-6 flex flex-col gap-3 rounded-sm border border-pvn-gold/50 bg-pvn-gold/10 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm leading-relaxed text-pvn-navy/80">
+            <span className="font-semibold text-pvn-navy">{unpaid.title}</span>{" "}
+            is saved but still waiting for its first stone. Finish it, or carry
+            on below to start a different fundraiser.
+          </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => finishUnpaid(unpaid, account)}
+            className="font-nav inline-flex min-h-9 shrink-0 items-center justify-center rounded-md bg-pvn-navy px-4 text-[0.6rem] font-bold tracking-[0.14em] text-pvn-cream uppercase transition hover:bg-pvn-navy/90 disabled:opacity-50"
+          >
+            {seedLabel ? `Finish it · ${seedLabel}` : "Finish it"}
           </button>
         </div>
       ) : null}
@@ -1108,6 +1187,28 @@ export function QuickCreateFundraiser(props: Props) {
         lead="This email already has a host account. Sign in and we will carry on where you left off."
         workingLabel="Carrying on…"
         onSignedIn={onSignedInFromModal}
+      />
+
+      <ResultModal
+        open={resumeOffer !== null}
+        variant="confirm"
+        title="Finish your first fundraiser?"
+        body={
+          resumeOffer
+            ? `You already started “${resumeOffer.pot.title}”, but it hasn’t had its first stone yet, so nobody can see it. Finish that one, or create a new fundraiser alongside it.`
+            : ""
+        }
+        confirmLabel={seedLabel ? `Finish it · ${seedLabel}` : "Finish it"}
+        onConfirm={() => {
+          if (resumeOffer) finishUnpaid(resumeOffer.pot, resumeOffer.signedIn);
+        }}
+        actionLabel="Create a new one"
+        onSecondary={() => {
+          const offer = resumeOffer;
+          setResumeOffer(null);
+          if (offer) void submit(offer.payNow, offer.signedIn, true);
+        }}
+        onClose={() => setResumeOffer(null)}
       />
     </>
   );
